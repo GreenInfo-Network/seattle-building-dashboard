@@ -119,7 +119,6 @@ dl {
     margin: 0; }
 
 table {
-  -webkit-font-feature-settings: "kern", "liga", "tnum";
   -moz-font-feature-settings: "kern", "liga", "tnum";
   -ms-font-feature-settings: "kern", "liga", "tnum";
   font-feature-settings: "kern", "liga", "tnum";
@@ -144,7 +143,6 @@ th {
   vertical-align: middle; }
 
 body {
-  -webkit-font-feature-settings: "kern", "liga", "pnum";
   -moz-font-feature-settings: "kern", "liga", "pnum";
   -ms-font-feature-settings: "kern", "liga", "pnum";
   font-feature-settings: "kern", "liga", "pnum";
@@ -576,8 +574,7 @@ header {
   display: inline-block;
   margin: 0 1rem;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  transform: translateY(-50%);
   vertical-align: top; }
 
 #map-controls {
@@ -680,13 +677,10 @@ header {
   border: 1px solid white;
   border-radius: 1em;
   margin: 0.5em 1em;
-  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row; }
+  -ms-flex-direction: row;
+      flex-direction: row; }
   .search-wrapper .address-search:focus {
     border-color: inherit;
     box-shadow: none; }
@@ -1460,8 +1454,7 @@ header {
     text-align: center;
     font-size: 14px;
     line-height: 1;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%); }
+    transform: translateY(-50%); }
   #ce-activity-indicator .spinner {
     position: absolute;
     top: 50%;
@@ -1470,8 +1463,7 @@ header {
     margin: 0;
     text-align: center;
     font-size: 10px;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%); }
+    transform: translateY(-50%); }
   .activity-indicator-basic #ce-activity-indicator .spinner {
     display: none; }
   #ce-activity-indicator .spinner > div {
@@ -1479,26 +1471,15 @@ header {
     height: 100%;
     width: 6px;
     display: inline-block;
-    -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
     animation: sk-stretchdelay 1.2s infinite ease-in-out; }
   #ce-activity-indicator .spinner .rect2 {
-    -webkit-animation-delay: -1.1s;
     animation-delay: -1.1s; }
   #ce-activity-indicator .spinner .rect3 {
-    -webkit-animation-delay: -1.0s;
     animation-delay: -1.0s; }
   #ce-activity-indicator .spinner .rect4 {
-    -webkit-animation-delay: -0.9s;
     animation-delay: -0.9s; }
   #ce-activity-indicator .spinner .rect5 {
-    -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s; }
-
-@-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% {
-    -webkit-transform: scaleY(0.4); }
-  20% {
-    -webkit-transform: scaleY(1); } }
 
 @keyframes sk-stretchdelay {
   0%, 40%, 100% {
@@ -1524,8 +1505,7 @@ header {
     font-size: 0.85em;
     text-transform: uppercase;
     line-height: 1.2;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%); }
+    transform: translateY(-50%); }
   #map-controls-counts .showing {
     font-size: 1.4em;
     font-weight: 500; }
@@ -1617,8 +1597,7 @@ header {
       font-size: 1.7em;
       line-height: 1;
       top: 50%;
-      -webkit-transform: translateY(-50%);
-              transform: translateY(-50%);
+      transform: translateY(-50%);
       font-family: monospace;
       width: 1em;
       z-index: 1;
@@ -1722,13 +1701,13 @@ header {
   #scorecard .sc-heading {
     margin: 0;
     padding: 0;
-    font-size: 1rem;
+    font-size: 18px;
     font-weight: 500;
-    color: #0047ba;
+    color: #003DA5;
     text-transform: uppercase;
     line-height: 1; }
     #scorecard .sc-heading.small {
-      font-size: 0.75rem; }
+      font-size: 16px; }
     #scorecard .sc-heading.large {
       font-size: 1.5rem; }
     #scorecard .sc-heading.xlarge {
@@ -1762,25 +1741,21 @@ header {
       color: #fff; }
     #scorecard .sc-txt.orange {
       color: #DE8F41; }
+    #scorecard .sc-txt.blue-new {
+      color: #003DA5; }
     #scorecard .sc-txt.tiny {
       font-size: 0.75rem; }
     #scorecard .sc-txt.small {
-      font-size: 0.75rem; }
+      font-size: 16px; }
     #scorecard .sc-txt.light {
       font-weight: 300; }
     #scorecard .sc-txt.bold {
       font-weight: 500; }
-    #scorecard .sc-txt.sc-addr {
-      font-weight: bold; }
     #scorecard .sc-txt.pg {
       line-height: 1.2; }
     @media print {
       #scorecard .sc-txt {
         font-size: 0.75rem; } }
-  #scorecard .sc-address {
-    margin-bottom: 1rem; }
-    #scorecard .sc-address .sc-addr {
-      margin-bottom: .5rem; }
   #scorecard .sc-details-value {
     margin-bottom: .5rem; }
     #scorecard .sc-details-value label {
@@ -1799,7 +1774,7 @@ header {
         #scorecard .scorecard--section .section-head {
           margin-bottom: .5rem; } }
       #scorecard .scorecard--section .section-head .sc-heading {
-        margin-bottom: 0.75rem; }
+        margin-bottom: 7px; }
         @media print {
           #scorecard .scorecard--section .section-head .sc-heading {
             margin-bottom: .25rem; } }
@@ -1808,29 +1783,21 @@ header {
     #scorecard .sc-toggle .sc-heading {
       margin-bottom: .25rem; }
     #scorecard .sc-toggle .sc-toggle-row {
-      display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-              flex-direction: row;
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center; }
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-align: center;
+          align-items: center; }
     #scorecard .sc-toggle label {
       font-weight: 400;
       margin: 0;
-      display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-              flex-direction: row;
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center; }
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-align: center;
+          align-items: center; }
     #scorecard .sc-toggle label + label {
       margin-left: 0.5rem; }
     #scorecard .sc-toggle label.cb-plain {
@@ -1857,24 +1824,30 @@ header {
         display: block; }
   #scorecard .scorecard--nav,
   #scorecard .scorecard--header {
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    display: -webkit-box;
+    -ms-flex-align: center;
+        align-items: center;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    margin: 1rem 1rem; }
+    -ms-flex-direction: row;
+        flex-direction: row;
+    -ms-flex-pack: justify;
+        justify-content: space-between; }
     @media print {
       #scorecard .scorecard--nav,
       #scorecard .scorecard--header {
         margin: 0.5rem 1rem; } }
+  #scorecard .scorecard--header {
+    background: #003DA5;
+    border-radius: 0 0 10px 10px;
+    height: 81px; }
+    #scorecard .scorecard--header h1.sc-header {
+      color: #fff;
+      font-size: 30px;
+      font-weight: 500;
+      margin-bottom: 0;
+      margin-left: 30px; }
+    #scorecard .scorecard--header img {
+      margin-right: 20px; }
   #scorecard .scorecard--nav {
     margin: 1rem 0; }
   #scorecard .ess-certified .ess-logo {
@@ -1890,74 +1863,162 @@ header {
   #scorecard .scorecard--details {
     margin-bottom: 1rem;
     position: relative;
-    padding: 0 1rem;
-    background: #0047ba;
-    height: 210px;
-    overflow: hidden; }
+    padding: 0 0 0 1rem;
+    background: #fff;
+    overflow: hidden;
+    height: 300px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    -ms-flex-pack: start;
+        justify-content: flex-start; }
     @media print {
       #scorecard .scorecard--details {
         height: 160px; } }
-    #scorecard .scorecard--details [class^="col"] {
-      height: 100%;
-      padding-top: 1rem;
-      color: white; }
-    #scorecard .scorecard--details [class^="col"].middle {
-      position: relative;
-      padding-top: 0;
-      color: #0047ba;
-      z-index: 1; }
-      #scorecard .scorecard--details [class^="col"].middle .circle-bk {
+    #scorecard .scorecard--details div#building-name-wrapper {
+      height: 75px;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: end;
+          align-items: flex-end; }
+      #scorecard .scorecard--details div#building-name-wrapper div.sc-building-name {
+        font-weight: 500;
+        font-size: 25px;
+        padding-bottom: 15px; }
+    #scorecard .scorecard--details div#building-details-outer {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: row;
+          flex-direction: row; }
+      #scorecard .scorecard--details div#building-details-outer div#building-details-row .sc-address {
+        margin-bottom: 6px; }
+        #scorecard .scorecard--details div#building-details-outer div#building-details-row .sc-address div {
+          font-weight: 400;
+          font-size: 18px;
+          text-transform: uppercase;
+          margin-bottom: -5px; }
+      #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: row;
+            flex-direction: row; }
+        #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div.building-details-col {
+          padding: 5px 15px;
+          width: 200px; }
+          #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div.building-details-col:first-child {
+            border-right: 1px solid #003DA5;
+            padding-left: 0;
+            width: auto;
+            white-space: nowrap; }
+        #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels,
+        #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values {
+          font-size: 16px;
+          font-weight: 400; }
+          #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels div,
+          #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values div {
+            margin-bottom: -5px; }
+    #scorecard .scorecard--details div#building-details-cards-wrapper {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+      width: 100%; }
+      #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card-note {
+        font-size: 14px;
+        color: #707070; }
+      #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card {
         position: relative;
-        top: 50%;
-        padding-top: 0;
-        text-align: center;
-        z-index: 1;
-        -webkit-transform: translateY(-50%);
-                transform: translateY(-50%); }
-      #scorecard .scorecard--details [class^="col"].middle:after {
-        content: ' ';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 260px;
-        height: 260px;
-        background: white;
-        border-radius: 50%;
-        -webkit-transform: translateX(-50%) translateY(-50%);
-                transform: translateX(-50%) translateY(-50%);
-        z-index: -1; }
-      #scorecard .scorecard--details [class^="col"].middle .eui-desc {
-        margin: 1rem auto 0;
-        width: 150px; }
-        #scorecard .scorecard--details [class^="col"].middle .eui-desc p:first-child {
-          font-weight: 500; }
-    #scorecard .scorecard--details .details-box-wrapper {
-      float: right;
-      width: auto; }
-    #scorecard .scorecard--details .details-box {
-      text-align: right; }
-      #scorecard .scorecard--details .details-box + .details-box {
-        margin-top: 1rem; }
-      #scorecard .scorecard--details .details-box .details-numbers {
-        margin-top: 1rem;
-        text-align: right; }
-        #scorecard .scorecard--details .details-box .details-numbers h4:last-of-type {
-          border-top: 1px solid white;
-          display: inline-block;
-          margin-top: .5rem;
-          padding-top: .5rem; }
-      #scorecard .scorecard--details .details-box .ways-to-save-button {
-        background: white;
-        border-radius: 2px;
-        color: #0047BA;
-        display: inline-block;
-        font-size: 15px;
-        margin-top: 1rem;
-        padding: .5rem;
-        text-transform: uppercase; }
-        @media print {
-          #scorecard .scorecard--details .details-box .ways-to-save-button {
-            display: none; } }
+        font-size: 16px;
+        width: 242px;
+        height: 100%;
+        border: 2px solid #003DA5;
+        border-radius: 10px;
+        margin-right: 20px;
+        padding: 12px 16px 10px; }
+        #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon {
+          position: absolute;
+          background: #003DA5;
+          width: 40px;
+          height: 40px;
+          top: 0;
+          right: 0;
+          border-radius: 0 5px 0 10px;
+          background-repeat: no-repeat; }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.ghg {
+            background-image: url("../images/scorecard/cloud.svg");
+            background-size: 83%;
+            background-position: 5px 8px; }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.eui {
+            background-image: url("../images/scorecard/lightbulb.svg");
+            background-size: 68%;
+            background-position: 7px 3px; }
+        #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure {
+          line-height: 1;
+          margin-bottom: 15px; }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure span.building-details-card-measure-number {
+            font-size: 38px;
+            font-weight: 500; }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure div.building-details-card-words .bolder {
+            font-weight: 600; }
+        #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend {
+          display: -ms-flexbox;
+          display: flex; }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow {
+            width: 30px;
+            height: 40px;
+            background: transparent;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: 0 7px;
+            display: inline-block; }
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow.decreased {
+              background-image: url("../images/scorecard/changearrow-down.png"); }
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow.increased {
+              background-image: url("../images/scorecard/changearrow-up.png"); }
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+                flex-direction: column;
+            -ms-flex-pack: center;
+                justify-content: center;
+            line-height: 1.15;
+            margin-left: 8px; }
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words span.text-increased {
+              color: #C04F31; }
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words span.text-decreased {
+              color: #90AE60; }
+  #scorecard div#state-requirement-wrapper {
+    color: #003DA5;
+    background: #E5EBF6;
+    border-radius: 0px 0px 5px 5px;
+    border-top: 1px solid #003DA5;
+    padding: 16px; }
+    #scorecard div#state-requirement-wrapper div#state-requirement-outer {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: row;
+          flex-direction: row; }
+      #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-icon {
+        width: 16px;
+        height: 20px;
+        background-image: url("../images/scorecard/info-icon.svg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: 0 4px; }
+      #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner {
+        margin-left: 6px; }
+        #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-action {
+          font-size: 16px;
+          font-weight: 600; }
+        #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-details {
+          font-size: 16px; }
+          #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-details a {
+            color: #003DA5;
+            text-decoration: underline; }
   #scorecard .compare-desc {
     text-align: center;
     padding-right: 2rem; }
@@ -2013,202 +2074,149 @@ header {
       color: #90AE60; }
     #scorecard .compare-desc .change-txt.higher.eui, #scorecard .compare-desc .change-txt.lower.ess, #scorecard .compare-desc .change-txt.increased {
       color: #C04F31; }
-  #scorecard .compare-chart,
-  #scorecard #emissions-intensity-chart {
+  #scorecard .compare-chart {
     position: relative;
     height: 250px; }
     @media print {
-      #scorecard .compare-chart,
-      #scorecard #emissions-intensity-chart {
+      #scorecard .compare-chart {
         height: 200px; } }
-    #scorecard .compare-chart svg,
-    #scorecard #emissions-intensity-chart svg {
+    #scorecard .compare-chart svg {
       height: 100%;
       width: 100%; }
-    #scorecard .compare-chart .bar rect,
-    #scorecard #emissions-intensity-chart .bar rect {
+    #scorecard .compare-chart .bar rect {
       fill: #F1F1F1;
       shape-rendering: crispEdges; }
-      #scorecard .compare-chart .bar rect.selected,
-      #scorecard #emissions-intensity-chart .bar rect.selected {
+      #scorecard .compare-chart .bar rect.selected {
         fill: #DE8F41; }
-      #scorecard .compare-chart .bar rect.avg-bar,
-      #scorecard #emissions-intensity-chart .bar rect.avg-bar {
+      #scorecard .compare-chart .bar rect.avg-bar {
         opacity: 0.5; }
-    #scorecard .compare-chart .axis path,
-    #scorecard #emissions-intensity-chart .axis path {
+    #scorecard .compare-chart .axis path {
       shape-rendering: crispEdges; }
-    #scorecard .compare-chart .y.axis path,
-    #scorecard #emissions-intensity-chart .y.axis path {
+    #scorecard .compare-chart .y.axis path {
       fill: none;
       stroke: #CBCBCB; }
-    #scorecard .compare-chart text,
-    #scorecard #emissions-intensity-chart text {
+    #scorecard .compare-chart text {
       font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
       font-size: 10px;
       text-transform: lowercase; }
-    #scorecard .compare-chart .y.axis text, #scorecard .compare-chart .label text,
-    #scorecard #emissions-intensity-chart .y.axis text,
-    #scorecard #emissions-intensity-chart .label text {
+    #scorecard .compare-chart .y.axis text, #scorecard .compare-chart .label text {
       fill: #5d5d5d; }
-    #scorecard .compare-chart .label text,
-    #scorecard #emissions-intensity-chart .label text {
+    #scorecard .compare-chart .label text {
       text-transform: uppercase; }
-    #scorecard .compare-chart .axis line,
-    #scorecard #emissions-intensity-chart .axis line {
+    #scorecard .compare-chart .axis line {
       fill: none;
       shape-rendering: crispEdges; }
-    #scorecard .compare-chart .y.axis line,
-    #scorecard #emissions-intensity-chart .y.axis line {
+    #scorecard .compare-chart .y.axis line {
       display: none; }
-    #scorecard .compare-chart .x.axis line,
-    #scorecard #emissions-intensity-chart .x.axis line {
+    #scorecard .compare-chart .x.axis line {
       stroke-width: 1.5; }
-    #scorecard .compare-chart .average-building-highlight,
-    #scorecard #emissions-intensity-chart .average-building-highlight {
+    #scorecard .compare-chart .average-building-highlight {
       opacity: 0.5; }
-      #scorecard .compare-chart .average-building-highlight > div,
-      #scorecard #emissions-intensity-chart .average-building-highlight > div {
+      #scorecard .compare-chart .average-building-highlight > div {
         position: relative;
         width: 100px; }
-      #scorecard .compare-chart .average-building-highlight text,
-      #scorecard #emissions-intensity-chart .average-building-highlight text {
+      #scorecard .compare-chart .average-building-highlight text {
         dominant-baseline: central; }
-      #scorecard .compare-chart .average-building-highlight tspan,
-      #scorecard #emissions-intensity-chart .average-building-highlight tspan {
+      #scorecard .compare-chart .average-building-highlight tspan {
         text-anchor: start; }
-      #scorecard .compare-chart .average-building-highlight.align-right tspan,
-      #scorecard #emissions-intensity-chart .average-building-highlight.align-right tspan {
+      #scorecard .compare-chart .average-building-highlight.align-right tspan {
         text-anchor: end; }
-      #scorecard .compare-chart .average-building-highlight .value,
-      #scorecard #emissions-intensity-chart .average-building-highlight .value {
+      #scorecard .compare-chart .average-building-highlight .value {
         line-height: 1;
         font-size: 24px;
         font-weight: 500;
         color: #DE8F41; }
-      #scorecard .compare-chart .average-building-highlight .label, #scorecard .compare-chart .average-building-highlight .units,
-      #scorecard #emissions-intensity-chart .average-building-highlight .label,
-      #scorecard #emissions-intensity-chart .average-building-highlight .units {
+      #scorecard .compare-chart .average-building-highlight .label, #scorecard .compare-chart .average-building-highlight .units {
         font-size: 10px;
         font-weight: 400;
         text-transform: uppercase; }
-      #scorecard .compare-chart .average-building-highlight .label,
-      #scorecard #emissions-intensity-chart .average-building-highlight .label {
+      #scorecard .compare-chart .average-building-highlight .label {
         fill: #666; }
-    #scorecard .compare-chart .callout-text text,
-    #scorecard #emissions-intensity-chart .callout-text text {
+    #scorecard .compare-chart .callout-text text {
       fill: #b7b7b7;
       text-transform: uppercase; }
-      #scorecard .compare-chart .callout-text text.value,
-      #scorecard #emissions-intensity-chart .callout-text text.value {
+      #scorecard .compare-chart .callout-text text.value {
         font-size: 24px;
         font-weight: 500;
         line-height: 24px; }
-      #scorecard .compare-chart .callout-text text.quartile-1,
-      #scorecard #emissions-intensity-chart .callout-text text.quartile-1 {
+      #scorecard .compare-chart .callout-text text.quartile-1 {
         fill: #0047BA; }
-      #scorecard .compare-chart .callout-text text.quartile-2,
-      #scorecard #emissions-intensity-chart .callout-text text.quartile-2 {
+      #scorecard .compare-chart .callout-text text.quartile-2 {
         fill: #90AE60; }
-      #scorecard .compare-chart .callout-text text.quartile-3,
-      #scorecard #emissions-intensity-chart .callout-text text.quartile-3 {
+      #scorecard .compare-chart .callout-text text.quartile-3 {
         fill: #F7C34D; }
-      #scorecard .compare-chart .callout-text text.quartile-4,
-      #scorecard #emissions-intensity-chart .callout-text text.quartile-4 {
+      #scorecard .compare-chart .callout-text text.quartile-4 {
         fill: #C04F31; }
-    #scorecard .compare-chart .callout-text.callout-selected-text .selected-label,
-    #scorecard #emissions-intensity-chart .callout-text.callout-selected-text .selected-label {
+    #scorecard .compare-chart .callout-text.callout-selected-text .selected-label {
       fill: #0047BA; }
-    #scorecard .compare-chart .selected-city-highlight .value,
-    #scorecard #emissions-intensity-chart .selected-city-highlight .value {
+    #scorecard .compare-chart .selected-city-highlight .value {
       font-size: 24px;
       font-weight: 500;
       text-anchor: middle; }
-    #scorecard .compare-chart .selected-city-highlight .units,
-    #scorecard #emissions-intensity-chart .selected-city-highlight .units {
+    #scorecard .compare-chart .selected-city-highlight .units {
       font-size: 10px;
       text-anchor: middle;
       text-transform: none; }
-    #scorecard .compare-chart .selected-city-highlight .building-name,
-    #scorecard #emissions-intensity-chart .selected-city-highlight .building-name {
+    #scorecard .compare-chart .selected-city-highlight .building-name {
       font-size: 14px;
       fill: #0047ba;
       text-transform: uppercase; }
-    #scorecard .compare-chart .selected-city-highlight .circle,
-    #scorecard #emissions-intensity-chart .selected-city-highlight .circle {
+    #scorecard .compare-chart .selected-city-highlight .circle {
       fill: none;
       stroke: #0047ba; }
-    #scorecard .compare-chart .selected-city-highlight .line,
-    #scorecard #emissions-intensity-chart .selected-city-highlight .line {
+    #scorecard .compare-chart .selected-city-highlight .line {
       stroke: #0047ba; }
-  #scorecard #emissions-intensity-chart {
-    height: 100%; }
-    #scorecard #emissions-intensity-chart .x.axis path {
-      fill: none;
-      stroke: #CBCBCB; }
-    #scorecard #emissions-intensity-chart .x.axis text, #scorecard #emissions-intensity-chart .label text {
-      fill: #5d5d5d; }
-    #scorecard #emissions-intensity-chart .avg-highlight-html.selected-building {
-      opacity: 1; }
-      #scorecard #emissions-intensity-chart .avg-highlight-html.selected-building.right-aligned {
-        text-align: right; }
-      #scorecard #emissions-intensity-chart .avg-highlight-html.selected-building p {
-        color: #0047BA; }
-    #scorecard #emissions-intensity-chart .avg-highlight-html p.quartile-1 {
-      color: #0047BA; }
-    #scorecard #emissions-intensity-chart .avg-highlight-html p.quartile-2 {
-      color: #90AE60; }
-    #scorecard #emissions-intensity-chart .avg-highlight-html p.quartile-3 {
-      color: #F7C34D; }
-    #scorecard #emissions-intensity-chart .avg-highlight-html p.quartile-4 {
-      color: #C04F31; }
-  #scorecard .emissions-intensity-chart-container {
-    display: -webkit-box;
+  #scorecard div#performance-standard-chart div.no-performance-standard-data {
+    margin-top: 25px;
+    padding: 5px; }
+  #scorecard div#performance-standard-chart div#performance-standard-chart-header {
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row; }
-  #scorecard .emissions-intensity-chart-legend {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between; }
-    #scorecard .emissions-intensity-chart-legend-box {
-      margin-top: 1rem; }
-    #scorecard .emissions-intensity-chart-legend-label {
-      color: #5d5d5d;
-      font-weight: 500;
-      text-transform: uppercase; }
-    #scorecard .emissions-intensity-chart-legend .emissions-dots {
-      border: 1px solid #CBCBCB;
-      display: -webkit-box;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    margin-top: 25px; }
+    #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble {
+      border: 2px solid #003DA5;
+      border-radius: 10px;
+      padding: 0 60px 0 15px;
+      position: relative;
       display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-              flex-direction: column;
-      margin-bottom: 48px; }
-    #scorecard .emissions-intensity-chart-legend .emissions-dots-label {
-      color: #5d5d5d;
-      font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
-      font-size: 10px; }
-    #scorecard .emissions-intensity-chart-legend .emissions-dots-title {
-      color: #5d5d5d;
-      font-size: 10px;
-      text-align: center;
-      text-transform: uppercase;
-      -webkit-box-ordinal-group: 3;
-          -ms-flex-order: 2;
-              order: 2; }
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-align: center;
+          align-items: center; }
+      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure {
+        font-size: 26px;
+        font-weight: 500; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure .bubble-unit {
+          font-weight: 400;
+          font-size: 20px;
+          position: relative;
+          top: -1px; }
+      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble img.arrow-icon {
+        width: 30px;
+        height: 30px; }
+      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-description {
+        font-size: 16px;
+        font-weight: 500;
+        position: relative;
+        top: 2px; }
+      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon {
+        background: #003DA5;
+        width: 36px;
+        height: 100%;
+        border-radius: 0 7px 7px 0;
+        position: absolute;
+        right: 0; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.calendar {
+          background-image: url("../images/scorecard/calendar.svg");
+          background-repeat: no-repeat;
+          background-position: 7px 5px; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.bolt {
+          background-image: url("../images/scorecard/bolt.svg");
+          background-repeat: no-repeat;
+          background-position: 12px 7px; }
   #scorecard #change-chart {
     text-align: center; }
     #scorecard #change-chart .year {
@@ -2388,8 +2396,7 @@ header {
       display: none; }
     #scorecard .scorecard--section, #scorecard .scorecard--details {
       page-break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-              break-inside: avoid; }
+      break-inside: avoid; }
     #scorecard .scorecard-compare-chart {
       border: none;
       border-bottom: 1px solid #f1f1f1; }
@@ -2398,29 +2405,19 @@ header {
         margin: 0; }
       #scorecard .scorecard-compare-chart.screen-only {
         display: none; }
-    #scorecard #fuel-use-chart {
-      page-break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-              break-inside: avoid; }
     #scorecard #building-type-table {
       page-break-after: always;
-      -webkit-break-after: always;
-         -moz-break-after: always;
-              break-after: always; }
+      -moz-break-after: always;
+           break-after: always; }
     #scorecard .scorecard--print-footer {
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
-      display: -webkit-box;
+      -ms-flex-align: center;
+          align-items: center;
       display: -ms-flexbox;
       display: flex;
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-              flex-direction: row;
-      -webkit-box-pack: justify;
-          -ms-flex-pack: justify;
-              justify-content: space-between;
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
       left: 0;
       right: 0;
       bottom: 0;
@@ -2536,8 +2533,7 @@ header {
   position: relative;
   display: inline-block;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  transform: translateY(-50%);
   z-index: 2; }
   #city-scorcard-toggle button {
     background-color: #001488;
@@ -2580,8 +2576,7 @@ header {
     font-size: 1rem;
     font-weight: 500;
     text-align: center;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%); }
+    transform: translateY(-50%); }
     #mobile-failover .hero > div {
       display: inline-block; }
   #mobile-failover #continue-on {

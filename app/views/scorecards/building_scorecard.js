@@ -2,7 +2,7 @@
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fueluse', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, FuelUseView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
+define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
       this.state = options.state;
@@ -67,7 +67,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       }).sort(function (a, b) {
         return a - b;
       });
-
       if (this.scoreCardData && this.scoreCardData.id === id) {
         this.show(buildings, this.scoreCardData.data, year, years);
       } else {
@@ -196,11 +195,36 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       var building = building_data[selected_year];
       var view = this.state.get('scorecard').get('view');
-
       var name = building.property_name;
       var sqft = +building.reported_gross_floor_area;
       var prop_type = building.property_type;
       var id = building.id;
+
+      var site_eui_wn = building.site_eui_wn;
+      var building_eui_win = building.building_type_eui_wn;
+      var eui_difference = (site_eui_wn - building_eui_win) / building_eui_win * 100;
+      var eui_direction = eui_difference < 0 ? 'decreased' : 'increased';
+      var eui_direction_word = eui_difference < 0 ? 'lower' : 'higher';
+      var eui_difference_formatted = Math.abs(eui_difference) / 100;
+      eui_difference_formatted = eui_difference_formatted.toLocaleString('en-US', {
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+      var eui_direction_statement = eui_difference_formatted + ' ' + eui_direction_word;
+
+      var total_ghg = building.total_ghg_emissions;
+      var building_type_average_ghg = this.getMeanBuildingTypeGhg(buildings, prop_type);
+      var ghg_difference = (total_ghg - building_type_average_ghg) / building_type_average_ghg * 100;
+      var ghg_direction = ghg_difference < 0 ? 'decreased' : 'increased';
+      var ghg_direction_word = ghg_difference < 0 ? 'lower' : 'higher';
+      var ghg_difference_formatted = Math.abs(eui_difference) / 100;
+      ghg_difference_formatted = ghg_difference_formatted.toLocaleString('en-US', {
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+      var ghg_direction_statement = ghg_difference_formatted + ' ' + ghg_direction_word;
 
       var config = this.state.get('city').get('scorecard');
 
@@ -240,27 +264,35 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         valueColor: valueColor,
         costs: this.costs(building, selected_year),
         compareEui: this.compare(building, 'eui', config, chartdata),
-        compareEss: this.compare(building, 'ess', config, essChartData)
+        compareEss: this.compare(building, 'ess', config, essChartData),
+        site_eui_wn: site_eui_wn.toLocaleString(),
+        eui_difference: eui_difference,
+        eui_direction: eui_direction,
+        eui_direction_statement: eui_direction_statement,
+        total_ghg: total_ghg,
+        ghg_direction: ghg_direction,
+        ghg_direction_statement: ghg_direction_statement
       }));
 
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
 
-      // render fuel use chart
-      if (!this.charts['eui'].chart_fueluse) {
-        var emissionsChartData = this.prepareEmissionsChartData(buildings, prop_type);
-        this.charts['eui'].chart_fueluse = new FuelUseView({
+      // render Clean Building Performance Standard chart
+      if (!this.charts['eui'].chart_performance_standard) {
+        this.charts['eui'].chart_performance_standard = new PerformanceStandardView({
           formatters: this.formatters,
           data: [building],
           name: name,
-          year: selected_year,
           parent: el[0],
-          emissionsChartData: emissionsChartData
+          current_eui: building.site_eui_wn,
+          target_eui: building.cbps_euit,
+          compliance_year: building.cbps_date,
+          cbps_flag: building.cbps_flag
         });
       }
 
-      el.find('#fuel-use-chart').html(this.charts['eui'].chart_fueluse.render());
-      this.charts['eui'].chart_fueluse.afterRender();
+      el.find('#performance-standard-chart').html(this.charts['eui'].chart_performance_standard.render());
+      this.charts['eui'].chart_performance_standard.afterRender();
 
       // render Energy Use Trends chart
       if (!this.charts['eui'].chart_shift) {
@@ -438,6 +470,29 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       }
     },
 
+    getMeanBuildingTypeGhg: function getMeanBuildingTypeGhg(buildings, property_type) {
+      // first get all the buildings of this type
+      var buildingsOfType = buildings.where({ property_type: property_type }).map(function (m) {
+        return m.toJSON();
+      });
+      // keep only a few fields, and remove blanks
+      buildingsOfType.map(function (building) {
+        return {
+          id: building.id,
+          eui: building.site_eui,
+          emissions: building.total_ghg_emissions,
+          emissionsIntensity: building.total_ghg_emissions_intensity
+        };
+      }).filter(function (d) {
+        return d.eui != null && d.emissionsIntensity != null;
+      });
+
+      // find the average (mean), and return it
+      return d3.mean(buildingsOfType.map(function (d) {
+        return d.emissionsIntensity;
+      }));
+    },
+
     getThresholdLabels: function getThresholdLabels(thresholds) {
       var prev = 0;
       return thresholds.map(function (d, i) {
@@ -541,22 +596,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         selectedColor: selectedColor,
         mean: avg
       };
-    },
-
-    prepareEmissionsChartData: function prepareEmissionsChartData(buildings, property_type) {
-      var buildingsOfType = buildings.where({ property_type: property_type }).map(function (m) {
-        return m.toJSON();
-      });
-      return buildingsOfType.map(function (building) {
-        return {
-          id: building.id,
-          eui: building.site_eui,
-          emissions: building.total_ghg_emissions,
-          emissionsIntensity: building.total_ghg_emissions_intensity
-        };
-      }).filter(function (d) {
-        return d.eui != null && d.emissionsIntensity != null;
-      });
     },
 
     renderCompareChart: function renderCompareChart(config, chartdata, view, prop_type, name, viewSelector) {
