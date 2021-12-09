@@ -4,8 +4,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
   var PerformanceStandardView = Backbone.View.extend({
     className: 'performance-standard-chart',
 
-    TYPICAL_CAR_EMMISSION: 4.7,
-
     initialize: function initialize(options) {
       this.template = _.template(PerformanceStandardTemplate);
       this.formatters = options.formatters;
@@ -19,29 +17,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     },
 
     chartData: function chartData() {
-      // // const data = this.data;
-
-      // let total_ghg_emissions;
-      // let total_ghg_emissions_intensity;
-      // let total_usage;
-
-      // let fuels;
-
-      // var totals = {
-      //   usage: d3.format(',d')(d3.round(total_usage, 0)),
-      //   emissions: d3.format(',d')(d3.round(total_ghg_emissions, 0))
-      // };
-
-      // return {
-      //   fuels,
-      //   totals,
-      //   total_ghg_emissions,
-      //   total_ghg_emissions_intensity,
-      //   isCity: this.isCity,
-      //   building_name: this.building_name,
-      //   year: this.year,
-      //   cars: this.formatters.fixedOne(total_ghg_emissions / this.TYPICAL_CAR_EMMISSION)
-      // };
       return {
         current_eui: this.current_eui,
         target_eui: this.target_eui,
@@ -50,182 +25,127 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       };
     },
 
-    getLabelSizes: function getLabelSizes(labels) {
-      var sizes = [];
-
-      labels.each(function () {
-        var pw = this.offsetWidth;
-        var cw = this.firstChild.offsetWidth;
-
-        if (pw === 0) return;
-
-        sizes.push({
-          elm: this,
-          pw: pw,
-          cw: cw,
-          dirty: cw > pw,
-          pct: +this.style.width.replace('%', '')
-        });
-      });
-
-      return sizes;
-    },
-
-    adjSizes: function adjSizes(labels, ct) {
-      var sizes = this.getLabelSizes(labels);
-
-      if (!sizes.length) return;
-
-      var ctr = ct || 0;
-      ctr += 1;
-      if (ctr > 100) return;
-
-      var dirty = _.findIndex(sizes, function (d) {
-        return d.dirty;
-      });
-
-      if (dirty > -1) {
-        var available = sizes.filter(function (d) {
-          return !d.dirty;
-        });
-
-        var additional = 0;
-
-        available.forEach(function (d) {
-          additional += 1;
-          d3.select(d.elm).style('width', d.pct - 1 + '%');
-        });
-
-        d3.select(sizes[dirty].elm).style('width', sizes[dirty].pct + additional + '%');
-
-        this.adjSizes(labels, ctr);
-      }
-    },
-
-    hideLabels: function hideLabels(labels) {
-      var sizes = this.getLabelSizes(labels);
-      sizes.forEach(function (d) {
-        if (d.dirty) {
-          d3.select(d.elm.firstChild).style('display', 'none');
-        }
-      });
-    },
-
-    renderPerformanceStandardChart: function renderPerformanceStandardChart(data, totals) {
-      // const parent = d3.select(this.viewParent).select('.performance-standard-bar-chart-container');
-      // if (!parent.node()) return;
+    renderBarChart: function renderBarChart(data) {
+      var parent = d3.select('div#performance-standard-bar-chart');
+      if (!parent.node()) return;
 
       // const margin = { top: 20, right: 30, bottom: 20, left: 30 };
-      // const outerWidth = parent.node().offsetWidth;
-      // const outerHeight = parent.node().offsetHeight;
-      // const width = outerWidth - margin.left - margin.right;
+      var outerWidth = parent.node().offsetWidth;
+      var outerHeight = parent.node().offsetHeight;
+      var margin_right = 15;
+      var margin_left = 5;
+      var chartWidth = outerWidth - margin_left - margin_right;
 
-      // const svg = parent.append('svg')
-      //   .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`);
+      // barchart height and offset
+      var barHeight = 30;
+      // vertically center the bar chart in the middle of the overall SVG
+      var chartOffset = outerHeight / 2 - barHeight / 2;
+      // place the text just below the chart
+      var tickOffset = outerHeight / 2 + barHeight;
 
-      // const totalBarWidth = width * (3 / 5);
+      var svg = parent.append('svg').attr('viewBox', '0 0 ' + outerWidth + ' ' + outerHeight);
 
-      // const chartData = data.map((row, i) => {
-      //   return {
-      //     ...row,
-      //     emissions: {
-      //       ...row.emissions,
-      //       pctBefore: d3.sum(data.map((d, k) => k >= i ? 0 : d.emissions.pct_actual))
-      //     },
-      //     usage: {
-      //       ...row.usage,
-      //       pctBefore: d3.sum(data.map((d, k) => k >= i ? 0 : d.usage.pct_actual))
-      //     }
-      //   };
-      // });
+      var chartGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + chartOffset + ')');
 
-      // const labels = {
-      //   emissions: {
-      //     label: 'Resulting Emissions',
-      //     labelUnits: '(% ghg)'
-      //   },
-      //   usage: {
-      //     label: 'Energy Consumed',
-      //     labelUnits: '(% kBtu)'
-      //   }
-      // };
+      var tickGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + tickOffset + ')');
 
-      // const energyConsumedGroup = svg.append('g');
-      // this.renderBarChart(energyConsumedGroup, chartData, labels, totals, 10, width, totalBarWidth, 30, 'usage');
+      var labelGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + tickOffset + ')');
 
-      // const emissionsGroup = svg.append('g')
-      //   .attr('transform', `translate(0, 60)`);
-      // this.renderBarChart(emissionsGroup, chartData, labels, totals, 15, width, totalBarWidth, 30, 'emissions');
+      // now some maths to work out a simple scale
+      // we want the midpoint between two data points to be roughly the middle of the bar
+      // then we figure out the max bar value from that
+      var chart_midpoint = (data.current_eui + data.target_eui) / 2;
+      var chart_maxvalue = chart_midpoint * 2;
+      var quartile_rough = chart_maxvalue / 5;
+      var quartile = this.roundQuartile(quartile_rough);
+
+      // add the background bar, which is just a 100% width rect, with margin on the left to support the final label
+      chartGroup.append('rect').attr('class', 'bar-outline').attr('height', barHeight).attr('width', chartWidth);
+
+      // add the red bar, no need for a data/enter type pattern
+      // as there is just one bar and we can calc the width directly
+      var barWidth = data.current_eui * chartWidth / (quartile * 5);
+      chartGroup.append('rect').attr('class', 'bar-eui').attr('height', barHeight).attr('width', barWidth).attr('text', barWidth);
+
+      var quartiles = [0, quartile, quartile * 2, quartile * 3, quartile * 4, quartile * 5];
+      var quartileWidth = chartWidth / 5;
+
+      // add the tick values
+      var tickGroupInnerGroup = tickGroup.selectAll('g').data(quartiles).enter().append('g')
+      // we use this class to hide the first tick line (at 0) and the last tick line (at 100%)
+      .classed('hide-line', function (d, i) {
+        return i == 5 || i == 0;
+      }).attr('transform', function (d, i) {
+        var dx = quartileWidth * i;
+        return 'translate(' + dx + ', 0)';
+      });
+
+      tickGroupInnerGroup.selectAll('.tick-label').data(function (d) {
+        return [d];
+      }).enter().append('text').attr('class', 'tick-label').attr('dx', function (d) {
+        // offset the label according to its length
+        // to more closely center it on the tick mark
+        var chars = d.toString().length;
+        return chars * -3.25;
+      }).text(function (d) {
+        return d;
+      });
+
+      tickGroupInnerGroup.selectAll('.tick-line').data(function (d) {
+        return [d];
+      }).enter().append('line').attr('class', 'tick-line').attr('x1', 0).attr('y1', -15).attr('y2', -barHeight - 15);
+
+      // append a group to hold the ticks for the current and target EUI
+      var euiLabelGroup = labelGroup.append('g').attr('transform', function () {
+        return 'translate(' + (barWidth - 1) + ', 0)';
+      });
+
+      // now append the tick for the current EUI
+      euiLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', 8).attr('y2', -17);
+
+      // append a group to hold the tick for the target EUI
+      var targetWidth = data.target_eui * chartWidth / (quartile * 5);
+      var targetLabelGroup = labelGroup.append('g').attr('transform', function () {
+        return 'translate(' + targetWidth + ', 0)';
+      });
+
+      // now append the tick for the target EUI
+      targetLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', -45).attr('y2', -72).attr('dx', 5);
+
+      // append a div to hold the label for target EUI
+      // div is more flexible, auto-sizes, has border radius, etc.
+      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '113px');
+
+      // append a div to hold the label for current EUI
+      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 20 + 'px').style('bottom', '16px');
+
+      // append a div to hold a lable for "Meets target"
+      d3.select('#performance-standard-bar-chart').append('div').text('Meets EUI Target').attr('class', 'chart-label-meets-target').style('left', targetWidth - 120 + 'px').style('bottom', '93px');
+
+      // append a div to hold a lable for "Misses target"
+      d3.select('#performance-standard-bar-chart').append('div').text('Doesn\'t Meet EUI Target').attr('class', 'chart-label-misses-target').style('left', targetWidth + 20 + 'px').style('bottom', '93px');
     },
 
-    renderBarChart: function renderBarChart(parent, data, labels, totals, yOffset, chartWidth, barWidth, barHeight, metric) {
-      var chartGroup = parent.append('g').attr('transform', 'translate(0, ' + yOffset + ')');
+    roundToNearest: function roundToNearest(nearest, number) {
+      // Math.ceil would take the upper?
+      return Math.round(number / nearest) * nearest;
+    },
 
-      // Width of text on either side of bars
-      var textWidth = (chartWidth - barWidth) / 2;
-      var barStart = textWidth;
-      var barGroup = chartGroup.append('g').attr('transform', 'translate(' + barStart + ', 15)');
-      barGroup.selectAll('.bar-item').data(data).enter().append('rect').attr('class', function (d) {
-        return d.key;
-      }).classed('bar-item', true).attr('height', barHeight).attr('width', function (d) {
-        return d[metric].pct_actual * barWidth;
-      }).attr('x', function (d) {
-        return d[metric].pctBefore * barWidth;
-      });
-
-      var labelGroup = chartGroup.append('g').classed('bar-chart-label', true).attr('transform', 'translate(' + (barStart - 5) + ', 25)');
-
-      labelGroup.append('text').attr('x', 0).text(labels[metric].label).call(wrap, textWidth);
-
-      labelGroup.selectAll('tspan').classed('bar-chart-label-name', true);
-
-      labelGroup.select('text').append('tspan').attr('x', 0).attr('dy', '1.1em').text(labels[metric].labelUnits);
-
-      var totalGroup = chartGroup.append('g').attr('transform', 'translate(' + (barStart + barWidth + 5) + ', 25)');
-
-      var totalText = totalGroup.append('text').classed('bar-chart-total', true);
-
-      totalText.append('tspan').attr('x', 0).classed('bar-chart-total-value', true).text(totals[metric]);
-      totalText.append('tspan').attr('dx', '.25em').text(metric === 'usage' ? 'kBtu' : 'metric tons');
-
-      var barLabels = chartGroup.append('g').attr('transform', 'translate(0, 10)').classed('bar-labels', true);
-      var barLabelText = barLabels.selectAll('.bar-label').data(data).enter().append('text').attr('class', function (d) {
-        return d.key;
-      }).classed('bar-label', true).attr('x', function (d) {
-        return barStart + (d[metric].pctBefore + d[metric].pct_actual / 2) * barWidth;
-      }).text(function (d) {
-        if (metric === 'usage') return d.label + ' ' + d[metric].pct + '%';
-        return d[metric].pct + '%';
-      });
-
-      barLabelText.call(detectHorizontalCollision);
-
-      function detectHorizontalCollision() {
-        this.each(function () {
-          var node = this;
-          var box = node.getBBox();
-
-          // Only have to detect horizontally, vertically will be on the same
-          var x0 = box.x;
-          var x1 = x0 + box.width;
-
-          barLabelText.each(function () {
-            if (this !== node) {
-              var otherBox = this.getBBox();
-              var otherX0 = otherBox.x;
-
-              // Only interested in labels that should be to the left of other
-              // labels
-              if (x0 < otherX0 && x1 > otherX0) {
-                var overlapSize = x1 - otherX0 + 2;
-                d3.select(node).attr('dx', -(overlapSize / 2));
-
-                d3.select(this).attr('dx', overlapSize / 2);
-              }
-            }
-          });
-        });
+    roundQuartile: function roundQuartile(quartile_rough) {
+      // round the quartile according to the following rules
+      var quartile = void 0;
+      if (quartile_rough > 1000) {
+        quartile = this.roundToNearest(50, quartile_rough);
+      } else if (quartile_rough > 100 && quartile_rough <= 1000) {
+        quartile = this.roundToNearest(25, quartile_rough);
+      } else if (quartile_rough > 50 && quartile_rough <= 100) {
+        quartile = this.roundToNearest(25, quartile_rough);
+      } else if (quartile_rough > 30 && quartile_rough <= 50) {
+        quartile = this.roundToNearest(10, quartile_rough);
+      } else if (quartile_rough <= 30) {
+        quartile = this.roundToNearest(5, quartile_rough);
       }
+      return quartile;
     },
 
     render: function render() {
@@ -235,7 +155,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     afterRender: function afterRender() {
       if (!this.isCity) {
         var chartData = this.chartData();
-        this.renderPerformanceStandardChart(chartData);
+        this.renderBarChart(chartData);
       }
     }
   });
