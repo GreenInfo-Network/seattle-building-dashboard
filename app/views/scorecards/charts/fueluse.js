@@ -14,18 +14,17 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.template = _.template(FuelUseTemplate);
       this.formatters = options.formatters;
       this.data = options.data;
-      this.emissionsChartData = options.emissionsChartData;
       this.building_name = options.name || '';
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
 
       this.fuels = [{
-        label: 'Gas',
-        key: 'gas'
-      }, {
         label: 'Electric',
         key: 'electricity'
+      }, {
+        label: 'Gas',
+        key: 'gas'
       }, {
         label: 'Steam',
         key: 'steam'
@@ -202,7 +201,9 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.fixPercents(fuels, 'usage');
 
       var totals = {
+        usage_raw: total_usage,
         usage: d3.format(',d')(d3.round(total_usage, 0)),
+        emissions_raw: total_ghg_emissions,
         emissions: d3.format(',d')(d3.round(total_ghg_emissions, 0))
       };
 
@@ -292,14 +293,15 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var parent = d3.select(this.viewParent).select('.energy-consumption-bar-chart-container');
       if (!parent.node()) return;
 
-      var margin = { top: 20, right: 30, bottom: 20, left: 30 };
+      var margin = { top: 20, right: 10, bottom: 20, left: 10 };
       var outerWidth = parent.node().offsetWidth;
       var outerHeight = parent.node().offsetHeight;
       var width = outerWidth - margin.left - margin.right;
 
       var svg = parent.append('svg').attr('viewBox', '0 0 ' + outerWidth + ' ' + outerHeight);
 
-      var totalBarWidth = width * (3 / 5);
+      // Extra padding here for dynamic labels on either end of the bars
+      var totalBarWidth = width * 0.7;
 
       var chartData = data.map(function (row, i) {
         return _extends({}, row, {
@@ -404,174 +406,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }
     },
 
-    renderEmissionsChart: function renderEmissionsChart(data) {
-      var _this3 = this;
-
-      var selectedBuilding = this.data[0];
-      var averageEmissionsIntensity = d3.mean(data.map(function (d) {
-        return d.emissionsIntensity;
-      }));
-
-      var parent = d3.select(this.viewParent).select('.emissions-intensity-chart');
-      if (!parent.node()) return;
-
-      var outerWidth = parent.node().offsetWidth;
-      var outerHeight = 300;
-
-      var margin = { top: 50, right: 30, bottom: 40, left: 40 };
-      var width = outerWidth - margin.left - margin.right;
-      var height = outerHeight - margin.top - margin.bottom;
-
-      var svg = parent.append('svg').attr('viewBox', '0 0 ' + outerWidth + ' ' + outerHeight);
-
-      var container = svg.append('g').attr('width', width).attr('height', height).attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-      var maxEmissionsIntensity = d3.max(data.map(function (r) {
-        return r.emissionsIntensity;
-      }));
-      var x = d3.scale.linear().domain([0, maxEmissionsIntensity * 1.05]).range([0, width]);
-
-      var maxEui = d3.max(data.map(function (r) {
-        return r.eui;
-      }));
-      var y = d3.scale.linear().domain([0, maxEui * 1.15]).range([height, 0]);
-
-      var size = d3.scale.linear().domain([0, d3.max(data.map(function (r) {
-        return r.emissions;
-      }))]).range([5, 25]);
-
-      var xAxis = d3.svg.axis().orient('bottom').outerTickSize(0).innerTickSize(2).scale(x);
-      svg.append('g').attr('class', 'x axis').attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')').call(xAxis);
-
-      var yAxis = d3.svg.axis().orient('left').outerTickSize(0).innerTickSize(2).scale(y);
-      svg.append('g').attr('class', 'y axis').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').call(yAxis);
-
-      svg.append('g').classed('label', true).attr('transform', 'translate(' + (margin.left + width / 2) + ', ' + (height + margin.top + 30) + ')').append('text').attr('text-anchor', 'middle').text('GHG Emissions Per Square Foot');
-
-      svg.append('g').classed('label', true).attr('transform', 'translate(8, ' + (height / 2 + margin.top) + ') rotate(-90)').append('text').attr('text-anchor', 'middle').text('Energy Use Per Square Foot (EUI)');
-
-      // Bring selected building to front
-      var scatterpointData = data.slice();
-      var buildingData = data.filter(function (d) {
-        return d.id === selectedBuilding.id;
-      })[0];
-      if (buildingData) {
-        scatterpointData.push(buildingData);
-      }
-
-      var quartileColors = {
-        1: '#0047BA',
-        2: '#90AE60',
-        3: '#F7C34D',
-        4: '#C04F31'
-      };
-      var emissionsIntensities = data.map(function (d) {
-        return d.emissionsIntensity;
-      }).sort();
-      var quartiles = [0.25, 0.5, 0.75, 1].map(function (q) {
-        return d3.quantile(emissionsIntensities, q);
-      });
-
-      container.selectAll('circle').data(scatterpointData).enter().append('circle').attr('cx', function (d) {
-        return x(d.emissionsIntensity);
-      }).attr('cy', function (d) {
-        return y(d.eui);
-      }).attr('r', function (d) {
-        return size(d.emissions);
-      }).attr('fill-opacity', function (d) {
-        return d.id === selectedBuilding.id ? 1 : 0.35;
-      }).attr('fill', function (d) {
-        return quartileColors[_this3.findQuartile(quartiles, d.emissionsIntensity)];
-      });
-
-      // Show average intensity
-      container.append('line').attr('stroke', '#D5D5D5').attr('stroke-dasharray', '8 5').attr('x1', x(averageEmissionsIntensity)).attr('x2', x(averageEmissionsIntensity)).attr('y1', y(0)).attr('y2', 0);
-
-      // Draw line to selected building
-      container.append('line').attr('stroke', '#1F5DBE').attr('x1', x(selectedBuilding.total_ghg_emissions_intensity)).attr('x2', x(selectedBuilding.total_ghg_emissions_intensity)).attr('y1', y(selectedBuilding.site_eui) - size(selectedBuilding.total_ghg_emissions) - 3).attr('y2', -margin.top);
-
-      // Text for average
-      var averageQuartile = this.findQuartile(quartiles, averageEmissionsIntensity);
-
-      var averageTextGroup = svg.append('g').classed('callout-text callout-average-text', true).attr('transform', 'translate(' + (margin.left + x(averageEmissionsIntensity) + 5) + ', ' + margin.top + ')');
-
-      averageTextGroup.append('text').attr('x', 0).attr('dy', '0').text('Building type average');
-
-      averageTextGroup.append('text').text(d3.format('.2f')(averageEmissionsIntensity)).attr('x', 0).attr('dy', '.8em').classed('value quartile-' + averageQuartile, true);
-
-      averageTextGroup.append('text').text('KG/SF').attr('x', 0).attr('dy', '2.7em').classed('units quartile-' + averageQuartile, true);
-
-      // Text for selected building
-      var selectedBuildingX = x(selectedBuilding.total_ghg_emissions_intensity);
-      var selectedQuartile = this.findQuartile(quartiles, selectedBuilding.total_ghg_emissions_intensity);
-
-      var selectedTextGroup = svg.append('g').classed('callout-text callout-selected-text', true);
-      selectedTextGroup.append('text').text(selectedBuilding.property_name).classed('selected-label', true);
-
-      selectedTextGroup.append('text').text(d3.format('.2f')(selectedBuilding.total_ghg_emissions_intensity)).attr('x', 0).attr('dy', '.8em').classed('value quartile-' + selectedQuartile, true);
-
-      selectedTextGroup.append('text').text('KG/SF').attr('x', 0).attr('dy', '2.7em').classed('units quartile-' + selectedQuartile, true);
-
-      var labelOnLeft = margin.left + selectedBuildingX + selectedTextGroup.node().getBBox().width > width;
-      selectedTextGroup.attr('text-anchor', labelOnLeft ? 'end' : 'start').attr('transform', function () {
-        var x = margin.left + selectedBuildingX + 5;
-        if (labelOnLeft) {
-          x -= 10;
-        }
-        return 'translate(' + x + ', 10)';
-      });
-
-      var legendParent = d3.select(this.viewParent).select('.emissions-dots');
-      if (legendParent.node()) {
-        var legendWidth = legendParent.node().offsetWidth;
-        var dotMargin = 15;
-
-        var dotScale = d3.scale.linear().domain(d3.extent(data.map(function (d) {
-          return d.emissions;
-        })));
-        var dots = [0.1, 0.25, 0.5, 0.75, 1];
-
-        var expectedWidth = dotMargin * (dots.length - 1) + d3.sum(dots.map(function (dot) {
-          return size(dotScale.invert(dot)) * 2;
-        }));
-
-        var legendSvg = legendParent.append('svg').attr('viewBox', '0 0 ' + legendWidth + ' 100');
-        var legendContainer = legendSvg.append('g').attr('transform', 'translate(' + (legendWidth - expectedWidth) / 2 + ', 15)');
-
-        var xDotPosition = 0;
-        var enterLegendDot = legendContainer.selectAll('.emissions-chart-legend-dot').data(dots).enter().append('g').classed('emissions-chart-legend-dot', true).attr('transform', function (d, i) {
-          var r = size(dotScale.invert(d));
-          xDotPosition += r;
-          var translate = 'translate(' + xDotPosition + ', ' + (50 - r) + ')';
-          xDotPosition += r + dotMargin;
-          return translate;
-        });
-
-        enterLegendDot.append('circle').attr('cx', 0).attr('cy', 0).attr('r', function (d) {
-          return size(dotScale.invert(d));
-        }).attr('fill', function (d) {
-          return '#B9B9B9';
-        });
-
-        enterLegendDot.append('text').attr('text-anchor', 'middle').classed('emissions-dots-label', true).text(function (d) {
-          return d3.format('.2r')(dotScale.invert(d));
-        }).attr('transform', function (d) {
-          return 'translate(0, ' + (15 + size(dotScale.invert(d))) + ')';
-        });
-      }
-    },
-
     render: function render() {
       return this.template(this.chartData());
     },
 
     afterRender: function afterRender() {
-      if (!this.isCity) {
-        this.renderEmissionsChart(this.emissionsChartData);
-
-        var chartData = this.chartData();
-        this.renderEnergyConsumptionChart(chartData.fuels, chartData.totals);
-      }
+      var chartData = this.chartData();
+      this.renderEnergyConsumptionChart(chartData.fuels, chartData.totals);
     }
   });
 

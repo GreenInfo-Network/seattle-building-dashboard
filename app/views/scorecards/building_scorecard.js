@@ -2,7 +2,7 @@
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
+define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fueluse', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, FuelUseView, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
       this.state = options.state;
@@ -276,6 +276,20 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/perfo
 
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
+
+      // render fuel use chart
+      if (!this.charts['eui'].chart_fueluse) {
+        this.charts['eui'].chart_fueluse = new FuelUseView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          parent: el[0]
+        });
+      }
+
+      el.find('#fuel-use-chart').html(this.charts['eui'].chart_fueluse.render());
+      this.charts['eui'].chart_fueluse.afterRender();
 
       // render Clean Building Performance Standard (CBPS) chart, but only if flagged
       if (building.cbps_flag) {

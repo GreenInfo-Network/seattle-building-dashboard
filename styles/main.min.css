@@ -2700,7 +2700,7 @@ header {
     margin: 0;
     padding: 0;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     color: #003DA5;
     text-transform: uppercase;
     line-height: 1; }
@@ -2734,7 +2734,7 @@ header {
     color: #0047BA;
     font-size: 1rem;
     font-weight: 400;
-    line-height: 1; }
+    line-height: 1.2; }
     #scorecard .sc-txt.white {
       color: #FFFFFF; }
     #scorecard .sc-txt.orange {
@@ -2776,7 +2776,7 @@ header {
         #scorecard .scorecard--section .section-head {
           margin-bottom: .5rem; } }
       #scorecard .scorecard--section .section-head .sc-heading {
-        margin-bottom: 7px; }
+        margin-bottom: 8px; }
         @media print {
           #scorecard .scorecard--section .section-head .sc-heading {
             margin-bottom: .25rem; } }
@@ -3021,6 +3021,42 @@ header {
           #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-details a {
             color: #003DA5;
             text-decoration: underline; }
+  #scorecard div#fuel-use-chart {
+    page-break-inside: avoid;
+    break-inside: avoid; }
+    #scorecard div#fuel-use-chart div#fueluse-chart div#energy-consumption-chart-heading {
+      text-transform: none; }
+    #scorecard div#fuel-use-chart div#fueluse-chart .fc-row.notes {
+      margin-top: -15px; }
+    #scorecard div#fuel-use-chart .hr {
+      margin: 1.7em 0.15em;
+      height: 2px;
+      border-top: 1px solid #003DA5;
+      opacity: 50%; }
+    #scorecard div#fuel-use-chart div#fuel-use-future {
+      padding: 0 2.5em; }
+      #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-learn-more a {
+        color: #003DA5;
+        text-decoration: underline; }
+      #scorecard div#fuel-use-chart div#fuel-use-future h3#fuel-use-future-heading {
+        text-transform: none; }
+      #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+            flex-direction: column;
+        margin-top: 1em; }
+        #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem {
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-align: center;
+              align-items: center;
+          height: 45px; }
+          #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem span.future-icon {
+            width: 50px;
+            text-align: center; }
+            #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem span.future-icon img {
+              width: auto; }
   #scorecard .compare-desc {
     text-align: center;
     padding-right: 2rem; }
@@ -3339,35 +3375,42 @@ header {
       border: 0;
       padding: 0 10px;
       line-height: 1.2;
-      vertical-align: top;
-      font-size: 0.875rem; }
+      vertical-align: top; }
     #scorecard #links table .link-cell {
       color: #5d5d5d; }
     #scorecard #links table .link-num {
       width: 2rem;
       height: 2rem;
-      background: #5d5d5d;
+      background: #003DA5;
       border-radius: 2rem;
       text-align: center;
       line-height: 2rem;
       color: white;
-      font-size: 1.5rem;
-      float: left; }
+      font-size: 20px;
+      font-weight: 600;
+      float: left;
+      margin-left: 4px; }
     #scorecard #links table .link-content {
       display: block;
       margin-left: 3rem;
-      vertical-align: top; }
+      vertical-align: top;
+      color: #003DA5;
+      font-size: 16px; }
     #scorecard #links table .link-link {
       margin-left: 3rem;
       padding-top: 1rem; }
       #scorecard #links table .link-link .link-button {
         display: inline-block;
-        padding: 1em;
-        background: #0047ba;
+        padding: 6px 8px;
+        margin-top: -7px;
+        margin-bottom: 6px;
+        background: #003DA5;
         color: white;
-        margin-bottom: 1em;
+        font-weight: 600;
+        font-size: 16px;
         text-decoration: none;
-        text-transform: uppercase; }
+        text-transform: uppercase;
+        border-radius: 5px; }
         @media print {
           #scorecard #links table .link-link .link-button {
             padding: .5em; } }
