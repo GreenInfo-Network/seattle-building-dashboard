@@ -1678,7 +1678,7 @@ header {
   right: 0;
   bottom: 0;
   width: 100%;
-  background: #fff;
+  background: #FFFFFF;
   overflow: auto;
   z-index: 999999; }
   #scorecard.active {
@@ -1721,7 +1721,7 @@ header {
     #scorecard .sc-heading.orange {
       color: #DE8F41; }
     #scorecard .sc-heading.white {
-      color: #fff; }
+      color: #FFFFFF; }
     #scorecard .sc-heading.nodata {
       font-size: 2.5rem;
       margin-bottom: .25rem; }
@@ -1738,15 +1738,19 @@ header {
     font-weight: 400;
     line-height: 1; }
     #scorecard .sc-txt.white {
-      color: #fff; }
+      color: #FFFFFF; }
     #scorecard .sc-txt.orange {
       color: #DE8F41; }
     #scorecard .sc-txt.blue-new {
       color: #003DA5; }
+    #scorecard .sc-txt.grey {
+      color: #707070; }
     #scorecard .sc-txt.tiny {
       font-size: 0.75rem; }
     #scorecard .sc-txt.small {
       font-size: 16px; }
+    #scorecard .sc-txt.x-small {
+      font-size: 14px; }
     #scorecard .sc-txt.light {
       font-weight: 300; }
     #scorecard .sc-txt.bold {
@@ -2168,7 +2172,15 @@ header {
       stroke: #0047ba; }
   #scorecard div#performance-standard-chart div.no-performance-standard-data {
     margin-top: 25px;
-    padding: 5px; }
+    border: 1px solid #003DA5;
+    border-radius: 5px;
+    padding: 1em;
+    display: inline-block; }
+    #scorecard div#performance-standard-chart div.no-performance-standard-data p {
+      line-height: 1.38; }
+    #scorecard div#performance-standard-chart div.no-performance-standard-data a {
+      color: #003DA5;
+      text-decoration: underline; }
   #scorecard div#performance-standard-chart div#performance-standard-chart-header {
     display: -ms-flexbox;
     display: flex;
@@ -2267,6 +2279,17 @@ header {
       background-position: 132px -3px;
       background-size: 23px;
       width: 152px; }
+  #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-x-axis-label {
+    color: #000;
+    font-size: 12px;
+    position: relative;
+    top: -42px;
+    left: 3px; }
+  #scorecard div#performance-standard-chart p#early-incentive-message a {
+    color: #003DA5;
+    text-decoration: underline; }
+  #scorecard div#performance-standard-chart p#performance-standard-disclaimer {
+    margin-top: 10px; }
   #scorecard #change-chart {
     text-align: center; }
     #scorecard #change-chart .year {

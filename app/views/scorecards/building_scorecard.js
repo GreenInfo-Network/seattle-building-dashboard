@@ -287,7 +287,8 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/perfo
           current_eui: building.site_eui_wn,
           target_eui: building.cbps_euit,
           compliance_year: building.cbps_date,
-          cbps_flag: building.cbps_flag
+          cbps_flag: building.cbps_flag && building.cbps_euit,
+          cbps_flag_but_no_cbps_euit: building.cbps_flag && !building.cbps_euit
         });
       }
 

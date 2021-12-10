@@ -14,6 +14,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.target_eui = options.target_eui;
       this.compliance_year = options.compliance_year;
       this.cbps_flag = options.cbps_flag;
+      this.cbps_flag_but_no_cbps_euit = options.cbps_flag_but_no_cbps_euit;
+      console.log(options);
     },
 
     chartData: function chartData() {
@@ -21,7 +23,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         current_eui: this.current_eui,
         target_eui: this.target_eui,
         compliance_year: this.compliance_year,
-        cbps_flag: this.cbps_flag
+        cbps_flag: this.cbps_flag,
+        cbps_flag_but_no_cbps_euit: this.cbps_flag_but_no_cbps_euit
       };
     },
 
@@ -101,7 +104,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       });
 
       // now append the tick for the current EUI
-      euiLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', 8).attr('y2', -17);
+      euiLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', 10).attr('y2', -17);
 
       // append a group to hold the tick for the target EUI
       var targetWidth = data.target_eui * chartWidth / (quartile * 5);
@@ -114,10 +117,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
 
       // append a div to hold the label for target EUI
       // div is more flexible, auto-sizes, has border radius, etc.
-      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '113px');
+      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '116px');
 
       // append a div to hold the label for current EUI
-      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 20 + 'px').style('bottom', '16px');
+      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui.toLocaleString() + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 20 + 'px').style('bottom', '14px');
 
       // append a div to hold a lable for "Meets target"
       d3.select('#performance-standard-bar-chart').append('div').text('Meets EUI Target').attr('class', 'chart-label-meets-target').style('left', targetWidth - 120 + 'px').style('bottom', '93px');
