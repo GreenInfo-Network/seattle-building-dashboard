@@ -292,13 +292,13 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/perfo
             cbps_flag_but_no_cbps_euit: building.cbps_flag && !building.cbps_euit
           });
         }
+
+        el.find('#performance-standard-chart').html(this.charts['eui'].chart_performance_standard.render());
+        this.charts['eui'].chart_performance_standard.afterRender();
       } else {
         // if we aren't showing the CBPS chart, then hide this alert
         $('div#state-requirement-wrapper').hide();
       }
-
-      el.find('#performance-standard-chart').html(this.charts['eui'].chart_performance_standard.render());
-      this.charts['eui'].chart_performance_standard.afterRender();
 
       // render Energy Use Trends chart
       if (!this.charts['eui'].chart_shift) {
