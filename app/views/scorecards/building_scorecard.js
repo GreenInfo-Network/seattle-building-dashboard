@@ -218,7 +218,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/perfo
       var ghg_difference = (total_ghg - building_type_average_ghg) / building_type_average_ghg * 100;
       var ghg_direction = ghg_difference < 0 ? 'decreased' : 'increased';
       var ghg_direction_word = ghg_difference < 0 ? 'lower' : 'higher';
-      var ghg_difference_formatted = Math.abs(eui_difference) / 100;
+      var ghg_difference_formatted = Math.abs(ghg_difference) / 100;
       ghg_difference_formatted = ghg_difference_formatted.toLocaleString('en-US', {
         style: 'percent',
         minimumFractionDigits: 0,
@@ -477,20 +477,19 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/perfo
         return m.toJSON();
       });
       // keep only a few fields, and remove blanks
-      buildingsOfType.map(function (building) {
+      var buildingsFiltered = buildingsOfType.map(function (building) {
         return {
           id: building.id,
           eui: building.site_eui,
-          emissions: building.total_ghg_emissions,
-          emissionsIntensity: building.total_ghg_emissions_intensity
+          emissions: building.total_ghg_emissions
         };
       }).filter(function (d) {
-        return d.eui != null && d.emissionsIntensity != null;
+        return d.eui != null && d.emissions != null;
       });
 
       // find the average (mean), and return it
-      return d3.mean(buildingsOfType.map(function (d) {
-        return d.emissionsIntensity;
+      return d3.mean(buildingsFiltered.map(function (d) {
+        return d.emissions;
       }));
     },
 
