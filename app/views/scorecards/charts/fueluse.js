@@ -23,11 +23,11 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         label: 'Electric',
         key: 'electricity'
       }, {
-        label: 'Gas',
-        key: 'gas'
-      }, {
         label: 'Steam',
         key: 'steam'
+      }, {
+        label: 'Gas',
+        key: 'gas'
       }];
     },
 
@@ -197,6 +197,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         total_usage = this.getSum('total_kbtu', data);
       }
 
+      // what the heck is this?
       this.fixPercents(fuels, 'emissions');
       this.fixPercents(fuels, 'usage');
 

@@ -277,7 +277,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
 
-      // render fuel use chart
+      // render fuel use chart (fueluse.js)
       if (!this.charts['eui'].chart_fueluse) {
         this.charts['eui'].chart_fueluse = new FuelUseView({
           formatters: this.formatters,
@@ -291,7 +291,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       el.find('#fuel-use-chart').html(this.charts['eui'].chart_fueluse.render());
       this.charts['eui'].chart_fueluse.afterRender();
 
-      // render Clean Building Performance Standard (CBPS) chart, but only if flagged
+      // render Clean Building Performance Standard (CBPS) chart (performance_standard.js), but only if flagged
       if (building.cbps_flag) {
         if (!this.charts['eui'].chart_performance_standard) {
           this.charts['eui'].chart_performance_standard = new PerformanceStandardView({
@@ -314,7 +314,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         $('div#state-requirement-wrapper').hide();
       }
 
-      // render Energy Use Trends chart
+      // render Energy Use Trends (shift.js) chart
       if (!this.charts['eui'].chart_shift) {
         var shiftConfig = config.change_chart.building;
         var previousYear = avail_years[0];
@@ -332,17 +332,19 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         });
       }
 
+      // Render Energy Use Compared To Average and Energy Star Score Compared To Average
       if (this.charts['eui'].chart_shift) {
         this.charts['eui'].chart_shift.render(function (t) {
           el.find('#compare-shift-chart').html(t);
         }, viewSelector);
       }
 
-      // Render compare charts
+      // Note: this one doesn't have a separate template, render is defined here
       this.renderCompareChart(config, chartdata, 'eui', prop_type, name, viewSelector);
       this.renderCompareChart(config, essChartData, 'ess', prop_type, name, viewSelector + ' .screen-only');
       this.renderCompareChart(config, essChartData, 'ess', prop_type, name, viewSelector + ' .print-only');
 
+      // Add building comments (??)
       if (!this.commentview) {
         this.commentview = new CommentView({ building: building });
 
@@ -617,6 +619,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       };
     },
 
+    // Render Energy Use Compared To Average and Energy Star Score Compared To Average
     renderCompareChart: function renderCompareChart(config, chartdata, view, prop_type, name, viewSelector) {
       var container = d3.select(viewSelector);
       var rootElm = container.select('.' + view + '-compare-chart');
@@ -637,6 +640,10 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var margin = { top: 80, right: 30, bottom: 40, left: 40 };
       var width = outerWidth - margin.left - margin.right;
       var height = outerHeight - margin.top - margin.bottom;
+
+      console.log('outerHeight', outerHeight);
+      console.log('margin', margin);
+      console.log('height', height);
 
       if (chartdata.building_value === null) margin.top = 20;
 
@@ -713,7 +720,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       });
 
       bar.append('rect').attr('x', 1).attr('width', x.rangeBand()).attr('height', function (d) {
-        return height - y(d.y);
+        var h = height - y(d.y);if (h < 0) debugger;return h;
       }).attr('class', function (d, i) {
         if (i === chartdata.selectedIndex) return 'building-bar selected';
         if (i === chartdata.avgIndex) return 'avg-bar selected';
@@ -744,15 +751,22 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       var selectedCityHighlight = chartGroup.append('g').classed('selected-city-highlight', true).attr('transform', 'translate(' + (xpos - circleRadius) + ', ' + highlightOffsetY + ')');
 
-      selectedCityHighlight.append('circle').attr('cx', 0).attr('cy', 0).attr('r', circleRadius).attr('transform', 'translate(' + circleRadius + ', ' + circleRadius + ')').classed('circle', true);
+      // selectedCityHighlight.append('circle')
+      //   .attr('cx', 0)
+      //   .attr('cy', 0)
+      //   .attr('r', circleRadius)
+      //   .attr('transform', `translate(${circleRadius}, ${circleRadius})`)
+      //   .classed('circle', true);
 
       var selectedValueTextGroup = selectedCityHighlight.append('g').attr('transform', 'translate(' + circleRadius + ', ' + (circleRadius + 5) + ')');
 
       var selectedValueText = selectedValueTextGroup.append('text');
 
-      selectedValueText.append('tspan').attr('x', 0).text(chartdata.building_value).style('fill', chartdata.selectedColor).classed('value', true);
+      // add EUI or ESS value
+      selectedValueText.append('tspan').attr('x', 0).text(chartdata.building_value.toLocaleString()).style('fill', '#000').classed('value', true);
 
-      selectedValueTextGroup.append('text').text(compareChartConfig.highlight_metric[view]).attr('x', 0).attr('dy', '1em').style('fill', chartdata.selectedColor).classed('units', true).call(wrap, circleRadius * 2);
+      // add units
+      selectedValueTextGroup.append('text').text(compareChartConfig.highlight_metric[view]).attr('x', 0).attr('dy', '1em').style('fill', '#000').classed('units', true).call(wrap, circleRadius * 2);
 
       selectedValueTextGroup.attr('transform', function () {
         var textGroupHeight = selectedValueTextGroup.node().getBBox().height;
@@ -775,7 +789,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         return 'translate(' + x + ', ' + y + ')';
       });
 
-      selectedCityHighlight.append('path').classed('line', true).attr('d', d3.svg.line()([[circleRadius + 1, circleRadius * 2], [circleRadius + 1, margin.top + ypos - highlightTopMargin]]));
+      selectedCityHighlight.append('path').classed('line', true).attr('d', d3.svg.line()([[circleRadius + 1, circleRadius * 2 - 5], [circleRadius + 1, margin.top + ypos - highlightTopMargin]]));
 
       //
       // Set average label and fill
@@ -790,12 +804,85 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       ypos = y(chartdata.data[chartdata.avgIndex].y); // top of bar
 
+      // var xBandWidth = x.rangeBand();
+      // var xpos = chartdata.selectedIndex === null ? 0 : x(chartdata.data[chartdata.avgIndex].x) + (xBandWidth / 2);
+      // var ypos = chartdata.selectedIndex === null ? 0 : y(chartdata.data[chartdata.avgIndex].y);
+      // const selectedXPos = xpos;
+      // const circleRadius = 30;
+      // const highlightOffsetY = -70;
+      // const highlightTopMargin = margin.top + highlightOffsetY;
+
+      // var averageTypeHighlight = chartGroup.append('g')
+      //   .classed('selected-city-highlight', true)
+      //   .attr('transform', `translate(${xpos - circleRadius}, ${highlightOffsetY})`);
+
+      // // averageTypeHighlight.append('circle')
+      // //   .attr('cx', 0)
+      // //   .attr('cy', 0)
+      // //   .attr('r', circleRadius)
+      // //   .attr('transform', `translate(${circleRadius}, ${circleRadius})`)
+      // //   .classed('circle', true);
+
+      // const averageValueTextGroup = averageTypeHighlight.append('g')
+      //   .attr('transform', `translate(${circleRadius}, ${circleRadius + 5})`);
+
+      // var averageValueText = averageValueTextGroup.append('text');
+
+      // // add EUI or ESS value
+      // averageValueText.append('tspan')
+      //   .attr('x', 0)
+      //   .text(chartdata.building_value.toLocaleString())
+      //   .style('fill', '#000')
+      //   .classed('value', true);
+
+      // // add units
+      // averageValueTextGroup.append('text')
+      //   .text(compareChartConfig.highlight_metric[view])
+      //   .attr('x', 0)
+      //   .attr('dy', '1em')
+      //   .style('fill', '#000')
+      //   .classed('units', true)
+      //   .call(wrap, circleRadius * 2);
+
+      // averageValueTextGroup
+      //   .attr('transform', () => {
+      //     const textGroupHeight = averageValueTextGroup.node().getBBox().height;
+      //     const valueHeight = averageValueText.node().getBBox().height;
+      //     return `translate(${circleRadius}, ${highlightTopMargin + valueHeight / 2 + (circleRadius - textGroupHeight / 2)})`;
+      //   });
+
+      // const averageNameText = averageTypeHighlight.append('g').append('text')
+      //   .text(name)
+      //   .classed('building-name', true)
+      //   .call(wrap, 150);
+
+      // averageNameText
+      //   .attr('transform', () => {
+      //     const bbox = averageNameText.node().getBBox();
+      //     const nodeWidth = bbox.width;
+      //     const nodeHeight = bbox.height;
+      //     let x = circleRadius * 2 + 5;
+
+      //     if (nodeWidth + xpos + circleRadius > width) {
+      //       x = -(nodeWidth + 5);
+      //     }
+      //     let y = circleRadius - (nodeHeight / 2) + highlightTopMargin;
+      //     return `translate(${x}, ${y})`;
+      //   });
+
+      // averageTypeHighlight.append('path')
+      //   .classed('line', true)
+      //   .attr('d', d3.svg.line()([
+      //     [circleRadius + 1, circleRadius * 2 - 5],
+      //     [circleRadius + 1, margin.top + ypos - highlightTopMargin],
+      //   ]));
+
       var yTranslate = ypos + 5;
       var averageBuildingHighlight = chartGroup.append('g').classed('average-building-highlight', true).attr('transform', 'translate(' + xTranslate + ', ' + yTranslate + ')');
 
       var averageText = averageBuildingHighlight.append('text');
 
-      averageText.append('tspan').text('Building type average').classed('label', true).call(wrap, 75);
+      averageText.append('tspan').text('Building type average').classed('building-name', true).call(wrap, 75);
 
       averageText.append('tspan').text(chartdata.mean).attr('x', 0).attr('dy', '.7em').style('fill', chartdata.avgColor).classed('value', true);
 
