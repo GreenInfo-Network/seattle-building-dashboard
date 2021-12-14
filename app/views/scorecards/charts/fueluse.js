@@ -201,6 +201,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.fixPercents(fuels, 'emissions');
       this.fixPercents(fuels, 'usage');
 
+      var all_electric = fuels.filter(function (d) {
+        return d.key == 'electricity';
+      }).reduce(function (z, e) {
+        return e.usage.pct > 99;
+      }, false);
+
       var totals = {
         usage_raw: total_usage,
         usage: d3.format(',d')(d3.round(total_usage, 0)),
@@ -212,6 +218,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         fuels: fuels,
         totals: totals,
         total_ghg_emissions: total_ghg_emissions,
+        all_electric: all_electric,
         total_ghg_emissions_intensity: total_ghg_emissions_intensity,
         isCity: this.isCity,
         building_name: this.building_name,

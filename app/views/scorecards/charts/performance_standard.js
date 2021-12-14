@@ -64,10 +64,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // add the background bar, which is just a 100% width rect, with margin on the left to support the final label
       chartGroup.append('rect').attr('class', 'bar-outline').attr('height', barHeight).attr('width', chartWidth);
 
-      // add the red bar, no need for a data/enter type pattern
+      // add the bar, no need for a data/enter type pattern
       // as there is just one bar and we can calc the width directly
       var barWidth = data.current_eui * chartWidth / (quartile * 5);
-      chartGroup.append('rect').attr('class', 'bar-eui').attr('height', barHeight).attr('width', barWidth).attr('text', barWidth);
+      chartGroup.append('rect').attr('class', 'bar-eui').attr('fill', function () {
+        return data.current_eui <= data.target_eui ? '#90AE60' : '#C04F31';
+      }).attr('height', barHeight).attr('width', barWidth).attr('text', barWidth);
 
       var quartiles = [0, quartile, quartile * 2, quartile * 3, quartile * 4, quartile * 5];
       var quartileWidth = chartWidth / 5;
@@ -77,6 +79,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // we use this class to hide the first tick line (at 0) and the last tick line (at 100%)
       .classed('hide-line', function (d, i) {
         return i == 5 || i == 0;
+      }).classed('tick-line-over-bar', function (d, i) {
+        return d < data.current_eui;
       }).attr('transform', function (d, i) {
         var dx = quartileWidth * i;
         return 'translate(' + dx + ', 0)';

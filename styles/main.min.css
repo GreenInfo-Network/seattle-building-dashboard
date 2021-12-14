@@ -2817,7 +2817,6 @@ header {
     width: 100px;
     line-height: 1.15; }
   #scorecard .scorecard--details {
-    margin-bottom: 1rem;
     position: relative;
     padding: 0 0 0 1rem;
     background: #fff;
@@ -2888,12 +2887,13 @@ header {
       #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card {
         position: relative;
         font-size: 16px;
-        width: 242px;
+        min-width: 241px;
+        width: auto;
         height: 100%;
         border: 2px solid #003DA5;
         border-radius: 10px;
         margin-right: 20px;
-        padding: 12px 16px 10px; }
+        padding: 27px 16px 0; }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon {
           position: absolute;
           background: #003DA5;
@@ -2921,7 +2921,10 @@ header {
             font-weight: 600; }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend {
           display: -ms-flexbox;
-          display: flex; }
+          display: flex;
+          -ms-flex-pack: center;
+              justify-content: center;
+          margin-right: 1em; }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow {
             width: 30px;
             height: 40px;
@@ -2931,9 +2934,9 @@ header {
             background-position: 0 7px;
             display: inline-block; }
             #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow.decreased {
-              background-image: url("../images/scorecard/changearrow-down.png"); }
+              background-image: url("../images/scorecard/changearrow-down-sm.png"); }
             #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .change-arrow.increased {
-              background-image: url("../images/scorecard/changearrow-up.png"); }
+              background-image: url("../images/scorecard/changearrow-up-sm.png"); }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words {
             display: -ms-flexbox;
             display: flex;
@@ -2953,6 +2956,11 @@ header {
     border-radius: 0px 0px 5px 5px;
     border-top: 1px solid #003DA5;
     padding: 16px; }
+    #scorecard div#state-requirement-wrapper.wrapper-hidden {
+      padding: 0;
+      height: 1px; }
+      #scorecard div#state-requirement-wrapper.wrapper-hidden > div#state-requirement-outer {
+        display: none; }
     #scorecard div#state-requirement-wrapper div#state-requirement-outer {
       display: -ms-flexbox;
       display: flex;
@@ -2988,7 +2996,7 @@ header {
       border-top: 1px solid #003DA5;
       opacity: 50%; }
     #scorecard div#fuel-use-chart div#fuel-use-future {
-      padding: 0 2.5em; }
+      padding: 0 1.75em; }
       #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-learn-more a {
         color: #003DA5;
         text-decoration: underline;
@@ -3014,267 +3022,208 @@ header {
             text-align: center; }
             #scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem span.future-icon img {
               width: auto; }
-  #scorecard div#performance-standard-chart div.no-performance-standard-data {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: center;
-        justify-content: center; }
-    #scorecard div#performance-standard-chart div.no-performance-standard-data div {
-      margin-top: 5px;
-      border: 1px solid #003DA5;
-      border-radius: 5px;
-      padding: 1em;
-      display: inline-block; }
-      #scorecard div#performance-standard-chart div.no-performance-standard-data div p {
-        line-height: 1.38; }
-      #scorecard div#performance-standard-chart div.no-performance-standard-data div a {
-        color: #003DA5;
-        text-decoration: underline; }
-  #scorecard div#performance-standard-chart div#performance-standard-chart-header {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: distribute;
-        justify-content: space-around;
-    margin: 20px 0; }
-    #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble {
-      border: 2px solid #003DA5;
-      border-radius: 10px;
-      padding: 0 60px 0 15px;
-      position: relative;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-direction: row;
-          flex-direction: row;
-      -ms-flex-align: center;
-          align-items: center; }
-      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure {
-        font-size: 26px;
-        font-weight: 500; }
-        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure .bubble-unit {
-          font-weight: 400;
-          font-size: 20px;
-          position: relative;
-          top: -1px; }
-      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble img.arrow-icon {
-        width: 30px;
-        height: 30px; }
-      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-description {
-        font-size: 16px;
-        font-weight: 500;
+  #scorecard #compare-shift-chart {
+    margin-top: 5px; }
+    #scorecard #compare-shift-chart .compare-desc {
+      text-align: center;
+      padding-right: 2em; }
+      #scorecard #compare-shift-chart .compare-desc .change-arrow {
         position: relative;
-        top: 2px; }
-      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon {
-        background: #003DA5;
-        width: 36px;
-        height: 100%;
-        border-radius: 0 7px 7px 0;
-        position: absolute;
-        right: 0; }
-        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.calendar {
-          background-image: url("../images/scorecard/calendar.svg");
-          background-repeat: no-repeat;
-          background-position: 7px 5px; }
-        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.bolt {
-          background-image: url("../images/scorecard/bolt.svg");
-          background-repeat: no-repeat;
-          background-position: 12px 7px; }
-  #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-label {
-    margin-bottom: 5px; }
-  #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart {
-    width: 100%;
-    height: 150px;
-    position: relative; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .bar-outline {
-      fill: #fff;
-      stroke: #B2B2B2; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .bar-eui {
-      fill: #C04F31; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-label {
-      fill: #B2B2B2;
-      font-size: 12px; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .hide-line > .tick-line {
-      stroke-width: 0; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-line {
-      stroke: #B2B2B2;
-      stroke-width: 1px; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .data-line {
-      stroke: #000000;
-      stroke-width: 2px; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label {
-      color: #fff;
-      padding: 2px 5px;
-      background: #000;
-      border-radius: 5px;
-      position: absolute;
-      font-size: 12px;
-      font-weight: 600; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-meets-target {
-      position: absolute;
-      font-size: 12px;
-      color: #90AE60;
-      background-image: url("../images/scorecard/arrow-icon-sm-green.svg");
-      background-repeat: no-repeat;
-      background-position: -2px -3px;
-      background-size: 23px;
-      width: 113px;
-      text-align: right; }
-    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-misses-target {
-      position: absolute;
-      font-size: 12px;
-      color: #C04F31;
-      background-image: url("../images/scorecard/arrow-icon-sm-red.svg");
-      background-repeat: no-repeat;
-      background-position: 12px 7px;
-      background-position: 132px -3px;
-      background-size: 23px;
-      width: 152px; }
-  #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-x-axis-label {
-    color: #000;
-    font-size: 12px;
-    position: relative;
-    top: -42px;
-    left: 3px; }
-  #scorecard div#performance-standard-chart p#early-incentive-message a {
-    color: #003DA5;
-    text-decoration: underline; }
-  #scorecard div#performance-standard-chart p#performance-standard-disclaimer {
-    margin-top: 10px; }
-  #scorecard #change-chart {
-    text-align: center; }
-    #scorecard #change-chart .year {
+        display: inline-block;
+        margin: 0 0 1rem;
+        padding: 0;
+        background: transparent;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        line-height: 1;
+        width: 85px;
+        height: 74px; }
+        #scorecard #compare-shift-chart .compare-desc .change-arrow.decreased {
+          background-image: url("../images/scorecard/changearrow-down.png"); }
+        #scorecard #compare-shift-chart .compare-desc .change-arrow.increased {
+          background-image: url("../images/scorecard/changearrow-up.png"); }
+        #scorecard #compare-shift-chart .compare-desc .change-arrow span {
+          width: 100%;
+          font-size: 1rem;
+          font-weight: 500;
+          color: white;
+          position: absolute;
+          bottom: auto;
+          top: 50%;
+          left: 0;
+          margin-top: -2px; }
+        #scorecard #compare-shift-chart .compare-desc .change-arrow.decreased span {
+          margin-top: -8px; }
+      #scorecard #compare-shift-chart .compare-desc p#compare-label {
+        text-align: left; }
+        #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.lower.eui, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.higher.ess, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.decreased {
+          color: #90AE60; }
+        #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.higher.eui, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.lower.ess, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.increased {
+          color: #C04F31; }
+    #scorecard #compare-shift-chart #change-chart .year {
       fill: #0047ba;
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 500;
       text-anchor: middle; }
-    #scorecard #change-chart #change-chart-vis {
+    #scorecard #compare-shift-chart #change-chart #change-chart-vis {
       position: relative;
       margin: 30px 0;
       height: 200px; }
       @media print {
-        #scorecard #change-chart #change-chart-vis {
+        #scorecard #compare-shift-chart #change-chart #change-chart-vis {
           height: 100px;
           margin: 20px 0; } }
-      #scorecard #change-chart #change-chart-vis svg {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis svg {
         overflow: visible;
         height: 100%;
         width: 100%; }
-      #scorecard #change-chart #change-chart-vis path {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis path {
         fill: none;
         stroke: #c5c5c5;
         stroke-width: 1; }
-      #scorecard #change-chart #change-chart-vis circle {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis circle {
         stroke: none; }
-      #scorecard #change-chart #change-chart-vis .no-clr > circle {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis .no-clr > circle {
         fill: #bababa; }
-      #scorecard #change-chart #change-chart-vis tspan.value {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis tspan.value {
         font-size: 16px; }
-      #scorecard #change-chart #change-chart-vis tspan.metric.small {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis tspan.metric.small {
         font-size: 8px;
         text-transform: uppercase; }
-      #scorecard #change-chart #change-chart-vis text.building {
+      #scorecard #compare-shift-chart #change-chart #change-chart-vis text.building {
         fill: #acacac;
         font-size: 8px;
         text-transform: uppercase; }
-        #scorecard #change-chart #change-chart-vis text.building.selected-building {
+        #scorecard #compare-shift-chart #change-chart #change-chart-vis text.building.selected-building {
           font-size: 12px;
           color: #0047BA; }
-  #scorecard #links {
-    background: #F1F1F1; }
-    #scorecard #links table td {
-      width: auto;
-      border: 0;
-      padding: 0 10px;
-      line-height: 1.2;
-      vertical-align: top; }
-    #scorecard #links table .link-cell {
-      color: #5d5d5d; }
-    #scorecard #links table .link-num {
-      width: 2rem;
-      height: 2rem;
-      background: #003DA5;
-      border-radius: 2rem;
-      text-align: center;
-      line-height: 2rem;
-      color: white;
-      font-size: 20px;
-      font-weight: 600;
-      float: left;
-      margin-left: 4px; }
-    #scorecard #links table .link-content {
-      display: block;
-      margin-left: 3rem;
-      vertical-align: top;
+  #scorecard div#performance-standard-chart {
+    border-top: 1px solid #003DA5; }
+    #scorecard div#performance-standard-chart div.no-performance-standard-data {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: center;
+          justify-content: center; }
+      #scorecard div#performance-standard-chart div.no-performance-standard-data div {
+        margin-top: 5px;
+        border: 1px solid #003DA5;
+        border-radius: 5px;
+        padding: 1em;
+        display: inline-block; }
+        #scorecard div#performance-standard-chart div.no-performance-standard-data div p {
+          line-height: 1.38; }
+        #scorecard div#performance-standard-chart div.no-performance-standard-data div a {
+          color: #003DA5;
+          text-decoration: underline; }
+    #scorecard div#performance-standard-chart div#performance-standard-chart-header {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+      margin: 20px 0; }
+      #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble {
+        border: 2px solid #003DA5;
+        border-radius: 10px;
+        padding: 0 60px 0 15px;
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: row;
+            flex-direction: row;
+        -ms-flex-align: center;
+            align-items: center; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure {
+          font-size: 26px;
+          font-weight: 500; }
+          #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure .bubble-unit {
+            font-weight: 400;
+            font-size: 20px;
+            position: relative;
+            top: -1px; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble img.arrow-icon {
+          width: 30px;
+          height: 30px; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-description {
+          font-size: 16px;
+          font-weight: 500;
+          position: relative;
+          top: 2px; }
+        #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon {
+          background: #003DA5;
+          width: 36px;
+          height: 100%;
+          border-radius: 0 7px 7px 0;
+          position: absolute;
+          right: 0; }
+          #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.calendar {
+            background-image: url("../images/scorecard/calendar.svg");
+            background-repeat: no-repeat;
+            background-position: 7px 5px; }
+          #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon.bolt {
+            background-image: url("../images/scorecard/bolt.svg");
+            background-repeat: no-repeat;
+            background-position: 12px 7px; }
+    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-label {
+      margin-bottom: 5px; }
+    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart {
+      width: 100%;
+      height: 150px;
+      position: relative; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .bar-outline {
+        fill: #fff;
+        stroke: #B2B2B2; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-label {
+        fill: #B2B2B2;
+        font-size: 12px; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .hide-line > .tick-line {
+        stroke-width: 0; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-line {
+        stroke: #B2B2B2;
+        stroke-width: 1px; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-line-over-bar > .tick-line {
+        stroke: #dfdfdf; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .data-line {
+        stroke: #000000;
+        stroke-width: 2px; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label {
+        color: #fff;
+        padding: 2px 5px;
+        background: #000;
+        border-radius: 5px;
+        position: absolute;
+        font-size: 12px;
+        font-weight: 600; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-meets-target {
+        position: absolute;
+        font-size: 12px;
+        color: #90AE60;
+        background-image: url("../images/scorecard/arrow-icon-sm-green.svg");
+        background-repeat: no-repeat;
+        background-position: -2px -3px;
+        background-size: 23px;
+        width: 113px;
+        text-align: right; }
+      #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-misses-target {
+        position: absolute;
+        font-size: 12px;
+        color: #C04F31;
+        background-image: url("../images/scorecard/arrow-icon-sm-red.svg");
+        background-repeat: no-repeat;
+        background-position: 12px 7px;
+        background-position: 132px -3px;
+        background-size: 23px;
+        width: 152px; }
+    #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-x-axis-label {
+      color: #000;
+      font-size: 12px;
+      position: relative;
+      top: -42px;
+      left: 3px; }
+    #scorecard div#performance-standard-chart p#early-incentive-message a {
       color: #003DA5;
-      font-size: 16px; }
-    #scorecard #links table .link-link {
-      margin-left: 3rem;
-      padding-top: 1rem; }
-      #scorecard #links table .link-link .link-button {
-        display: inline-block;
-        padding: 7px 10px 7px 9px;
-        margin-top: -7px;
-        margin-bottom: 6px;
-        background: #003DA5;
-        color: white;
-        font-weight: 600;
-        font-size: 16px;
-        text-decoration: none;
-        text-transform: uppercase;
-        border-radius: 5px; }
-        @media print {
-          #scorecard #links table .link-link .link-button {
-            padding: .5em; } }
-      #scorecard #links table .link-link .link-text {
-        display: block; }
-      #scorecard #links table .link-link p {
-        font-weight: bold; }
-      #scorecard #links table .link-link a {
-        color: #0047ba;
-        text-decoration: underline;
-        word-break: break-word;
-        word-wrap: break-word; }
-    #scorecard #links table tr.ad td {
-      text-align: center; }
-    #scorecard #links table tr.ad a {
-      display: block;
-      margin-top: 2rem; }
-  #scorecard .scorecard--print-footer {
-    display: none; }
-  #scorecard #building-type-table table {
-    color: #646569;
-    font-size: 0.725rem; }
-  #scorecard #building-type-table td {
-    text-align: center;
-    vertical-align: middle;
-    border-bottom-color: #ddd;
-    padding: 0.5rem 0; }
-    #scorecard #building-type-table td:first-child {
-      text-align: right;
-      width: auto;
-      padding-left: 0.7rem;
-      padding-right: 0.7rem;
-      width: 6.5em; }
-  #scorecard #building-type-table thead tr:first-child td {
-    border: 0; }
-  #scorecard #building-type-table thead td {
-    vertical-align: bottom; }
-  #scorecard #building-type-table thead td:first-child {
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    font-weight: 500;
-    line-height: 1.1; }
-  #scorecard #building-type-table tbody td {
-    font-weight: 500;
-    font-size: 0.75rem; }
-    #scorecard #building-type-table tbody td:first-child {
-      font-size: 0.725rem;
-      font-weight: 400; }
-  #scorecard #building-type-table .header {
-    font-size: 0.75rem; }
-  #scorecard #building-type-table .gray-bk {
-    background: #f1f1f1; }
-  #scorecard #building-type-table .no-border {
-    border: 0; }
+      text-decoration: underline; }
+    #scorecard div#performance-standard-chart p#performance-standard-disclaimer {
+      margin-top: 10px; }
   #scorecard .scorecard-compare-chart {
     border: 1px solid #003DA5;
     border-radius: 5px; }
@@ -3376,23 +3325,6 @@ header {
             font-size: 1rem;
             font-weight: 500;
             color: white; }
-        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-arrow {
-          width: 85px;
-          height: 74px; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-arrow.decreased {
-            background-image: url("../images/scorecard/changearrow-down.png"); }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-arrow.increased {
-            background-image: url("../images/scorecard/changearrow-up.png"); }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-arrow span {
-            bottom: auto;
-            top: 50%;
-            margin-top: -2px; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-arrow.decreased span {
-            margin-top: -8px; }
-        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.decreased {
-          color: #90AE60; }
-        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.increased {
-          color: #C04F31; }
       #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart {
         position: relative;
         height: 250px; }
@@ -3508,6 +3440,103 @@ header {
       margin-left: -10000px; }
   #scorecard.show-eui-view #scorecard-view {
     display: block; }
+  #scorecard #links {
+    background: #F1F1F1; }
+    #scorecard #links table td {
+      width: auto;
+      border: 0;
+      padding: 0 10px;
+      line-height: 1.2;
+      vertical-align: top; }
+    #scorecard #links table .link-cell {
+      color: #5d5d5d; }
+    #scorecard #links table .link-num {
+      width: 2rem;
+      height: 2rem;
+      background: #003DA5;
+      border-radius: 2rem;
+      text-align: center;
+      line-height: 2rem;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      float: left;
+      margin-left: 4px; }
+    #scorecard #links table .link-content {
+      display: block;
+      margin-left: 3rem;
+      vertical-align: top;
+      color: #003DA5;
+      font-size: 16px; }
+    #scorecard #links table .link-link {
+      margin-left: 3rem;
+      padding-top: 1rem; }
+      #scorecard #links table .link-link .link-button {
+        display: inline-block;
+        padding: 7px 10px 7px 9px;
+        margin-top: -7px;
+        margin-bottom: 6px;
+        background: #003DA5;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        text-transform: uppercase;
+        border-radius: 5px; }
+        @media print {
+          #scorecard #links table .link-link .link-button {
+            padding: .5em; } }
+      #scorecard #links table .link-link .link-text {
+        display: block; }
+      #scorecard #links table .link-link p {
+        font-weight: bold; }
+      #scorecard #links table .link-link a {
+        color: #0047ba;
+        text-decoration: underline;
+        word-break: break-word;
+        word-wrap: break-word; }
+    #scorecard #links table tr.ad td {
+      text-align: center; }
+    #scorecard #links table tr.ad a {
+      display: block;
+      margin-top: 2rem; }
+  #scorecard .scorecard--print-footer {
+    display: none; }
+  #scorecard #building-type-table table {
+    color: #646569;
+    font-size: 0.725rem; }
+  #scorecard #building-type-table td {
+    text-align: center;
+    vertical-align: middle;
+    border-bottom-color: #ddd;
+    padding: 0.5rem 0; }
+    #scorecard #building-type-table td:first-child {
+      text-align: right;
+      width: auto;
+      padding-left: 0.7rem;
+      padding-right: 0.7rem;
+      width: 6.5em; }
+  #scorecard #building-type-table thead tr:first-child td {
+    border: 0; }
+  #scorecard #building-type-table thead td {
+    vertical-align: bottom; }
+  #scorecard #building-type-table thead td:first-child {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.1; }
+  #scorecard #building-type-table tbody td {
+    font-weight: 500;
+    font-size: 0.75rem; }
+    #scorecard #building-type-table tbody td:first-child {
+      font-size: 0.725rem;
+      font-weight: 400; }
+  #scorecard #building-type-table .header {
+    font-size: 0.75rem; }
+  #scorecard #building-type-table .gray-bk {
+    background: #f1f1f1; }
+  #scorecard #building-type-table .no-border {
+    border: 0; }
   @media print {
     #scorecard {
       overflow: visible;
