@@ -2887,7 +2887,7 @@ header {
       #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card {
         position: relative;
         font-size: 16px;
-        min-width: 241px;
+        min-width: 260px;
         width: auto;
         height: 100%;
         border: 2px solid #003DA5;
@@ -3233,7 +3233,8 @@ header {
       -ms-flex-direction: row;
           flex-direction: row;
       -ms-flex-pack: justify;
-          justify-content: space-between; }
+          justify-content: space-between;
+      float: right; }
       #scorecard .scorecard-compare-chart #sc-toggle-wrapper .sc-toggle {
         padding: 0.5rem;
         background: #E5EBF6;
@@ -3288,8 +3289,8 @@ header {
         text-align: center;
         padding-right: 2rem;
         width: 310px;
-        -ms-flex-item-align: end;
-            align-self: end; }
+        -ms-flex-item-align: start;
+            align-self: flex-start; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc > p:last-child {
           text-align: left; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .compare-logo,
@@ -3361,28 +3362,26 @@ header {
           display: none; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .x.axis line {
           stroke-width: 1.5; }
-        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight {
-          opacity: 0.5; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight > div {
-            position: relative;
-            width: 100px; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight text {
-            dominant-baseline: central; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight tspan {
-            text-anchor: start; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight.align-right tspan {
-            text-anchor: end; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .value {
-            line-height: 1;
-            font-size: 24px;
-            font-weight: 500;
-            color: #DE8F41; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .units {
-            font-size: 10px;
-            font-weight: 400;
-            text-transform: uppercase; }
-          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label {
-            fill: #666; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight > div {
+          position: relative;
+          width: 100px; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight text {
+          dominant-baseline: central; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight tspan {
+          text-anchor: start; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight.align-right tspan {
+          text-anchor: end; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .value {
+          line-height: 1;
+          font-size: 24px;
+          font-weight: 500;
+          color: #DE8F41; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .units {
+          font-size: 10px;
+          font-weight: 400;
+          text-transform: uppercase; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label {
+          fill: #666; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text text {
           fill: #b7b7b7;
           text-transform: uppercase; }
@@ -3405,14 +3404,14 @@ header {
           font-weight: 500;
           text-anchor: middle; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .selected-city-highlight .units {
-          font-size: 10px;
+          font-size: 13px;
           text-anchor: middle;
-          text-transform: none; }
+          text-transform: uppercase; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .selected-city-highlight .building-name {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 500;
           fill: #707070;
-          text-transform: uppercase; }
+          text-transform: none; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .selected-city-highlight .circle {
           fill: none;
           stroke: #0047ba; }
