@@ -2830,17 +2830,25 @@ header {
         justify-content: flex-start; }
     @media print {
       #scorecard .scorecard--details {
-        height: 160px; } }
+        height: 210px;
+        padding: 0 0 0 15px; } }
     #scorecard .scorecard--details div#building-name-wrapper {
       height: 75px;
       display: -ms-flexbox;
       display: flex;
       -ms-flex-align: end;
           align-items: flex-end; }
+      @media print {
+        #scorecard .scorecard--details div#building-name-wrapper {
+          height: 45px; } }
       #scorecard .scorecard--details div#building-name-wrapper div.sc-building-name {
         font-weight: 500;
         font-size: 25px;
         padding-bottom: 15px; }
+        @media print {
+          #scorecard .scorecard--details div#building-name-wrapper div.sc-building-name {
+            font-size: 23px;
+            padding-bottom: 5px; } }
     #scorecard .scorecard--details div#building-details-outer {
       display: -ms-flexbox;
       display: flex;
@@ -2848,6 +2856,10 @@ header {
           flex-direction: row; }
       #scorecard .scorecard--details div#building-details-outer div#building-details-row .sc-address {
         margin-bottom: 6px; }
+        @media print {
+          #scorecard .scorecard--details div#building-details-outer div#building-details-row .sc-address {
+            font-size: 14px;
+            margin-bottom: 9px; } }
         #scorecard .scorecard--details div#building-details-outer div#building-details-row .sc-address div {
           font-weight: 400;
           font-size: 18px;
@@ -2870,6 +2882,10 @@ header {
         #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values {
           font-size: 16px;
           font-weight: 400; }
+          @media print {
+            #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels,
+            #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values {
+              font-size: 13px; } }
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels div,
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values div {
             margin-bottom: -5px; }
@@ -2884,6 +2900,9 @@ header {
       #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card-note {
         font-size: 14px;
         color: #707070; }
+        @media print {
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card-note {
+            font-size: 12px; } }
       #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card {
         position: relative;
         font-size: 16px;
@@ -2894,6 +2913,12 @@ header {
         border-radius: 10px;
         margin-right: 20px;
         padding: 15px 16px 0; }
+        @media print {
+          #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card {
+            font-size: 12px;
+            min-width: 210px;
+            padding: 10px 4px 0 8px;
+            margin-right: 10px; } }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon {
           position: absolute;
           background: #003DA5;
@@ -2903,20 +2928,41 @@ header {
           right: 0;
           border-radius: 5px 0 5px 0;
           background-repeat: no-repeat; }
+          @media print {
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon {
+              width: 33px;
+              height: 35px; } }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.ghg {
             background-image: url("../images/scorecard/cloud.svg");
             background-size: 76%;
             background-position: 7px 12px; }
+            @media print {
+              #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.ghg {
+                background-size: 65%;
+                background-position: 7px 10px; } }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.eui {
             background-image: url("../images/scorecard/lightbulb.svg");
             background-size: 55%;
             background-position: 12px 7px; }
+            @media print {
+              #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon.eui {
+                background-size: 50%;
+                background-position: 9px 7px; } }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure {
           line-height: 1;
           margin-bottom: 15px; }
+          @media print {
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure {
+              margin-bottom: 10px; } }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure span.building-details-card-measure-number {
             font-size: 38px;
             font-weight: 500; }
+            @media print {
+              #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure span.building-details-card-measure-number {
+                font-size: 25px; } }
+          @media print {
+            #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure div.building-details-card-words {
+              font-size: 14px; } }
           #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-measure div.building-details-card-words .bolder {
             font-weight: 600; }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend {
@@ -2947,6 +2993,9 @@ header {
               color: #C04F31; }
             #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words span.text-decreased {
               color: #90AE60; }
+            @media print {
+              #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words {
+                font-size: 14px; } }
   #scorecard div#state-requirement-wrapper {
     color: #003DA5;
     background: #E5EBF6;
@@ -2980,6 +3029,11 @@ header {
           #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-details a {
             color: #003DA5;
             text-decoration: underline; }
+          @media print {
+            #scorecard div#state-requirement-wrapper div#state-requirement-outer div#state-requirement-inner div#state-requirement-details {
+              line-height: 1.1;
+              margin-top: 4px;
+              font-size: 14px; } }
   #scorecard div#fuel-use-chart {
     page-break-inside: avoid;
     break-inside: avoid; }
@@ -3024,6 +3078,9 @@ header {
     #scorecard #compare-shift-chart .compare-desc {
       text-align: center;
       padding-right: 2em; }
+      @media print {
+        #scorecard #compare-shift-chart .compare-desc {
+          padding-right: 10px; } }
       #scorecard #compare-shift-chart .compare-desc .change-arrow {
         position: relative;
         display: inline-block;
@@ -3068,7 +3125,7 @@ header {
       height: 200px; }
       @media print {
         #scorecard #compare-shift-chart #change-chart #change-chart-vis {
-          height: 100px;
+          height: 170px;
           margin: 20px 0; } }
       #scorecard #compare-shift-chart #change-chart #change-chart-vis svg {
         overflow: visible;
@@ -3129,22 +3186,38 @@ header {
             flex-direction: row;
         -ms-flex-align: center;
             align-items: center; }
+        @media print {
+          #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble {
+            min-height: 44px; } }
         #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure {
           font-size: 26px;
           font-weight: 500; }
+          @media print {
+            #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure {
+              font-size: 20px; } }
           #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure .bubble-unit {
             font-weight: 400;
             font-size: 20px;
             position: relative;
             top: -1px; }
+            @media print {
+              #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-measure .bubble-unit {
+                font-size: 12px; } }
         #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble img.arrow-icon {
           width: 30px;
           height: 30px; }
+          @media print {
+            #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble img.arrow-icon {
+              width: 23px;
+              height: 23px; } }
         #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-description {
           font-size: 16px;
           font-weight: 500;
           position: relative;
           top: 2px; }
+          @media print {
+            #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.performance-standard-bubble-description {
+              font-size: 14px; } }
         #scorecard div#performance-standard-chart div#performance-standard-chart-header div.performance-standard-bubble span.bubble-icon {
           background: #003DA5;
           width: 36px;
@@ -3219,6 +3292,9 @@ header {
     #scorecard div#performance-standard-chart p#early-incentive-message a {
       color: #003DA5;
       text-decoration: underline; }
+    @media print {
+      #scorecard div#performance-standard-chart p#early-incentive-message {
+        font-size: 14px; } }
     #scorecard div#performance-standard-chart p#performance-standard-disclaimer {
       margin-top: 10px; }
   #scorecard .scorecard-compare-chart {
@@ -3288,6 +3364,9 @@ header {
         width: 310px;
         -ms-flex-item-align: start;
             align-self: flex-start; }
+        @media print {
+          #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc {
+            padding-right: 10px; } }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc > p:last-child {
           text-align: left; }
         #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .compare-logo,
@@ -3464,6 +3543,8 @@ header {
       vertical-align: top;
       color: #003DA5;
       font-size: 16px; }
+      #scorecard #links table .link-content.links-3 {
+        font-size: 15px; }
     #scorecard #links table .link-link {
       margin-left: 3rem;
       padding-top: 1rem; }
@@ -3479,9 +3560,15 @@ header {
         text-decoration: none;
         text-transform: uppercase;
         border-radius: 5px; }
+        #scorecard #links table .link-link .link-button.links-3 {
+          font-size: 14px; }
+          @media print {
+            #scorecard #links table .link-link .link-button.links-3 {
+              font-size: 11px; } }
         @media print {
           #scorecard #links table .link-link .link-button {
-            padding: .5em; } }
+            padding: .5em;
+            font-size: 13px; } }
       #scorecard #links table .link-link .link-text {
         display: block; }
       #scorecard #links table .link-link p {
@@ -3562,7 +3649,7 @@ header {
       break-inside: avoid; }
     #scorecard .scorecard-compare-chart {
       border: none;
-      border-bottom: 1px solid #f1f1f1; }
+      border-bottom: 1px solid #003DA5; }
       #scorecard .scorecard-compare-chart.print-only {
         float: none;
         margin: 0; }
