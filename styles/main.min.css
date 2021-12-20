@@ -2871,11 +2871,12 @@ header {
         -ms-flex-direction: row;
             flex-direction: row; }
         #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div.building-details-col {
-          padding: 5px 15px;
+          padding: 5px 0 5px 15px;
           width: 200px; }
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div.building-details-col:first-child {
             border-right: 1px solid #003DA5;
             padding-left: 0;
+            padding-right: 15px;
             width: auto;
             white-space: nowrap; }
         #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels,
@@ -2889,6 +2890,8 @@ header {
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-labels div,
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values div {
             margin-bottom: -5px; }
+        #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values {
+          min-width: 225px; }
     #scorecard .scorecard--details div#building-details-cards-wrapper {
       display: -ms-flexbox;
       display: flex;
@@ -2919,6 +2922,8 @@ header {
             min-width: 210px;
             padding: 10px 4px 0 8px;
             margin-right: 10px; } }
+        #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card:last-child {
+          margin-right: 0; }
         #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-icon {
           position: absolute;
           background: #003DA5;
@@ -3649,6 +3654,7 @@ header {
       break-inside: avoid; }
     #scorecard .scorecard-compare-chart {
       border: none;
+      border-radius: none;
       border-bottom: 1px solid #003DA5; }
       #scorecard .scorecard-compare-chart.print-only {
         float: none;

@@ -200,6 +200,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var prop_type = building.property_type;
       var id = building.id;
 
+      // for building details first card "energy per square foot"
       var site_eui_wn = building.site_eui_wn;
       var building_eui_win = building.building_type_eui_wn;
       var eui_difference = (site_eui_wn - building_eui_win) / building_eui_win * 100;
@@ -213,7 +214,8 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       });
       var eui_direction_statement = eui_difference_formatted + ' ' + eui_direction_word;
 
-      var total_ghg = building.total_ghg_emissions;
+      // for building details second card "emissions per square foot"
+      var total_ghg = building.total_ghg_emissions_intensity;
       var building_type_average_ghg = this.getMeanBuildingTypeGhg(buildings, prop_type);
       var ghg_difference = (total_ghg - building_type_average_ghg) / building_type_average_ghg * 100;
       var ghg_direction = ghg_difference < 0 ? 'decreased' : 'increased';
@@ -503,16 +505,17 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         return {
           id: building.id,
           eui: building.site_eui,
-          emissions: building.total_ghg_emissions
+          emissions: building.total_ghg_emissions_intensity
         };
       }).filter(function (d) {
         return d.eui != null && d.emissions != null;
       });
 
       // find the average (mean), and return it
-      return d3.mean(buildingsFiltered.map(function (d) {
+      var mean = d3.mean(buildingsFiltered.map(function (d) {
         return d.emissions;
       }));
+      return mean;
     },
 
     getThresholdLabels: function getThresholdLabels(thresholds) {
