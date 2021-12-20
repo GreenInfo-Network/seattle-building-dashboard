@@ -319,8 +319,14 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       // render Energy Use Trends (shift.js) chart
       if (!this.charts['eui'].chart_shift) {
+        // avail_years comes from seattle.json and shows all available years
+        // we want all years for this building
+        var building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+
         var shiftConfig = config.change_chart.building;
-        var previousYear = avail_years[0];
+        var previousYear = building_years[0];
         var hasPreviousYear = previousYear !== selected_year;
 
         var change_data = hasPreviousYear ? this.extractChangeData(building_data, buildings, building, shiftConfig) : null;

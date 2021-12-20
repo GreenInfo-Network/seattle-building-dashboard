@@ -2891,7 +2891,8 @@ header {
           #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values div {
             margin-bottom: -5px; }
         #scorecard .scorecard--details div#building-details-outer div#building-details-row div#building-details-wrapper div#building-details-values {
-          min-width: 225px; }
+          min-width: 225px;
+          white-space: nowrap; }
     #scorecard .scorecard--details div#building-details-cards-wrapper {
       display: -ms-flexbox;
       display: flex;
