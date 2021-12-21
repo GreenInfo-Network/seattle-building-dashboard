@@ -209,6 +209,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return 'translate(' + (-dotText[0][i].getBBox().width - 5) + ', 0)';
       });
 
+      // hacky way to attempt fixing label collisions after the fact
       this.detectAndCorrectLabelCollisions();
 
       var lastyear = x.domain().slice(-1)[0];
@@ -228,6 +229,11 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     detectAndCorrectLabelCollisions: function detectAndCorrectLabelCollisions() {
       var group_a = d3.selectAll('g.dot.shift-dot-site_eui_wn');
       var group_b = d3.selectAll('g.dot.shift-dot-building_type_eui_wn');
+
+      // sometimes the series are not the same length, and we don't try and accomodate that
+      // everything that follows assumes pairs of labels on the same plane
+      if (group_a.size() !== group_b.size()) return;
+
       var diffs = [];
       group_a.each(function (d, i) {
         var t1 = d3.transform(d3.select(this).attr('transform'));

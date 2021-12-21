@@ -107,7 +107,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       });
 
       // now append the tick for the current EUI
-      euiLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', 10).attr('y2', -17);
+      euiLabelGroup.append('line').attr('class', 'data-line').attr('x1', 0).attr('y1', 13).attr('y2', -15);
 
       // append a group to hold the tick for the target EUI
       var targetWidth = data.target_eui * chartWidth / (quartile * 5);
@@ -120,16 +120,16 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
 
       // append a div to hold the label for target EUI
       // div is more flexible, auto-sizes, has border radius, etc.
-      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '116px');
+      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '109px');
 
       // append a div to hold the label for current EUI
-      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui.toLocaleString() + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 20 + 'px').style('bottom', '14px');
+      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui.toLocaleString() + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 30 + 'px').style('bottom', '10px');
 
       // append a div to hold a lable for "Meets target"
-      d3.select('#performance-standard-bar-chart').append('div').text('Meets EUI Target').attr('class', 'chart-label-meets-target').style('left', targetWidth - 120 + 'px').style('bottom', '93px');
+      d3.select('#performance-standard-bar-chart').append('div').text('Meets EUI Target').attr('class', 'chart-label-meets-target').style('left', targetWidth - 120 + 'px').style('bottom', '87px');
 
       // append a div to hold a lable for "Misses target"
-      d3.select('#performance-standard-bar-chart').append('div').text('Doesn\'t Meet EUI Target').attr('class', 'chart-label-misses-target').style('left', targetWidth + 20 + 'px').style('bottom', '93px');
+      d3.select('#performance-standard-bar-chart').append('div').text('Doesn\'t Meet EUI Target').attr('class', 'chart-label-misses-target').style('left', targetWidth + 20 + 'px').style('bottom', '87px');
     },
 
     roundToNearest: function roundToNearest(nearest, number) {
