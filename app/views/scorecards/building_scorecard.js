@@ -510,11 +510,11 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var buildingsFiltered = buildingsOfType.map(function (building) {
         return {
           id: building.id,
-          eui: building.site_eui,
+          eui_wn: building.site_eui_wn,
           emissions: building.total_ghg_emissions_intensity
         };
       }).filter(function (d) {
-        return d.eui != null && d.emissions != null;
+        return d.eui_wn != null && d.emissions != null;
       });
 
       // find the average (mean), and return it

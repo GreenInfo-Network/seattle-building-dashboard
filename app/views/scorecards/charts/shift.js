@@ -180,7 +180,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return line(d.values);
       });
 
-      var dot = svg.selectAll('.dot').data(filteredData).enter().append('g').attr('class', function (d) {
+      var dotGroup = svg.selectAll('.dot').data(filteredData).enter().append('g').attr('class', function (d) {
         var colorize = d.colorize ? '' : ' no-clr';
         var field = d.field;
 
@@ -189,11 +189,11 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return 'translate(' + x(d.year) + ',' + y(d.value) + ')';
       });
 
-      dot.append('circle').attr('r', 5).attr('fill', function (d) {
+      dotGroup.append('circle').attr('r', 5).attr('fill', function (d) {
         return d.clr;
       });
 
-      var dotText = dot.append('text').style('fill', function (d) {
+      var dotText = dotGroup.append('text').style('fill', function (d) {
         return d.clr || '#acacac';
       });
 
@@ -209,8 +209,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return 'translate(' + (-dotText[0][i].getBBox().width - 5) + ', 0)';
       });
 
+      this.detectAndCorrectLabelCollisions();
+
       var lastyear = x.domain().slice(-1)[0];
-      dot.filter(function (d) {
+      dotGroup.filter(function (d) {
         return d.year === lastyear;
       }).append('text').classed('building', true).classed('selected-building', function (d) {
         return d.colorize;
@@ -219,6 +221,58 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }).attr('transform', 'translate(10, 0)').text(function (d) {
         return d.label;
       }).call(wrap, 120);
+    },
+
+    // look for label groups that overlap (defined as within 10px of each other)
+    // and when found, update the transforms on the text within them, moving them +/- 15px
+    detectAndCorrectLabelCollisions: function detectAndCorrectLabelCollisions() {
+      var group_a = d3.selectAll('g.dot.shift-dot-site_eui_wn');
+      var group_b = d3.selectAll('g.dot.shift-dot-building_type_eui_wn');
+      var diffs = [];
+      group_a.each(function (d, i) {
+        var t1 = d3.transform(d3.select(this).attr('transform'));
+        var x1 = t1.translate[0];
+        var y1 = t1.translate[1];
+        diffs[i] = { ax: x1, ay: parseFloat(y1) };
+      });
+      group_b.each(function (d, i) {
+        var t1 = d3.transform(d3.select(this).attr('transform'));
+        var x1 = t1.translate[0];
+        var y1 = t1.translate[1];
+        diffs[i]['bx'] = x1;
+        diffs[i]['by'] = parseFloat(y1);
+      });
+
+      diffs.forEach(function (d, i) {
+        var diff = d.ay - d.by;
+        if (Math.abs(diff) < 10) {
+          var a = group_a.filter(function (d, j) {
+            return j === i;
+          });
+          var a_text = a.select('text');
+          var at = d3.transform(a_text.attr('transform'));
+          var at_x = at.translate[0];
+          var at_y = at.translate[1];
+
+          var b = group_b.filter(function (d, j) {
+            return j === i;
+          });
+          var b_text = b.select('text');
+          var bt = d3.transform(b_text.attr('transform'));
+          var bt_x = bt.translate[0];
+          var bt_y = bt.translate[1];
+
+          var change_y = 15 + diff;
+
+          if (diff < 0) {
+            a_text.attr('transform', 'translate(' + at_x + ', ' + (at_y - change_y) + ')');
+            b_text.attr('transform', 'translate(' + bt_x + ', ' + (bt_y + change_y) + ')');
+          } else {
+            a_text.attr('transform', 'translate(' + at_x + ', ' + (at_y + change_y) + ')');
+            b_text.attr('transform', 'translate(' + bt_x + ', ' + (bt_y - change_y) + ')');
+          }
+        }
+      });
     },
 
     chartData: function chartData(cb) {
