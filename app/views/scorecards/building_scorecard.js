@@ -202,11 +202,13 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       // for building details first card "energy per square foot"
       var site_eui_wn = building.site_eui_wn;
-      var building_eui_win = building.building_type_eui_wn;
-      var eui_difference = (site_eui_wn - building_eui_win) / building_eui_win * 100;
+      var building_eui_wn = building.building_type_eui_wn;
+      console.log(building_eui_wn);
+      var eui_difference = (site_eui_wn - building_eui_wn) / building_eui_wn * 100;
       var eui_direction = eui_difference < 0 ? 'decreased' : 'increased';
       var eui_direction_word = eui_difference < 0 ? 'lower' : 'higher';
       var eui_difference_formatted = Math.abs(eui_difference) / 100;
+
       eui_difference_formatted = eui_difference_formatted.toLocaleString('en-US', {
         style: 'percent',
         minimumFractionDigits: 0,
@@ -432,11 +434,10 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var compareConfig = config.compare_chart;
 
       if (view === 'eui') {
-        change_pct = building.percent_from_median;
+        change_pct = (building.site_eui_wn - building.building_type_eui_wn) / building.building_type_eui_wn * 100;
         isValid = _.isNumber(change_pct) && _.isFinite(change_pct);
-        change_pct = this.formatters.percent(change_pct);
-
-        change_label = building.higher_or_lower.toLowerCase();
+        change_label = change_pct < 0 ? 'lower' : 'higher';
+        change_pct = this.formatters.percent(Math.abs(change_pct) / 100);
       } else {
         change_pct = Math.abs(chartdata.building_value - chartdata.mean);
         isValid = _.isNumber(change_pct) && _.isNumber(chartdata.building_value) && _.isFinite(change_pct);
@@ -575,7 +576,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         if (f) selectedIndex = i;
       });
 
-      var avg = view === 'eui' ? building.building_type_eui : d3.mean(buildingsOfType, function (d) {
+      var avg = view === 'eui' ? building.building_type_eui_wn : d3.mean(buildingsOfType, function (d) {
         return d[compareField];
       });
 

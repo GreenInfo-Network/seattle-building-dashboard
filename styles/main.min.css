@@ -3408,6 +3408,10 @@ header {
             font-size: 1rem;
             font-weight: 500;
             color: white; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.decreased {
+          color: #90AE60; }
+        #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.increased {
+          color: #C04F31; }
       #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart {
         position: relative;
         height: 250px; }
