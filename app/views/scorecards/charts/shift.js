@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.data = options.data || [];
       this.view = options.view;
       this.no_year = options.no_year || false;
+      this.single_year = options.single_year || false;
       this.selected_year = options.selected_year;
       this.previous_year = options.previous_year;
       this.isCity = options.isCity || false;
@@ -287,6 +288,15 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
 
     render: function render(cb, viewSelector) {
       var _this3 = this;
+
+      if (this.single_year) {
+        cb(this.template({
+          isValid: false,
+          isCity: this.isCity,
+          noyear: false
+        }));
+        return;
+      }
 
       if (this.no_year) {
         cb(this.template({
