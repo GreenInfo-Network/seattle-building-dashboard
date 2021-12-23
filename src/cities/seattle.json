@@ -85,45 +85,28 @@
     },
     "map_layers": [
         {
-            "title": "Neighborhood",
-            "field_name": "neighborhood",
-            "display_type": "category",
-            "sort_by_key": true,
-            "hide_other_category": true,
-            "section": "Property Information",
-            "description": "Neighborhood"
-        },
-        {
-            "title": "Council District",
-            "field_name": "councildistrict",
-            "display_type": "category",
-            "sort_by_key": true,
-            "hide_other_category": true,
-            "section": "Property Information",
-            "description": "Council District"
-        },
-        {
-            "title": "Property Size",
-            "field_name": "reported_gross_floor_area",
+            "title": "Total Seattle GHG Emissions",
+            "field_name": "total_ghg_emissions",
             "display_type": "range",
             "range_slice_count": 18,
-            "color_range": ["#b8cba9","#007749"],
-            "unit": "ft²",
-            "filter_range": {"min": 20000, "max" : 500000},
-            "formatter": "integer",
-            "section": "Property Information",
-            "description": "The Gross Floor Area (GFA) is the total property square footage, measured between the outside surface of the exterior walls of the building(s). This includes all areas inside the building(s) including supporting areas. GFA is not the same as rentable space, but rather includes all area inside the building(s)."
+            "section": "Greenhouse Gas Emissions",
+            "color_range": ["#1f5dbe","#599b67","#ffd552","#da863f","#ab2328"],
+            "unit": "Metric Tons CO₂e",
+            "filter_range": {"min" : 0, "max" : 500},
+            "formatter": "fixed-1",
+            "description": "Greenhouse Gas (GHG) Emissions are the carbon dioxide (CO2), methane (CH4), and nitrous oxide (N2O) gases released into the atmosphere as a result of energy consumption at the property. GHG emissions are expressed in Metric Tons of carbon dioxide equivalent (CO2e), a universal unit of measure that combines the quantity and global warming potential of each greenhouse gas. Total Emissions is the sum of Direct Emissions (emissions associated with onsite fuel combustion) and Indirect Emissions (emissions associated with purchases of electricity, district steam, district hot water, or district chilled water). These emissions estimates are calculated from site electricity, natural gas, and steam energy use using GHG emissions factors. The calculation includes a custom factor from Seattle City Light for electricity, a default natural gas factor from the EPA, and a custom emissions factor from Enwave for steam."
         },
         {
-            "title": "Year Built",
-            "field_name": "yearbuilt",
+            "title": "Seattle GHG Intensity",
+            "field_name": "total_ghg_emissions_intensity",
             "display_type": "range",
             "range_slice_count": 18,
-            "color_range": ["#b8cba9","#007749"],
-            "section": "Property Information",
-            "formatter": "none",
-            "description": "The year property was constructed, as reported by owner",
-            "disable_prettify": true
+            "section": "Greenhouse Gas Emissions",
+            "color_range": ["#1f5dbe","#599b67","#ffd552","#da863f","#ab2328"],
+            "unit": "Kilograms CO₂e/ft²",
+            "formatter": "fixed-1",
+            "filter_range": {"min" : 0, "max" : 10},
+            "description": "The  total Greenhouse Gas (GHG) Emissions, divided by the floor area of the building, in kilograms of carbon dioxide equivalent (CO2e) per square foot."
         },
         {
             "title": "Building EUI Quartiles",
@@ -190,54 +173,71 @@
             "description": "Non-normalized site energy use is the total amount of all the energy a property consumes on-site annually, as reported on utility bills. Site energy use is measured in thousands of British thermal units (kBtu)."
         },
         {
-            "title": "Total Seattle GHG Emissions",
-            "field_name": "total_ghg_emissions",
-            "display_type": "range",
-            "range_slice_count": 18,
-            "section": "Greenhouse Gas Emissions",
-            "color_range": ["#1f5dbe","#599b67","#ffd552","#da863f","#ab2328"],
-            "unit": "Metric Tons CO₂e",
-            "filter_range": {"min" : 0, "max" : 500},
-            "formatter": "fixed-1",
-            "description": "Greenhouse Gas (GHG) Emissions are the carbon dioxide (CO2), methane (CH4), and nitrous oxide (N2O) gases released into the atmosphere as a result of energy consumption at the property. GHG emissions are expressed in Metric Tons of carbon dioxide equivalent (CO2e), a universal unit of measure that combines the quantity and global warming potential of each greenhouse gas. Total Emissions is the sum of Direct Emissions (emissions associated with onsite fuel combustion) and Indirect Emissions (emissions associated with purchases of electricity, district steam, district hot water, or district chilled water). These emissions estimates are calculated from site electricity, natural gas, and steam energy use using GHG emissions factors. The calculation includes a custom factor from Seattle City Light for electricity, a default natural gas factor from the EPA, and a custom emissions factor from Enwave for steam."
+            "title": "Neighborhood",
+            "field_name": "neighborhood",
+            "display_type": "category",
+            "sort_by_key": true,
+            "hide_other_category": true,
+            "section": "Property Information",
+            "description": "Neighborhood"
         },
         {
-            "title": "Seattle GHG Intensity",
-            "field_name": "total_ghg_emissions_intensity",
+            "title": "Council District",
+            "field_name": "councildistrict",
+            "display_type": "category",
+            "sort_by_key": true,
+            "hide_other_category": true,
+            "section": "Property Information",
+            "description": "Council District"
+        },
+        {
+            "title": "Property Size",
+            "field_name": "reported_gross_floor_area",
             "display_type": "range",
             "range_slice_count": 18,
-            "section": "Greenhouse Gas Emissions",
-            "color_range": ["#1f5dbe","#599b67","#ffd552","#da863f","#ab2328"],
-            "unit": "Kilograms CO₂e/ft²",
-            "formatter": "fixed-1",
-            "filter_range": {"min" : 0, "max" : 10},
-            "description": "The  total Greenhouse Gas (GHG) Emissions, divided by the floor area of the building, in kilograms of carbon dioxide equivalent (CO2e) per square foot."
-        }
+            "color_range": ["#b8cba9","#007749"],
+            "unit": "ft²",
+            "filter_range": {"min": 20000, "max" : 500000},
+            "formatter": "integer",
+            "section": "Property Information",
+            "description": "The Gross Floor Area (GFA) is the total property square footage, measured between the outside surface of the exterior walls of the building(s). This includes all areas inside the building(s) including supporting areas. GFA is not the same as rentable space, but rather includes all area inside the building(s)."
+        },
+        {
+            "title": "Year Built",
+            "field_name": "yearbuilt",
+            "display_type": "range",
+            "range_slice_count": 18,
+            "color_range": ["#b8cba9","#007749"],
+            "section": "Property Information",
+            "formatter": "none",
+            "description": "The year property was constructed, as reported by owner",
+            "disable_prettify": true
+        }        
     ],
     "years": {
         "2015": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         },
         "2016": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         },
         "2017": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         },
         "2018": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         },
 		 "2019": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         },
          "2020": {
             "table_name": "seattle_buildings_master_copy_for_update2020",
-            "default_layer": "energy_star_score"
+            "default_layer": "total_ghg_emissions"
         }
     },
     "building_footprints": {
