@@ -43,7 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var previousValue = yearData[0].val;
       var selectedValue = yearData[1].val;
       if (previousValue == null || selectedValue == null) return null;
-      return (selectedValue - previousValue) / selectedValue * 100;
+      return (selectedValue - previousValue) / previousValue * 100;
     },
 
     extractChangeData: function extractChangeData() {
