@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 define(['jquery', 'underscore', 'backbone', 'text!templates/layout/header.html'], function ($, _, Backbone, HeaderTemplate) {
   var Header = Backbone.View.extend({
@@ -16,13 +16,15 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/layout/header.html']
       var url_name = city.get('url_name');
       var logo_link = city.get('logo_link_url');
       var banner_images = city.get('header_banner_images');
-
       document.title = name;
-
-      $('#title').html(this.template({ url_name: url_name, title: name, logo_link: logo_link, banner_images: banner_images }));
+      $('#title').html(this.template({
+        url_name: url_name,
+        title: name,
+        logo_link: logo_link,
+        banner_images: banner_images
+      }));
       return this;
     }
   });
-
   return Header;
 });

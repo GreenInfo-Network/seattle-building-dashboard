@@ -1,12 +1,10 @@
-'use strict';
+"use strict";
 
 define(['underscore', 'backbone'], function (_, Backbone) {
   var urlTemplate = _.template('https://<%= cartoDbUser %>.carto.com/api/v2/sql');
-
   function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
-
   function normalizeCityBuildingCategories(categories) {
     return _.map(categories, function (category) {
       return {
@@ -19,7 +17,6 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       };
     });
   }
-
   function normalizeCityBuildingRanges(ranges) {
     return _.map(ranges, function (range) {
       return {
@@ -29,11 +26,9 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       };
     });
   }
-
   function isValidCategoryValue(value, category) {
     var _value = isNumeric(value) ? +value : value;
     var idx = category.values.indexOf(_value);
-
     if (category.other === 'false' || category.other === false) {
       // IN
       if (idx < 0) return false;
@@ -41,13 +36,10 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       // NOT IN
       if (idx > -1) return false;
     }
-
     return true;
   }
-
   function isValidRangeValue(value, range) {
     var _value = parseFloat(value);
-
     if (!_.isNumber(_value)) {
       return false;
     }
@@ -60,14 +52,11 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       return _value <= range.max;
     }
   }
-
   function cityBuildingsFilterizer(buildings, categories, ranges) {
     var normalizedCategories = normalizeCityBuildingCategories(categories);
     var normalizedRanges = normalizeCityBuildingRanges(ranges);
-
     return buildings.filter(function (building, i) {
       var valid = true;
-
       var atts = building.attributes;
 
       // categories
@@ -81,18 +70,15 @@ define(['underscore', 'backbone'], function (_, Backbone) {
         if (!valid) return;
         if (!isValidRangeValue(atts[range.field], range)) valid = false;
       });
-
       return valid;
     });
   }
-
   var CityBuildingQuery = function CityBuildingQuery(table_name, year, categories, ranges) {
     this.tableName = table_name;
     this.categories = categories;
     this.ranges = ranges;
     this.year = year;
   };
-
   CityBuildingQuery.prototype.toRangeSql = function (prefix) {
     prefix = prefix || '';
     return _.map(this.ranges, function (range) {
@@ -106,11 +92,9 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       }
     });
   };
-
   CityBuildingQuery.prototype.toWrappedValue = function (value) {
-    return '\'' + value + '\'';
+    return "'".concat(value, "'");
   };
-
   CityBuildingQuery.prototype.toCategorySql = function (prefix) {
     prefix = prefix || '';
     var self = this;
@@ -121,12 +105,10 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       return prefix + category.field + ' ' + operation + ' (' + values.join(', ') + ')';
     });
   };
-
   CityBuildingQuery.prototype.toYearSql = function (prefix) {
     prefix = prefix || '';
     return [prefix + 'year=' + this.year];
   };
-
   CityBuildingQuery.prototype.toSql = function () {
     var table = this.tableName;
     var rangeSql = this.toRangeSql();
@@ -138,7 +120,6 @@ define(['underscore', 'backbone'], function (_, Backbone) {
     });
     return output.join(' WHERE ');
   };
-
   CityBuildingQuery.prototype.toSqlComponents = function (prefix) {
     return {
       table: this.tableName,
@@ -147,7 +128,6 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       year: this.toYearSql(prefix)
     };
   };
-
   var CityBuildings = Backbone.Collection.extend({
     initialize: function initialize(models, options) {
       this.tableName = options.tableName;
@@ -158,7 +138,11 @@ define(['underscore', 'backbone'], function (_, Backbone) {
     },
     fetch: function fetch(year, categories, range) {
       var query = this.toSql(year, categories, range);
-      var result = Backbone.Collection.prototype.fetch.apply(this, [{ data: { q: query } }]);
+      var result = Backbone.Collection.prototype.fetch.apply(this, [{
+        data: {
+          q: query
+        }
+      }]);
       return result;
     },
     parse: function parse(data) {
@@ -174,6 +158,5 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       return cityBuildingsFilterizer(buildings, categories, ranges);
     }
   });
-
   return CityBuildings;
 });

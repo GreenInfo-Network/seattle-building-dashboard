@@ -1,24 +1,21 @@
-'use strict';
+"use strict";
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scorecard', './links', 'text!templates/scorecards/scorecard.html'], function ($, _, Backbone, BuildingScorecard, CityScorecard, Links, ScorecardTemplate) {
   var ScorecardController = Backbone.View.extend({
     el: $('#scorecard'),
-
     initialize: function initialize(options) {
       this.state = options.state;
       this.mapView = options.mapView;
-
       this.listenTo(this.state, 'change:allbuildings', this.onBuildingsChange);
       this.listenTo(this.state, 'change:report_active', this.onBuildingReportActive);
       this.listenTo(this.state, 'change:city_report_active', this.onCityReportActive);
-
       var scorecard = this.state.get('scorecard');
       this.listenTo(scorecard, 'change:view', this.onViewChange);
-
       this.template = _.template(ScorecardTemplate);
-
       this.formatters = {
         currency: d3.format('$,.2f'),
         currency_zero: d3.format('$,.0f'),
@@ -31,88 +28,69 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
           if (n >= 1000000) {
             return [fmtr(n / 1000000), 'million'];
           }
-
           if (n > 1000) {
             return [fmtr(n / 1000), 'thousand'];
           }
-
           return fmtr(n, '');
         }
       };
     },
-
     events: {
       'click #back-to-map-link': 'closeReport',
       'click #comparison-view-link': 'showComparisonView'
     },
-
     onBuildingsChange: function onBuildingsChange() {
       if (this.dirty) this.render();
     },
-
     onViewChange: function onViewChange() {
       this.updateViewClass();
       if (this.view && this.view.onViewChange) this.view.onViewChange();
     },
-
     updateViewClass: function updateViewClass() {
       var scorecardState = this.state.get('scorecard');
       var view = scorecardState.get('view');
-
-      var klass = 'show-' + view + '-view';
-
-      this.$el.attr('class', 'active ' + klass);
+      var klass = "show-".concat(view, "-view");
+      this.$el.attr('class', "active ".concat(klass));
     },
-
     onBuildingReportActive: function onBuildingReportActive() {
       this.activekey = 'report_active';
       this.viewclass = BuildingScorecard;
       this.render();
     },
-
     onCityReportActive: function onCityReportActive() {
       this.activekey = 'city_report_active';
       this.viewclass = CityScorecard;
       this.render();
     },
-
     showComparisonView: function showComparisonView(evt) {
-      var _state$set;
-
+      var _this$state$set;
       evt.preventDefault();
       this.state.trigger('clearMapPopup');
-      this.state.set((_state$set = {}, _defineProperty(_state$set, this.activekey, false), _defineProperty(_state$set, 'building', null), _defineProperty(_state$set, 'building_compare_active', true), _state$set));
+      this.state.set((_this$state$set = {}, _defineProperty(_this$state$set, this.activekey, false), _defineProperty(_this$state$set, "building", null), _defineProperty(_this$state$set, "building_compare_active", true), _this$state$set));
     },
-
     closeReport: function closeReport(evt) {
       evt.preventDefault();
       this.state.set(_defineProperty({}, this.activekey, false));
     },
-
     toggleView: function toggleView(evt) {
       evt.preventDefault();
-
       var scorecardState = this.state.get('scorecard');
       var view = scorecardState.get('view');
-
       var target = evt.target;
       var value = target.dataset.view;
-
       if (value === view) {
         evt.preventDefault();
         return false;
       }
-
-      scorecardState.set({ 'view': value });
+      scorecardState.set({
+        'view': value
+      });
     },
-
     loadView: function loadView(view) {
       this.removeView();
       this.view = view;
-
       this.view.render();
     },
-
     removeView: function removeView() {
       if (this.view) {
         this.view.close();
@@ -120,16 +98,13 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
       }
       this.view = null;
     },
-
     getLinksTable: function getLinksTable() {
       var city = this.state.get('city');
       var table = city && city.get && city.get('scorecard');
       return table && table.links_table || 'links';
     },
-
     renderLinks: function renderLinks(building, building_type, isBuildingRenderer) {
       if (this.linksView) this.removeLinks();
-
       if (!isBuildingRenderer) return;
 
       // Add links to parent
@@ -140,16 +115,13 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
         el: this.$el.find('#links')
       });
     },
-
     removeLinks: function removeLinks() {
       if (this.linksView) {
         this.linksView.close();
         this.linksView.remove();
       }
-
       this.linksView = null;
     },
-
     getSubViewOptions: function getSubViewOptions() {
       return {
         el: '#scorecard-content',
@@ -159,18 +131,15 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
         parentEl: this.$el
       };
     },
-
     showScorecard: function showScorecard() {
       this.$el.toggleClass('active', true);
-
       var building = this.state.get('building');
-      var name = void 0;
-      var building_type = void 0;
-      var energy_star_score = void 0;
-      var comments = void 0;
+      var name;
+      var building_type;
+      var energy_star_score;
+      var comments;
       var isBuildingRenderer = this.viewclass === BuildingScorecard;
-      var year = void 0;
-
+      var year;
       if (isBuildingRenderer) {
         year = this.state.get('year');
         var buildings = this.state.get('allbuildings');
@@ -183,7 +152,6 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
         name = 'Citywide Report';
         building_type = 'citywide';
       }
-
       this.$el.html(this.template({
         building_view: this.viewclass === BuildingScorecard,
         comments: comments,
@@ -191,16 +159,12 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
         energy_star_score: energy_star_score,
         year: year
       }));
-
       this.renderLinks(building, building_type, isBuildingRenderer);
-
       this.updateViewClass();
-
       if (!this.viewclass) return;
       var view = new this.viewclass(this.getSubViewOptions());
       this.loadView(view);
     },
-
     hideScorecard: function hideScorecard() {
       this.$el.toggleClass('active', false);
       this.removeLinks();
@@ -208,11 +172,9 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
       this.viewclass = null;
       this.$el.html('');
     },
-
     render: function render() {
       var buildings = this.state.get('allbuildings');
       var active = this.state.get(this.activekey);
-
       if (active) {
         if (!buildings) {
           this.dirty = true;
@@ -222,12 +184,9 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
       } else {
         this.hideScorecard();
       }
-
       this.dirty = false;
-
       return this;
     }
   });
-
   return ScorecardController;
 });

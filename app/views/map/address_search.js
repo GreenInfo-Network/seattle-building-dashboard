@@ -1,23 +1,19 @@
-'use strict';
+"use strict";
 
 define(['jquery', 'underscore', 'backbone', 'toastr', 'text!templates/map/address_search.html'], function ($, _, Backbone, toastr, AddressSearchTemplate) {
   var AddressSearchView = Backbone.View.extend({
     $container: $('#search'),
-
     initialize: function initialize(options) {
       this.mapView = options.mapView;
       this.state = options.state;
       this.listenTo(this.state, 'change:city', this.onCityChange);
     },
-
     onCityChange: function onCityChange() {
       this.listenTo(this.state.get('city'), 'sync', this.onCitySync);
     },
-
     onCitySync: function onCitySync() {
       this.render();
     },
-
     render: function render() {
       var searchTemplate = _.template(AddressSearchTemplate);
       this.$container.html(searchTemplate());
@@ -25,11 +21,9 @@ define(['jquery', 'underscore', 'backbone', 'toastr', 'text!templates/map/addres
       this.delegateEvents(this.events);
       return this;
     },
-
     events: {
       search: 'search'
     },
-
     search: function search() {
       var self = this;
       var url = 'https://search.mapzen.com/v1/search';
@@ -53,22 +47,18 @@ define(['jquery', 'underscore', 'backbone', 'toastr', 'text!templates/map/addres
           'boundary.rect.max_lon': -76.909363,
           'locality': 'venue,address'
         },
-
         success: function success(response) {
           console.log(response);
           self.centerMapOn(response);
         }
       });
     },
-
     centerMapOn: function centerMapOn(location) {
       var hits = location.features.filter(function (feat) {
         var ctx = this.state.get('city').get('address_search_regional_context');
         var region = feat.properties.region;
-
         return region && region === ctx;
       }.bind(this));
-
       if (hits.length > 0) {
         var coordinates = hits[0].geometry.coordinates.reverse();
         this.placeMarker(coordinates);
@@ -91,14 +81,12 @@ define(['jquery', 'underscore', 'backbone', 'toastr', 'text!templates/map/addres
           'showMethod': 'fadeIn',
           'hideMethod': 'fadeOut'
         };
-
         toastr.error('Addresses not found!');
       }
     },
     placeMarker: function placeMarker(coordinates) {
       var map = this.mapView.leafletMap;
       this.clearMarker();
-
       var icon = new L.Icon({
         iconUrl: 'images/marker.svg',
         iconRetinaUrl: 'images/marker.svg',
@@ -110,17 +98,16 @@ define(['jquery', 'underscore', 'backbone', 'toastr', 'text!templates/map/addres
         shadowSize: [0, 0],
         shadowAnchor: [22, 94]
       });
-      this.marker = L.marker(coordinates, { icon: icon }).addTo(map);
+      this.marker = L.marker(coordinates, {
+        icon: icon
+      }).addTo(map);
     },
-
     clearMarker: function clearMarker() {
       var map = this.mapView.leafletMap;
       if (this.marker) {
         map.removeLayer(this.marker);
       }
     }
-
   });
-
   return AddressSearchView;
 });

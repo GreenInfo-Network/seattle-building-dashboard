@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 require.config({
   paths: {
@@ -20,7 +20,6 @@ require.config({
     selectize: ['jquery']
   }
 });
-
 require(['app'], function (App) {
   App.initialize();
 });

@@ -1,35 +1,33 @@
-'use strict';
+"use strict";
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'models/building_color_bucket_calculator', 'text!templates/map/building_info.html'], function ($, _, Backbone, CityBuildings, BuildingColorBucketCalculator, BuildingInfoTemplate) {
   var baseCartoCSS = {
     dots: ['{marker-fill: #CCC;' + 'marker-fill-opacity: 0.9;' + 'marker-line-color: #FFF;' + 'marker-line-width: 0.5;' + 'marker-line-opacity: 1;' + 'marker-placement: point;' + 'marker-multi-policy: largest;' + 'marker-type: ellipse;' + 'marker-allow-overlap: true;' + 'marker-clip: false;}'],
     footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;}']
   };
-
   var CartoStyleSheet = function CartoStyleSheet(tableName, bucketCalculator, mode) {
     this.tableName = tableName;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
   };
-
   CartoStyleSheet.prototype.toCartoCSS = function () {
     var bucketCSS = this.bucketCalculator.toCartoCSS();
     var tableName = this.tableName;
-
-    var styles = [].concat(_toConsumableArray(baseCartoCSS[this.mode])).concat(bucketCSS);
-
+    var styles = _toConsumableArray(baseCartoCSS[this.mode]).concat(bucketCSS);
     styles = _.reject(styles, function (s) {
       return !s;
     });
     styles = _.map(styles, function (s) {
-      return '#' + tableName + ' ' + s;
+      return "#".concat(tableName, " ").concat(s);
     });
-
     return styles.join('\n');
   };
-
   var BuildingInfoPresenter = function BuildingInfoPresenter(city, allBuildings, buildingId, idKey, controls, layerName, defaultColor) {
     this.city = city;
     this.allBuildings = allBuildings;
@@ -39,42 +37,34 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     this.layerName = layerName;
     this.defaultColor = defaultColor || 'blue';
   };
-
   BuildingInfoPresenter.prototype.toLatLng = function () {
     var building = this.toBuilding();
     if (typeof building === 'undefined') return null;
-
-    return { lat: building.get('lat'), lng: building.get('lng') };
+    return {
+      lat: building.get('lat'),
+      lng: building.get('lng')
+    };
   };
-
   BuildingInfoPresenter.prototype.toBuilding = function () {
     var _this = this;
-
     return this.allBuildings.find(function (building) {
       return building.get(_this.idKey) == _this.buildingId;
     }, this);
   };
-
   BuildingInfoPresenter.prototype.toPopulatedLabels = function () {
     var building = this.toBuilding();
     var o = {};
-
     if (typeof building === 'undefined') return o;
-
     o.items = _.map(this.city.get('popup_fields'), function (field) {
       var value = building.get(field.field);
-
       value = field.skipFormatter ? value || 'N/A' : (value || 'N/A').toLocaleString();
-
       var label = field.label;
       var template = null;
-
       if (field.template) {
         var key = '{' + field.field + '}';
         template = field.template.replace(key, value);
         label = null;
       }
-
       return {
         value: value,
         label: label,
@@ -86,22 +76,17 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     // chart
 
     var chartData = this.city.get('popup_chart');
-
     if (!chartData) return o;
-
     o.chart = {};
     o.chart.year = this.city.get('year');
-
     o.chart.lead = {
       value: building.get(chartData.lead.field),
       color: this.getColor(chartData.lead.field, building.get(chartData.lead.field)),
       label: chartData.lead.label
     };
-
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
       o.chart.lead.nodata = chartData.lead.nodata;
     }
-
     o.chart.barchart = {
       value: building.get(chartData.barchart.field),
       color: this.getColor(chartData.barchart.field, building.get(chartData.barchart.field)),
@@ -109,21 +94,17 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       min: chartData.barchart.min,
       max: chartData.barchart.max
     };
-
     if (!_.isNumber(o.chart.barchart.value) || _.isNaN(o.chart.barchart.value)) {
       o.chart.barchart.nodata = chartData.barchart.nodata;
     }
-
     return o;
   };
-
   BuildingInfoPresenter.prototype.getColor = function (field, value) {
     if (!this.controls || !this.controls._wrapped) return this.defaultColor;
 
     // TODO: fix hacky way to deal w/ quartiles
     var filter = this.controls._wrapped.find(function (item) {
       if (item.viewType !== 'filter') return false;
-
       if (item.layer.id === 'site_eui_quartiles') {
         return false;
         // return field === 'site_eui' && this.layerName  === 'site_eui_quartiles';
@@ -131,9 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       return item.layer.field_name === field;
     });
-
     if (!filter) return this.defaultColor;
-
     return filter.getColorForValue(value);
   };
 
@@ -148,30 +127,23 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     this.footprintsAllowed = this.config.allowable || false;
     this.mode = this.getMode();
   };
-
   BuildingLayerWatcher.prototype.getMode = function () {
     if (!this.footprintsAllowed) return 'dots'; // `dots` are going to be our default
 
     var zoom = this.map.getZoom();
     if (this.currentZoom === zoom) return this.mode;
     this.currentZoom = zoom;
-
     return zoom >= this.config.atZoom ? 'footprints' : 'dots';
   };
 
   // Determines whether to change the layer type
   BuildingLayerWatcher.prototype.check = function () {
     if (!this.footprintsAllowed) return false;
-
     var mode = this.getMode();
-
     if (mode === this.mode) return false;
-
     this.mode = mode;
-
     return true;
   };
-
   BuildingLayerWatcher.prototype.fillType = function () {
     return this.mode === 'dots' ? 'marker-fill' : 'polygon-fill';
   };
@@ -188,39 +160,30 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       return 'b.' + lyr.field_name;
     });
     this.mapLayerFields.push('b.id');
-
     this.mapLayerFields = _.uniq(this.mapLayerFields);
     this.mapLayerFields = this.mapLayerFields.join(',');
   };
-
   FootprintGenerateSql.prototype.sql = function (components) {
     var tableFootprint = this.footprintConfig.table_name;
     var tableData = components.table;
 
     // Base query
     var query = 'SELECT a.*,' + this.mapLayerFields + ' FROM ' + tableFootprint + ' a,' + tableData + ' b WHERE a.buildingid = b.id AND ';
-
     var filterSql = components.year.concat(components.range).concat(components.category).filter(function (e) {
       return e.length > 0;
     });
-
     query += filterSql.join(' AND ');
-
     return query;
   };
-
   var LayerView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.state = options.state;
       this.leafletMap = options.leafletMap;
       this.mapView = options.mapView;
       this.mapElm = $(this.leafletMap._container);
-
       this.allBuildings = new CityBuildings(null, {});
-
       this.footprints_cfg = this.state.get('city').get('building_footprints');
       this.buildingLayerWatcher = new BuildingLayerWatcher(this.footprints_cfg, this.leafletMap);
-
       this.footprintGenerateSql = new FootprintGenerateSql(this.footprints_cfg, this.state.get('city').get('map_layers'));
 
       // Listen for all changes but filter in the handler for these
@@ -230,9 +193,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       // building has a different handler
       this.listenTo(this.state, 'change:building', this.onBuildingChange);
       this.listenTo(this.allBuildings, 'sync', this.render);
-
       this.listenTo(this.state, 'clearMapPopup', this.onClearMapPopupTrigger, this);
-
       var self = this;
       this.leafletMap.on('popupclose', function (e) {
         // When the map is closing the popup the id's will match,
@@ -241,157 +202,127 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         if (e.popup._buildingid === self.state.get('building')) {
           e.popup._buildingid = null;
           self._popupid = undefined;
-          self.state.set({ building: null });
+          self.state.set({
+            building: null
+          });
         }
       });
-
       this.leafletMap.on('popupopen', function (e) {
         $('#view-report').on('click', self.onViewReportClick.bind(self));
         $('#compare-building').on('click', self.onCompareBuildingClick.bind(self));
       });
     },
-
     // Keep popup in map view after showing more details
     adjustPopup: function adjustPopup(layer) {
       var container = $(layer._container);
       var latlng = layer.getLatLng();
-
       var pt = this.leafletMap.latLngToContainerPoint(latlng);
       var height = container.height();
       var top = pt.y - height;
-
       if (top < 0) {
         this.leafletMap.panBy([0, top]);
       }
     },
-
     onClearMapPopupTrigger: function onClearMapPopupTrigger() {
       this.onClearPopups();
     },
-
     onClearPopups: function onClearPopups() {
       var map = this.leafletMap;
-
       map.eachLayer(function (lyr) {
         if (lyr._tip) {
           map.removeLayer(lyr);
         }
       });
     },
-
     isSelectedBuilding: function isSelectedBuilding(selected_buildings, id) {
       var hasBuilding = selected_buildings.find(function (b) {
         return b.id === id;
       });
-
       return hasBuilding;
     },
-
     makeSelectedBuildingsState: function makeSelectedBuildingsState(id) {
       var selected_buildings = this.state.get('selected_buildings') || [];
       if (this.isSelectedBuilding(selected_buildings, id)) return null;
       if (selected_buildings.length === 5) return null;
-
       var out = selected_buildings.map(function (b) {
         b.selected = false;
         return b;
       });
-
       out.push({
         id: id,
         insertedAt: Date.now(),
         selected: true
       });
-
       out.sort(function (a, b) {
         return a.insertedAt - b.insertedAt;
       });
-
       return out;
     },
-
     onCompareBuildingClick: function onCompareBuildingClick(evt) {
       if (evt.preventDefault) evt.preventDefault();
       var buildingId = this.state.get('building');
       if (!buildingId) return;
-
       this.onClearPopups();
-      this.state.set({ building_compare_active: true });
+      this.state.set({
+        building_compare_active: true
+      });
       return false;
     },
-
     onViewReportClick: function onViewReportClick(evt) {
       if (evt.preventDefault) evt.preventDefault();
-      this.state.set({ report_active: true });
+      this.state.set({
+        report_active: true
+      });
       return false;
     },
-
     onBuildingChange: function onBuildingChange() {
       var building_id = this.state.get('building');
       var isShowing = building_id === this._popupid;
-
       if (!this.allBuildings.length) return;
       if (!building_id || isShowing) return;
       if (!this.mapView.getControls()) return;
-
       this.popup_dirty = false;
-
       var propertyId = this.state.get('city').get('property_id');
-
       if (this.buildingLayerWatcher.mode !== 'dots') {
         propertyId = this.footprints_cfg.property_id;
       }
-
       var template = _.template(BuildingInfoTemplate);
-
       var presenter = new BuildingInfoPresenter(this.state.get('city'), this.allBuildings, building_id, propertyId, this.mapView.getControls(), this.state.get('layer'));
-
       if (!presenter.toLatLng()) return;
-
       var popup = L.popup().setLatLng(presenter.toLatLng()).setContent(template({
         data: presenter.toPopulatedLabels(),
         compare_disabled: ''
       }));
-
       this._popupid = building_id;
       popup._buildingid = building_id;
       popup.openOn(this.leafletMap);
     },
-
     onFeatureClick: function onFeatureClick(event, latlng, _unused, data) {
       var propertyId = this.state.get('city').get('property_id');
-
       if (this.buildingLayerWatcher.mode !== 'dots') {
         propertyId = this.footprints_cfg.property_id;
       }
-
       var buildingId = data[propertyId];
       var state = {
         building: buildingId
       };
-
       var selectedBuildings = this.makeSelectedBuildingsState(buildingId);
-
       if (selectedBuildings) {
         state.selected_buildings = selectedBuildings;
       }
-
       this.state.set(state);
     },
-
     onFeatureOver: function onFeatureOver() {
       this.mapElm.css('cursor', 'help');
     },
     onFeatureOut: function onFeatureOut() {
       this.mapElm.css('cursor', '');
     },
-
     onStateChange: function onStateChange() {
       // TODO: should not be mutating the buildings model.
       _.extend(this.allBuildings, this.state.pick('tableName', 'cartoDbUser'));
       this.allBuildings.fetch(this.state.get('year'));
     },
-
     changeStateChecker: function changeStateChecker() {
       // filters change
       if (this.state._previousAttributes.filters !== this.state.attributes.filters) {
@@ -416,44 +347,33 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         if (this.buildingLayerWatcher.check()) this.render();
       }
     },
-
     toCartoSublayer: function toCartoSublayer() {
       var layerMode = this.buildingLayerWatcher.mode;
       var cssFillType = this.buildingLayerWatcher.fillType();
-
       var buildings = this.allBuildings;
       var state = this.state;
       var city = state.get('city');
       var year = state.get('year');
       var layer = state.get('layer');
-
       var cityLayer = _.find(city.get('map_layers'), function (lyr) {
         if (lyr.id) return lyr.id === layer;
         return lyr.field_name === layer;
       });
-
       var fieldName = cityLayer.field_name;
       var buckets = cityLayer.range_slice_count;
       var colorStops = cityLayer.color_range;
-
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
-
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
-
       var stylesheet = new CartoStyleSheet(buildings.tableName, calculator, layerMode);
-
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
-
       var cartocss = stylesheet.toCartoCSS();
       var interactivity = this.state.get('city').get('property_id');
-
       return {
         sql: sql,
         cartocss: cartocss,
         interactivity: layerMode === 'dots' ? interactivity : interactivity += ',' + this.footprints_cfg.property_id
       };
     },
-
     render: function render() {
       if (this.cartoLayer) {
         this.cartoLayer.getSubLayer(0).set(this.toCartoSublayer()).show();
@@ -462,21 +382,19 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       // skip if we are loading `cartoLayer`
       if (this.cartoLoading) return;
-
       this.cartoLoading = true;
       cartodb.createLayer(this.leafletMap, {
         user_name: this.allBuildings.cartoDbUser,
         type: 'cartodb',
         sublayers: [this.toCartoSublayer()]
-      }, { https: true }).addTo(this.leafletMap).on('done', this.onCartoLoad, this);
-
+      }, {
+        https: true
+      }).addTo(this.leafletMap).on('done', this.onCartoLoad, this);
       return this;
     },
-
     onCartoLoad: function onCartoLoad(layer) {
       this.cartoLoading = false;
       var sub = layer.getSubLayer(0);
-
       this.cartoLayer = layer;
       sub.setInteraction(true);
       sub.on('featureClick', this.onFeatureClick, this);
@@ -485,6 +403,5 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       this.onBuildingChange();
     }
   });
-
   return LayerView;
 });

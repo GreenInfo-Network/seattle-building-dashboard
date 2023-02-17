@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 define(['backbone'], function (Backbone) {
   var Scorecard = Backbone.Model.extend({
@@ -8,6 +8,5 @@ define(['backbone'], function (Backbone) {
       type: 'city'
     }
   });
-
   return Scorecard;
 });

@@ -1,9 +1,13 @@
-'use strict';
+"use strict";
 
 define(['jquery'], function ($) {
   var deparam = function deparam(params, coerce) {
     var obj = {};
-    var coerce_types = { 'true': !0, 'false': !1, 'null': null };
+    var coerce_types = {
+      'true': !0,
+      'false': !1,
+      'null': null
+    };
 
     // Iterate over all name=value pairs.
     $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
@@ -80,9 +84,7 @@ define(['jquery'], function ($) {
         obj[key] = coerce ? undefined : '';
       }
     });
-
     return obj;
   };
-
   return deparam;
 });

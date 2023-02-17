@@ -1,9 +1,8 @@
-'use strict';
+"use strict";
 
 define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/performance_standard.html'], function ($, _, Backbone, d3, wrap, PerformanceStandardTemplate) {
   var PerformanceStandardView = Backbone.View.extend({
     className: 'performance-standard-chart',
-
     initialize: function initialize(options) {
       this.template = _.template(PerformanceStandardTemplate);
       this.formatters = options.formatters;
@@ -16,7 +15,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.cbps_flag = options.cbps_flag;
       this.cbps_flag_but_no_cbps_euit = options.cbps_flag_but_no_cbps_euit;
     },
-
     chartData: function chartData() {
       return {
         current_eui: this.current_eui,
@@ -26,7 +24,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         cbps_flag_but_no_cbps_euit: this.cbps_flag_but_no_cbps_euit
       };
     },
-
     renderBarChart: function renderBarChart(data) {
       var parent = d3.select('div#performance-standard-bar-chart');
       if (!parent.node()) return;
@@ -44,14 +41,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var chartOffset = outerHeight / 2 - barHeight / 2;
       // place the text just below the chart
       var tickOffset = outerHeight / 2 + barHeight;
-
-      var svg = parent.append('svg').attr('viewBox', '0 0 ' + outerWidth + ' ' + outerHeight);
-
-      var chartGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + chartOffset + ')');
-
-      var tickGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + tickOffset + ')');
-
-      var labelGroup = svg.append('g').attr('transform', 'translate(' + margin_left + ', ' + tickOffset + ')');
+      var svg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
+      var chartGroup = svg.append('g').attr('transform', "translate(".concat(margin_left, ", ").concat(chartOffset, ")"));
+      var tickGroup = svg.append('g').attr('transform', "translate(".concat(margin_left, ", ").concat(tickOffset, ")"));
+      var labelGroup = svg.append('g').attr('transform', "translate(".concat(margin_left, ", ").concat(tickOffset, ")"));
 
       // now some maths to work out a simple scale
       // we want the midpoint between two data points to be roughly the middle of the bar
@@ -70,7 +63,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       chartGroup.append('rect').attr('class', 'bar-eui').attr('fill', function () {
         return data.current_eui <= data.target_eui ? '#90AE60' : '#C04F31';
       }).attr('height', barHeight).attr('width', barWidth).attr('text', barWidth);
-
       var quartiles = [0, quartile, quartile * 2, quartile * 3, quartile * 4, quartile * 5];
       var quartileWidth = chartWidth / 5;
 
@@ -83,9 +75,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return d < data.current_eui;
       }).attr('transform', function (d, i) {
         var dx = quartileWidth * i;
-        return 'translate(' + dx + ', 0)';
+        return "translate(".concat(dx, ", 0)");
       });
-
       tickGroupInnerGroup.selectAll('.tick-label').data(function (d) {
         return [d];
       }).enter().append('text').attr('class', 'tick-label').attr('dx', function (d) {
@@ -96,14 +87,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }).text(function (d) {
         return d;
       });
-
       tickGroupInnerGroup.selectAll('.tick-line').data(function (d) {
         return [d];
       }).enter().append('line').attr('class', 'tick-line').attr('x1', 0).attr('y1', -15).attr('y2', -barHeight - 15);
 
       // append a group to hold the ticks for the current and target EUI
       var euiLabelGroup = labelGroup.append('g').attr('transform', function () {
-        return 'translate(' + (barWidth - 1) + ', 0)';
+        return "translate(".concat(barWidth - 1, ", 0)");
       });
 
       // now append the tick for the current EUI
@@ -112,7 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // append a group to hold the tick for the target EUI
       var targetWidth = data.target_eui * chartWidth / (quartile * 5);
       var targetLabelGroup = labelGroup.append('g').attr('transform', function () {
-        return 'translate(' + targetWidth + ', 0)';
+        return "translate(".concat(targetWidth, ", 0)");
       });
 
       // now append the tick for the target EUI
@@ -120,10 +110,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
 
       // append a div to hold the label for target EUI
       // div is more flexible, auto-sizes, has border radius, etc.
-      d3.select('#performance-standard-bar-chart').append('div').text(data.target_eui + ' (Estimated EUI Target)').attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '109px');
+      d3.select('#performance-standard-bar-chart').append('div').text("".concat(data.target_eui, " (Estimated EUI Target)")).attr('class', 'chart-label').style('left', targetWidth - 20 + 'px').style('bottom', '109px');
 
       // append a div to hold the label for current EUI
-      d3.select('#performance-standard-bar-chart').append('div').text(data.current_eui.toLocaleString() + ' (Current EUI)').attr('class', 'chart-label').style('left', barWidth - 30 + 'px').style('bottom', '10px');
+      d3.select('#performance-standard-bar-chart').append('div').text("".concat(data.current_eui.toLocaleString(), " (Current EUI)")).attr('class', 'chart-label').style('left', barWidth - 30 + 'px').style('bottom', '10px');
 
       // append a div to hold a lable for "Meets target"
       d3.select('#performance-standard-bar-chart').append('div').text('Meets EUI Target').attr('class', 'chart-label-meets-target').style('left', targetWidth - 120 + 'px').style('bottom', '87px');
@@ -131,15 +121,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // append a div to hold a lable for "Misses target"
       d3.select('#performance-standard-bar-chart').append('div').text('Doesn\'t Meet EUI Target').attr('class', 'chart-label-misses-target').style('left', targetWidth + 20 + 'px').style('bottom', '87px');
     },
-
     roundToNearest: function roundToNearest(nearest, number) {
       // Math.ceil would take the upper?
       return Math.round(number / nearest) * nearest;
     },
-
     roundQuartile: function roundQuartile(quartile_rough) {
       // round the quartile according to the following rules
-      var quartile = void 0;
+      var quartile;
       if (quartile_rough > 1000) {
         quartile = this.roundToNearest(50, quartile_rough);
       } else if (quartile_rough > 100 && quartile_rough <= 1000) {
@@ -153,11 +141,9 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }
       return quartile;
     },
-
     render: function render() {
       return this.template(this.chartData());
     },
-
     afterRender: function afterRender() {
       if (!this.isCity) {
         var chartData = this.chartData();
@@ -165,6 +151,5 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }
     }
   });
-
   return PerformanceStandardView;
 });

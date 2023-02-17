@@ -24,9 +24,8 @@
     "property_name": "property_name",
     "building_type": "property_type",
     "search": {
-        "url": "https://search.mapzen.com/v1/search",
+        "url": "https://nominatim.openstreetmap.org",
         "bounds": [38.79163, -77.119766, 38.995853, -76.909363],
-        "api_key": "search-oqsffOQ",
         "terms": [
             {
                 "name": "property",
@@ -224,7 +223,7 @@
     "building_footprints": {
         "allowable": true,
         "atZoom": 15,
-        "property_id": "buildingid",
+        "property_id": "id",
         "table_name": "seattle_building_outlines_2021"
     },
     "scorecard": {
@@ -581,6 +580,6 @@
     },
     "footer": {
         "about_link": "http://www.seattle.gov/environment/climate-change/building-energy/energy-benchmarking",
-        "download_link": "http://www.seattle.gov/environment/climate-change/building-energy/energy-benchmarking/why-benchmarking-is-required#dataanalysis"
+        "download_link": "https://www.seattle.gov/environment/climate-change/buildings-and-energy/energy-benchmarking/data-and-reports"
     }
 }

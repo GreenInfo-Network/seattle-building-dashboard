@@ -1,7 +1,11 @@
-'use strict';
+"use strict";
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fueluse', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, FuelUseView, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
@@ -10,56 +14,43 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       this.metricFilters = options.metricFilters;
       this.parentEl = options.parentEl;
       this.template = _.template(BuildingTemplate);
-
       this.charts = {};
-
       return this;
     },
-
     events: {
       'click .sc-toggle--input': 'toggleView',
       'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart'
     },
-
     close: function close() {
       this.scoreCardData = null;
     },
-
     scrollToPerformanceStandardChart: function scrollToPerformanceStandardChart(evt) {
       evt.preventDefault();
       this.parentEl[0].scrollTo(0, this.parentEl.find('#performance-standard-chart')[0].offsetTop);
       return false;
     },
-
     toggleView: function toggleView(evt) {
       evt.preventDefault();
-
       var scorecardState = this.state.get('scorecard');
       var view = scorecardState.get('view');
-
       var target = evt.target;
       var value = target.dataset.view;
-
       if (value === view) {
         return false;
       }
-
-      scorecardState.set({ 'view': value });
+      scorecardState.set({
+        'view': value
+      });
     },
-
     onViewChange: function onViewChange() {
       this.render();
     },
-
     render: function render() {
       var _this = this;
-
       if (!this.state.get('report_active')) return;
-
       var id = this.state.get('building');
       var year = this.state.get('year');
       var buildings = this.state.get('allbuildings');
-
       var city = this.state.get('city');
       var table = city.get('table_name');
       var years = _.keys(city.get('years')).map(function (d) {
@@ -71,38 +62,32 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         this.show(buildings, this.scoreCardData.data, year, years);
       } else {
         var yearWhereClause = years.reduce(function (a, b) {
-          if (!a.length) return 'year=' + b;
-          return a + (' OR year=' + b);
+          if (!a.length) return "year=".concat(b);
+          return a + " OR year=".concat(b);
         }, '');
 
         // Get building data for all years
-        d3.json('https://cityenergy-seattle.carto.com/api/v2/sql?q=SELECT+ST_X(the_geom)+AS+lng%2C+ST_Y(the_geom)+AS+lat%2C*+FROM+' + table + '+WHERE+id=' + id + ' AND(' + yearWhereClause + ')', function (payload) {
+        d3.json("https://cityenergy-seattle.carto.com/api/v2/sql?q=SELECT+ST_X(the_geom)+AS+lng%2C+ST_Y(the_geom)+AS+lat%2C*+FROM+".concat(table, "+WHERE+id=").concat(id, " AND(").concat(yearWhereClause, ")"), function (payload) {
           if (!_this.state.get('report_active')) return;
-
           if (!payload) {
             console.error('There was an error loading building data for the scorecard');
             return;
           }
-
           var data = {};
           payload.rows.forEach(function (d) {
-            data[d.year] = _extends({}, d);
+            data[d.year] = _objectSpread({}, d);
           });
-
           _this.scoreCardData = {
             id: _this.state.get('building'),
             data: data
           };
-
           _this.show(buildings, data, year, years);
         });
       }
     },
-
     show: function show(buildings, building_data, selected_year, avail_years) {
       this.processBuilding(buildings, building_data, selected_year, avail_years);
     },
-
     getColor: function getColor(field, value) {
       if (!this.metricFilters || !this.metricFilters._wrapped) return '#f1f1f1';
 
@@ -112,87 +97,66 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           if (field === 'site_eui_quartiles') return true;
           return false;
         }
-
         return item.viewType === 'filter' && item.layer.field_name === field;
       });
-
       if (!filter) return 'red';
-
       return filter.getColorForValue(value);
     },
-
     getCompareChartBinnedData: function getCompareChartBinnedData(config, buildings, prop_type, view, selected_year) {
       var compareField = this.getViewField(view);
-
-      var buildingsOfType = buildings.where({ property_type: prop_type }).map(function (m) {
+      var buildingsOfType = buildings.where({
+        property_type: prop_type
+      }).map(function (m) {
         return m.toJSON();
       });
-
       var buildingsOfType_max = d3.max(buildingsOfType, function (d) {
         if (d.hasOwnProperty(compareField)) return d[compareField];
         return 0;
       });
-
       var buildingsOfType_min = d3.min(buildingsOfType, function (d) {
         if (d.hasOwnProperty(compareField)) return d[compareField];
         return 0;
       });
-
       var _bins;
       if (view === 'eui') {
         _bins = this.calculateEuiBins(buildingsOfType_min, buildingsOfType_max, config.thresholds.eui[prop_type][selected_year], config.thresholds.eui_schema);
       } else {
         _bins = this.calculateEnergyStarBins(config.thresholds.energy_star);
       }
-
       var data = d3.layout.histogram().bins(_bins).value(function (d) {
         return d[compareField];
       })(buildingsOfType);
-
       data.forEach(function (d, i) {
         d.min = _bins[i];
         d.max = _bins[i + 1];
       });
-
       return data;
     },
-
     getCompareChartColor: function getCompareChartColor(data, thresholds, id) {
       var selectedIndex = null;
-
       data.forEach(function (d, i) {
         if (selectedIndex !== null) return;
-
         var f = d.find(function (r) {
           return r.id === id;
         });
-
         if (f) selectedIndex = i;
       });
-
       var threshold = thresholds.filter(function (d) {
         return selectedIndex >= d.indices[0] && selectedIndex <= d.indices[1];
       })[0];
       return threshold.clr;
     },
-
     getViewField: function getViewField(view) {
       return view === 'eui' ? 'site_eui_wn' : 'energy_star_score';
     },
-
     energyStarCertified: function energyStarCertified(view, building, config) {
       if (view === 'eui') return false;
-
       var certifiedField = config.certified_field || null;
-
       if (certifiedField === null) return false;
-
       return !!building[certifiedField];
     },
-
     processBuilding: function processBuilding(buildings, building_data, selected_year, avail_years) {
       var _this2 = this;
-
       var building = building_data[selected_year];
       var view = this.state.get('scorecard').get('view');
       var name = building.property_name;
@@ -207,13 +171,12 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var eui_direction = eui_difference < 0 ? 'decreased' : 'increased';
       var eui_direction_word = eui_difference < 0 ? 'lower' : 'higher';
       var eui_difference_formatted = Math.abs(eui_difference) / 100;
-
       eui_difference_formatted = eui_difference_formatted.toLocaleString('en-US', {
         style: 'percent',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
       });
-      var eui_direction_statement = eui_difference_formatted + ' ' + eui_direction_word;
+      var eui_direction_statement = "".concat(eui_difference_formatted, " ").concat(eui_direction_word);
 
       // for building details second card "emissions per square foot"
       var total_ghg = building.total_ghg_emissions_intensity;
@@ -227,17 +190,13 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
       });
-      var ghg_direction_statement = ghg_difference_formatted + ' ' + ghg_direction_word;
-
+      var ghg_direction_statement = "".concat(ghg_difference_formatted, " ").concat(ghg_direction_word);
       var config = this.state.get('city').get('scorecard');
-
-      var viewSelector = '#scorecard-view';
+      var viewSelector = "#scorecard-view";
       var el = this.$el.find(viewSelector);
       var compareField = this.getViewField('eui');
-
       var value = building.hasOwnProperty(compareField) ? building[compareField] : null;
       var data = this.getCompareChartBinnedData(config, buildings, prop_type, 'eui', selected_year);
-
       var thresholds = this.getThresholdLabels(config.thresholds.eui_schema);
       var valueColor = this.getColor(compareField, value);
       if (compareField === 'site_eui_wn') {
@@ -247,10 +206,8 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         value = null;
         valueColor = '#aaa';
       }
-
       var chartdata = this.prepareCompareChartData(config, buildings, building, selected_year, 'eui', prop_type, id);
       var essChartData = this.prepareCompareChartData(config, buildings, building, selected_year, 'ess', prop_type, id);
-
       el.html(this.template({
         active: 'active',
         name: name,
@@ -290,7 +247,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           parent: el[0]
         });
       }
-
       el.find('#fuel-use-chart').html(this.charts['eui'].chart_fueluse.render());
       this.charts['eui'].chart_fueluse.afterRender();
 
@@ -309,7 +265,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
             cbps_flag_but_no_cbps_euit: building.cbps_flag && !building.cbps_euit
           });
         }
-
         el.find('#performance-standard-chart').html(this.charts['eui'].chart_performance_standard.render());
         this.charts['eui'].chart_performance_standard.afterRender();
         $('div#state-requirement-wrapper').removeClass('wrapper-hidden');
@@ -325,19 +280,16 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         var building_years = Object.keys(building_data).sort(function (a, b) {
           return parseInt(a) - parseInt(b);
         });
-
         var shiftConfig = config.change_chart.building;
         var previousYear = building_years[0];
 
         // by definition, we should always have a previous year, or else a single year of data
         // so how can no_year be a condition?
         var hasPreviousYear = previousYear !== selected_year;
-
         var change_data = hasPreviousYear ? this.extractChangeData(building_data, buildings, building, shiftConfig) : null;
 
         // trap case where there is a range of only one year, send to the view for rendering an error
         var single_year = building_years.length === 1;
-
         this.charts['eui'].chart_shift = new ShiftView({
           formatters: this.formatters,
           data: change_data,
@@ -364,19 +316,18 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       // Add building comments (??)
       if (!this.commentview) {
-        this.commentview = new CommentView({ building: building });
-
+        this.commentview = new CommentView({
+          building: building
+        });
         this.commentview.render(function (markup) {
           _this2.parentEl.find('#building-comments').html(markup);
         });
       }
     },
-
     addressLine2: function addressLine2(building) {
       var city = building.city;
       var state = building.state;
       var zip = building.zip;
-
       var addr = city;
       if (state) {
         addr += ' ' + state;
@@ -384,10 +335,8 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       if (zip) {
         addr += ' ' + zip;
       }
-
       return addr;
     },
-
     costs: function costs(building, year) {
       //  ft²
       var per_sqft = building.cost_sq_ft;
@@ -396,28 +345,24 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       } else {
         per_sqft = this.formatters.currency(per_sqft);
       }
-
       var annual = building.cost_annual;
       if (annual === null) {
         annual = '0';
       } else {
         annual = this.formatters.currency_zero(annual);
       }
-
       var save_pct = building.percent_save;
       if (save_pct === null) {
         save_pct = '0';
       } else {
         save_pct = this.formatters.percent(save_pct);
       }
-
       var savings = building.amount_save;
       if (savings === null) {
         savings = '0';
       } else {
         savings = this.formatters.currency_zero(savings);
       }
-
       return {
         per_sqft: per_sqft,
         annual: annual,
@@ -425,21 +370,18 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         savings: savings
       };
     },
-
     viewlabels: function viewlabels(view, config) {
       return {
         view: view,
-        label_long: config.labels[view].long,
-        label_short: config.labels[view].short
+        label_long: config.labels[view]["long"],
+        label_short: config.labels[view]["short"]
       };
     },
-
     compare: function compare(building, view, config, chartdata) {
       var change_pct;
       var change_label;
       var isValid;
       var compareConfig = config.compare_chart;
-
       if (view === 'eui') {
         change_pct = (building.site_eui_wn - building.building_type_eui_wn) / building.building_type_eui_wn * 100;
         isValid = _.isNumber(change_pct) && _.isFinite(change_pct);
@@ -449,58 +391,44 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         change_pct = Math.abs(chartdata.building_value - chartdata.mean);
         isValid = _.isNumber(change_pct) && _.isNumber(chartdata.building_value) && _.isFinite(change_pct);
         change_pct = this.formatters.fixedZero(change_pct);
-
         change_label = chartdata.building_value >= chartdata.mean ? 'higher' : 'lower';
       }
-
       var o = {
         isValid: isValid,
         change_label: change_label,
         change_pct: change_pct,
         error: !isValid ? compareConfig.nodata[view] : ''
       };
-
       return o;
     },
-
     calculateEuiBins: function calculateEuiBins(data_min, data_max, thresholds, schema) {
       var me = this;
       var _bins = [];
       var min;
       var max;
-
       schema.forEach(function (d, i) {
         min = thresholds[i - 1] ? thresholds[i - 1] : data_min;
         max = thresholds[i] ? thresholds[i] : data_max;
-
         me.binRange(min, max, d.steps, _bins);
       });
-
       _bins.push(data_max);
-
       return _bins.sort(function (a, b) {
         return a - b;
       });
     },
-
     calculateEnergyStarBins: function calculateEnergyStarBins(thresholds) {
       var me = this;
       var _bins = [];
-
       _bins.push(thresholds[thresholds.length - 1].range[1]);
-
       thresholds.forEach(function (d, i) {
         me.binRange(d.range[0], d.range[1], d.steps, _bins);
       });
-
       return _bins.sort(function (a, b) {
         return a - b;
       });
     },
-
     binRange: function binRange(min, max, steps, arr) {
       var step = (max - min) / (steps + 1);
-
       var s = min;
       arr.push(min);
       for (var i = 0; i < steps; i++) {
@@ -508,10 +436,11 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         arr.push(s);
       }
     },
-
     getMeanBuildingTypeGhg: function getMeanBuildingTypeGhg(buildings, property_type) {
       // first get all the buildings of this type
-      var buildingsOfType = buildings.where({ property_type: property_type }).map(function (m) {
+      var buildingsOfType = buildings.where({
+        property_type: property_type
+      }).map(function (m) {
         return m.toJSON();
       });
       // keep only a few fields, and remove blanks
@@ -531,14 +460,12 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       }));
       return mean;
     },
-
     getThresholdLabels: function getThresholdLabels(thresholds) {
       var prev = 0;
       return thresholds.map(function (d, i) {
         var start = prev;
         var end = start + d.steps;
         prev = end + 1;
-
         return {
           label: d.label,
           clr: d.color,
@@ -546,72 +473,57 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         };
       });
     },
-
     validNumber: function validNumber(x) {
       return _.isNumber(x) && _.isFinite(x);
     },
-
     prepareCompareChartData: function prepareCompareChartData(config, buildings, building, selected_year, view, prop_type, id) {
-      var buildingsOfType = buildings.where({ property_type: prop_type }).map(function (m) {
+      var buildingsOfType = buildings.where({
+        property_type: prop_type
+      }).map(function (m) {
         return m.toJSON();
       });
       var compareField = this.getViewField(view);
       var building_value = building.hasOwnProperty(compareField) ? building[compareField] : null;
-
       if (!this.validNumber(building_value)) {
         building_value = null;
       }
       var data = this.getCompareChartBinnedData(config, buildings, prop_type, view, selected_year);
-
-      var thresholds = void 0;
+      var thresholds;
       if (view === 'eui') {
         thresholds = this.getThresholdLabels(config.thresholds.eui_schema);
       } else {
         thresholds = this.getThresholdLabels(config.thresholds.energy_star);
       }
-
       var selectedIndex = null;
       var avgIndex = null;
-
       data.forEach(function (d, i) {
         if (selectedIndex !== null) return;
-
         var f = d.find(function (r) {
           return r.id === id;
         });
-
         if (f) selectedIndex = i;
       });
-
       var avg = view === 'eui' ? building.building_type_eui_wn : d3.mean(buildingsOfType, function (d) {
         return d[compareField];
       });
-
       if (view !== 'eui') {
         avg = Math.round(avg);
       } else {
         avg = +this.formatters.fixedOne(avg);
       }
-
       data.forEach(function (d, i) {
         if (avgIndex !== null) return;
-
         var next = data[i + 1] || null;
-
         if (next === null) {
           avgIndex = i;
           return;
         }
-
         if (avg >= d.min && avg < next.min) avgIndex = i;
       });
-
-      var avgColor = void 0;
-      var selectedColor = void 0;
-
+      var avgColor;
+      var selectedColor;
       if (compareField === 'site_eui_wn') {
         selectedColor = this.getCompareChartColor(data, thresholds, id);
-
         thresholds.forEach(function (d) {
           if (avgIndex >= d.indices[0] && avgIndex <= d.indices[1]) {
             avgColor = d.clr;
@@ -621,9 +533,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         avgColor = this.getColor(compareField, avg);
         selectedColor = this.getColor(compareField, building_value);
       }
-
       if (!this.validNumber(avg)) avg = null;
-
       return {
         selectedIndex: selectedIndex,
         avgIndex: avgIndex,
@@ -636,43 +546,38 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         mean: avg
       };
     },
-
     // Render Energy Use Compared To Average and Energy Star Score Compared To Average
     renderCompareChart: function renderCompareChart(config, chartdata, view, prop_type, name, viewSelector) {
       var container = d3.select(viewSelector);
-      var rootElm = container.select('.' + view + '-compare-chart');
-
+      var rootElm = container.select(".".concat(view, "-compare-chart"));
       if (!rootElm.node()) return;
       if (chartdata.selectedIndex === null && (chartdata.avgIndex === null || chartdata.mean === null)) {
         console.warn('Could not find required data!', view, chartdata);
         return;
       }
-
       var outerWidth = rootElm.node().offsetWidth;
       var outerHeight = rootElm.node().offsetHeight;
 
       // Don't bother rendering a chart if it will be invisible
       if (outerWidth <= 0 || outerHeight <= 0) return;
-
       var compareChartConfig = config.compare_chart;
-      var margin = { top: 65, right: 30, bottom: 40, left: 40 };
+      var margin = {
+        top: 65,
+        right: 30,
+        bottom: 40,
+        left: 40
+      };
       var width = outerWidth - margin.left - margin.right;
       var height = outerHeight - margin.top - margin.bottom;
-
       var x = d3.scale.ordinal().rangeRoundBands([0, width], 0.3, 0).domain(chartdata.data.map(function (d) {
         return d.x;
       }));
-
       var y = d3.scale.linear().domain([0, d3.max(chartdata.data, function (d) {
         return d.y;
       })]).range([height, 0]);
-
-      var svg = rootElm.append('svg').attr('viewBox', '0 0 ' + outerWidth + ' ' + outerHeight);
-
+      var svg = rootElm.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
       var chartGroup = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
       chartGroup.append('g').attr('class', 'y axis').call(d3.svg.axis().scale(y).orient('left').ticks(5).outerTickSize(0).innerTickSize(2));
-
       var threshold = chartGroup.append('g').attr('class', 'x axis').attr('transform', function (d) {
         return 'translate(0,' + (height + 10) + ')';
       }).selectAll('.threshold').data(chartdata.thresholds).enter().append('g').attr('class', 'threshold').attr('transform', function (d) {
@@ -680,7 +585,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
         var start = x(chartdata.data[indices[0]].x);
         return 'translate(' + start + ',0)';
       });
-
       threshold.append('line').attr('x1', 0).attr('x2', function (d) {
         var indices = d.indices;
         var start = x(chartdata.data[indices[0]].x);
@@ -689,7 +593,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       }).attr('fill', 'none').attr('stroke', function (d) {
         return d.clr;
       });
-
       threshold.append('text').attr('fill', function (d) {
         return d.clr;
       }).attr('dy', 14).attr('dx', function (d) {
@@ -703,7 +606,6 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           return 'end';
         }
         if (i === 2 && view === 'eui') return 'start';
-
         return 'middle';
       }).text(function (d) {
         return d.label;
@@ -713,26 +615,23 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       if (view === 'ess') {
         chartGroup.select('.x.axis').selectAll('.label').data([1, 100]).enter().append('g').attr('class', 'label').attr('transform', function (d) {
           var labelX = d === 1 ? 0 : width - 5;
-          return 'translate(' + labelX + ', 3)';
+          return "translate(".concat(labelX, ", 3)");
         }).append('text').text(function (d) {
           return d;
         });
       }
-
       chartGroup.append('g').attr('class', 'label').attr('transform', function (d) {
         return 'translate(' + -30 + ',' + height / 2 + ')';
       }).append('text').text(compareChartConfig.y_label).attr('text-anchor', 'middle').attr('transform', 'rotate(-90)');
-
       chartGroup.append('g').attr('class', 'label').attr('transform', function (d) {
         return 'translate(' + width / 2 + ',' + (height + 40) + ')';
       }).append('text').text(compareChartConfig.x_label[view]).attr('text-anchor', 'middle');
-
       var bar = chartGroup.selectAll('.bar').data(chartdata.data).enter().append('g').attr('class', 'bar').attr('transform', function (d) {
         return 'translate(' + x(d.x) + ',' + y(d.y) + ')';
       });
-
       bar.append('rect').attr('x', 1).attr('width', x.rangeBand()).attr('height', function (d) {
-        var h = height - y(d.y);return h;
+        var h = height - y(d.y);
+        return h;
       }).attr('class', function (d, i) {
         if (i === chartdata.selectedIndex) return 'building-bar selected';
         if (i === chartdata.avgIndex) return 'avg-bar selected';
@@ -742,11 +641,9 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           if (chartdata.building_value === null) return '#F1F1F1';
           return chartdata.selectedColor;
         }
-
         if (i === chartdata.avgIndex) {
           return chartdata.avgColor;
         }
-
         return '#F1F1F1';
       }).attr('title', function (d) {
         return '>= ' + d.x + ' && < ' + (d.x + d.dx);
@@ -760,11 +657,8 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var circleRadius = 30;
       var highlightOffsetY = -62;
       var highlightTopMargin = margin.top + highlightOffsetY;
-
-      var selectedCityHighlight = chartGroup.append('g').classed('selected-city-highlight', true).attr('transform', 'translate(' + (xpos - circleRadius) + ', ' + highlightOffsetY + ')');
-
-      var selectedValueTextGroup = selectedCityHighlight.append('g').attr('transform', 'translate(' + circleRadius + ', ' + circleRadius + ')');
-
+      var selectedCityHighlight = chartGroup.append('g').classed('selected-city-highlight', true).attr('transform', "translate(".concat(xpos - circleRadius, ", ").concat(highlightOffsetY, ")"));
+      var selectedValueTextGroup = selectedCityHighlight.append('g').attr('transform', "translate(".concat(circleRadius, ", ").concat(circleRadius, ")"));
       var selectedValueText = selectedValueTextGroup.append('text');
 
       // add EUI or ESS value
@@ -773,45 +667,38 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
 
       // add units
       selectedValueTextGroup.append('text').text(compareChartConfig.highlight_metric[view]).attr('x', 0).attr('y', 3).attr('dy', '1em').style('fill', '#000').classed('units', true).call(wrap, circleRadius * 2);
-
       selectedValueTextGroup.attr('transform', function () {
         var textGroupHeight = selectedValueTextGroup.node().getBBox().height;
         var valueHeight = selectedValueText.node().getBBox().height;
         var y = highlightTopMargin + valueHeight / 2 + (circleRadius - textGroupHeight / 2);
-        return 'translate(' + circleRadius + ', ' + y + ')';
+        return "translate(".concat(circleRadius, ", ").concat(y, ")");
       });
-
       var buildingNameText = selectedCityHighlight.append('g').append('text').text(name).classed('building-name', true).call(wrap, 170);
-
       buildingNameText.attr('transform', function () {
         var bbox = buildingNameText.node().getBBox();
         var nodeWidth = bbox.width;
         var nodeHeight = bbox.height;
         var x = circleRadius * 2 + 7;
-
         if (nodeWidth + xpos + circleRadius > width) {
           x = -(nodeWidth + 5);
         }
         var y = circleRadius - nodeHeight / 2 + highlightTopMargin + 6;
-        return 'translate(' + x + ', ' + y + ')';
+        return "translate(".concat(x, ", ").concat(y, ")");
       });
-
       var linebuffer = view == 'eui' ? -8 : -5;
-      selectedCityHighlight.append('path').classed('line', true).attr('d', d3.svg.line()([[circleRadius + 1, circleRadius * 2 + linebuffer], // line start
-      [circleRadius + 1, margin.top + ypos - highlightTopMargin]] // line finish (top of bar)
-      ));
+      selectedCityHighlight.append('path').classed('line', true).attr('d', d3.svg.line()([[circleRadius + 1, circleRadius * 2 + linebuffer],
+      // line start
+      [circleRadius + 1, margin.top + ypos - highlightTopMargin] // line finish (top of bar)
+      ]));
 
       //
       // Set average label and fill
       //
       if (chartdata.avgIndex === null) return;
       if (chartdata.mean === null) return;
-
       xpos = x(chartdata.data[chartdata.avgIndex].x);
-
       var avgPadding = 5;
       var xTranslate = xpos + xBandWidth + avgPadding;
-
       ypos = y(chartdata.data[chartdata.avgIndex].y); // top of bar
 
       // var xBandWidth = x.rangeBand();
@@ -888,52 +775,38 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       //   ]));
 
       var yTranslate = ypos + 5;
-      var averageBuildingHighlight = chartGroup.append('g').classed('average-building-highlight', true).attr('transform', 'translate(' + xTranslate + ', ' + yTranslate + ')');
-
+      var averageBuildingHighlight = chartGroup.append('g').classed('average-building-highlight', true).attr('transform', "translate(".concat(xTranslate, ", ").concat(yTranslate, ")"));
       var averageText = averageBuildingHighlight.append('text');
-
       averageText.append('tspan').text('Building type average').classed('building-name', true).call(wrap, 75);
-
       averageText.append('tspan').text(chartdata.mean).attr('x', 0).attr('dy', '.7em').style('fill', '#707070').classed('value', true);
-
       averageText.append('tspan').text(compareChartConfig.highlight_metric[view]).attr('x', 0).attr('dy', '1.5em').style('fill', '#707070').classed('label', true);
-
       var averageBbox = averageBuildingHighlight.node().getBBox();
       if (xpos < selectedXPos && xpos + averageBbox.width > selectedXPos) {
         xTranslate = xpos - avgPadding;
         averageBuildingHighlight.classed('align-right', true);
       }
-
       if (ypos + averageBbox.height > height) {
         yTranslate = height - averageBbox.height;
       }
-
-      averageBuildingHighlight.attr('transform', 'translate(' + xTranslate + ', ' + yTranslate + ')');
+      averageBuildingHighlight.attr('transform', "translate(".concat(xTranslate, ", ").concat(yTranslate, ")"));
     },
-
     extractChangeData: function extractChangeData(yearly, buildings, building, config) {
       var _this3 = this;
-
       var o = [];
       var colorScales = {};
       config.metrics.forEach(function (metric) {
         if (metric.colorize && !colorScales.hasOwnProperty(metric.field)) {
           var gradientCalculator = new BuildingColorBucketCalculator(buildings, metric.field, metric.range_slice_count, metric.color_range, null, null);
-
           var scale = gradientCalculator.colorGradient().copy();
           var domain = scale.domain();
           var len = domain.length - 1;
-
           if (building[metric.field] > domain[len]) {
             domain[len] = building[metric.field];
           }
-
           scale.domain(domain);
-
           colorScales[metric.field] = scale;
         }
       });
-
       Object.keys(yearly).forEach(function (year) {
         var bldings = yearly[year];
         config.metrics.forEach(function (metric) {
@@ -944,17 +817,13 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           } else {
             label = metric.label;
           }
-
           var value = bldings[metric.field];
-
           if (!_this3.validNumber(value)) {
             value = null;
           } else {
             value = +value.toFixed(1);
           }
-
           var clr = colorScales.hasOwnProperty(metric.field) && metric.colorize ? colorScales[metric.field](value) : null;
-
           o.push({
             label: label,
             field: metric.field,
@@ -967,12 +836,10 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
           });
         });
       });
-
       return o.sort(function (a, b) {
         return a.year - b.year;
       });
     }
   });
-
   return BuildingScorecard;
 });

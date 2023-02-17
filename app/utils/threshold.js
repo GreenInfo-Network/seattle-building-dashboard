@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 define(['underscore', 'd3'], function (_, d3) {
   var getThresholds = function getThresholds(thresholds, proptype, yr) {
@@ -7,13 +7,11 @@ define(['underscore', 'd3'], function (_, d3) {
         error: 'No threshold for property type'
       };
     }
-
     if (!thresholds[proptype][yr]) {
       return {
         error: 'No thresholds for year'
       };
     }
-
     return {
       data: thresholds[proptype][yr]
     };
@@ -24,20 +22,18 @@ define(['underscore', 'd3'], function (_, d3) {
     return _.reduce(thresholds, function (acc, item, idx) {
       if (thresholds[idx + 1]) {
         var max = thresholds[idx + 1] - 0.1;
-        acc.push(item + '-' + max.toFixed(1));
+        acc.push("".concat(item, "-").concat(max.toFixed(1)));
       } else {
-        acc.push('\u2265' + item);
+        acc.push("\u2265".concat(item));
       }
-
       return acc;
-    }, ['<' + thresholds[0]]);
+    }, ["<".concat(thresholds[0])]);
   };
 
   //
   var thresholdIndexScale = function thresholdIndexScale(thresholds) {
     return d3.scale.threshold().domain(thresholds).range(d3.range(0, thresholds.length + 1));
   };
-
   return {
     getThresholds: getThresholds,
     makeLabels: makeLabels,
