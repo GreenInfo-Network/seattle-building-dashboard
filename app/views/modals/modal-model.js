@@ -13,7 +13,7 @@ define(['underscore', 'backbone', 'd3'], function (_, Backbone, d3) {
     },
     url: function url(props) {
       if (props.tablename) return this.cartoUrl(props.tablename);
-      if (props.file) return "constants/".concat(props.file);
+      if (props.file) return "data/".concat(props.file);
       return null;
     },
     cartoUrl: function cartoUrl(tablename) {

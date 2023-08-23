@@ -78,23 +78,16 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'text!templates/scorecards/lin
       if (row) return this.format(row);
       return null;
     },
-    url: function url() {
-      var table = this.links_table;
-      var where = ["property_type in ('".concat(this.link_type, "', 'default')"), "building_id = ".concat(this.building)].join(' OR ');
-      var base = 'https://cityenergy-seattle.carto.com/api/v2/sql?q=';
-      var query = "SELECT * FROM ".concat(table, " WHERE ").concat(where);
-      return base + query;
-    },
     load: function load() {
       var _this2 = this;
       // Load link data
-      d3.json(this.url(), function (payload) {
+      d3.csv('data/links.csv', function (payload) {
         if (!_this2.active) return;
         if (!payload) {
           console.error('There was an error loading link data for the scorecard');
           return;
         }
-        var data = _this2.getRow(payload.rows || []);
+        var data = _this2.getRow(payload || []);
         if (!data || !Array.isArray(data.links)) {
           data = {
             error: 'Could not load links at this time',
