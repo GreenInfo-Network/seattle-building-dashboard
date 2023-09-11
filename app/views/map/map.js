@@ -116,8 +116,11 @@ define(['jquery', 'underscore', 'backbone', 'views/map/building_layer', 'views/m
         L.tileLayer(background, {
           zIndex: 0
         }).addTo(this.leafletMap);
+
+        // the layer that will hold building highlights
+        this.leafletMap.highlightLayer = L.featureGroup().addTo(this.leafletMap);
         this.leafletMap.zoomControl.setPosition('topright');
-        this.leafletMap.on('moveend', this.onMapMove, this);
+        this.leafletMap.on('moveend', _.debounce(this.onMapMove, 500), this);
 
         // TODO: Possibly remove the need for this
         // layer to make seperate Carto calls
