@@ -167,12 +167,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     this.mapLayerFields = _.uniq(this.mapLayerFields);
     this.mapLayerFields = this.mapLayerFields.join(',');
   };
-  FootprintGenerateSql.prototype.sql_as_json = function (building_id) {
-    var tableFootprint = this.footprintConfig.table_name;
-    var query = 'SELECT cartob_id, ST_ASGeoJSON(the_geom) as the_geom FROM ' + this.tableFootprint + ' WHERE buildingid = ' + building_id + ' LIMIT 1';
-    console.log(query);
-    return query;
-  };
   FootprintGenerateSql.prototype.sql = function (components) {
     var tableFootprint = this.footprintConfig.table_name;
     var tableData = components.table;
@@ -227,7 +221,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     // Add outline to highlight dot or footprint
     addBuildingOutline: function () {
       var _addBuildingOutline = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var building_id, propertyId, presenter, latlng, layerMode, circle, cartoDbUser, url, tablename, query, response, json, geojson, poly;
+        var building_id, propertyId, presenter, latlng, layerMode, circle, cartoDbUser, url, tablename, query, response, json, features, geojson, poly;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -265,14 +259,14 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
                 this.state.set({
                   'has_highlight': 'dots'
                 });
-                _context.next = 31;
+                _context.next = 33;
                 break;
               case 15:
                 // otherwise this is 'footprints': add a polygon from geojson
                 cartoDbUser = this.state.get('cartoDbUser');
                 url = "https://".concat(cartoDbUser, ".carto.com/api/v2/sql");
                 tablename = this.footprints_cfg.table_name;
-                query = "SELECT cartodb_id,ST_AsGeoJSON(the_geom) as geojson FROM ".concat(tablename, " WHERE buildingid=").concat(building_id, " LIMIT 1");
+                query = "SELECT cartodb_id,ST_AsGeoJSON(the_geom) as geojson FROM ".concat(tablename, " WHERE buildingid=").concat(building_id);
                 _context.next = 21;
                 return fetch("".concat(url, "/?q=").concat(query));
               case 21:
@@ -281,7 +275,17 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
                 return response.json();
               case 24:
                 json = _context.sent;
-                geojson = JSON.parse(json.rows[0].geojson);
+                // parse the incoming features. There can be one to many of them
+                features = [];
+                json.rows.forEach(function (row) {
+                  var f = JSON.parse(row.geojson);
+                  features.push(f);
+                });
+                // create an output FeatureCollection
+                geojson = {
+                  type: 'FeatureCollection',
+                  features: features
+                };
                 poly = L.geoJson(geojson, {});
                 poly.setStyle({
                   fill: false,
@@ -296,7 +300,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
                 this.state.set({
                   'has_highlight': 'footprints'
                 });
-              case 31:
+              case 33:
               case "end":
                 return _context.stop();
             }
@@ -388,7 +392,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       return false;
     },
     onBuildingChange: function onBuildingChange() {
-      console.log('onBuildingChange');
       var building_id = this.state.get('building');
       var isShowing = building_id === this._popupid;
       if (!this.allBuildings.length) return;
