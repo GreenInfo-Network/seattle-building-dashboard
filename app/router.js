@@ -2,7 +2,7 @@
 
 // Filename: router.js
 //
-define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/scorecard', 'collections/city_buildings', 'views/map/map', 'views/map/address_search_autocomplete', 'views/map/year_control', 'views/layout/activity_indicator', 'views/layout/building_counts', 'views/layout/compare_bar', 'views/scorecards/controller', 'views/layout/button', 'views/layout/mobile-alert', 'views/modals/modal-model', 'views/modals/modal', 'views/layout/footer'], function ($, deparam, _, Backbone, CityModel, ScorecardModel, CityBuildings, MapView, AddressSearchView, YearControlView, ActivityIndicator, BuildingCounts, CompareBar, ScorecardController, Button, MobileAlert, ModalModel, ModalController, FooterView) {
+define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/scorecard', 'collections/city_buildings', 'views/map/map', 'views/map/address_search_autocomplete', 'views/map/year_control', 'views/layout/activity_indicator', 'views/layout/building_counts', 'views/layout/compare_bar', 'views/scorecards/controller', 'views/layout/button', 'views/layout/mobile-alert', 'views/modals/modal-model', 'views/modals/modal', 'views/layout/footer', 'views/layout/tutorial', 'views/modals/splash'], function ($, deparam, _, Backbone, CityModel, ScorecardModel, CityBuildings, MapView, AddressSearchView, YearControlView, ActivityIndicator, BuildingCounts, CompareBar, ScorecardController, Button, MobileAlert, ModalModel, ModalController, FooterView, TutorialView, SplashView) {
   var RouterState = Backbone.Model.extend({
     queryFields: ['filters', 'categories', 'layer', 'metrics', 'sort', 'order', 'lat', 'lng', 'zoom', 'building', 'report_active', 'city_report_active'],
     defaults: {
@@ -151,6 +151,17 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
         onClick: _.bind(this.toggleCityScorecard, this),
         value: 'Citywide Report'
       });
+      // hack: the turorial needs state from the map, which isn't present until after the map loads
+      // TODO: define and instantiate these views in the mapView/building_layer? 
+      setTimeout(function () {
+        new TutorialView({
+          state: state,
+          mapView: mapView
+        });
+        new SplashView({
+          state: state
+        });
+      }, 3000);
       this.state.on('change', this.onChange, this);
     },
     toggleCityScorecard: function toggleCityScorecard() {

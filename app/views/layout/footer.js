@@ -1,7 +1,7 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-define(['jquery', 'underscore', 'backbone', 'text!templates/layout/footer.html'], function ($, _, Backbone, FooterTemplate) {
+define(['jquery', 'underscore', 'backbone', 'views/layout/tutorial', 'text!templates/layout/footer.html'], function ($, _, Backbone, Tutorial, FooterTemplate) {
   var Footer = Backbone.View.extend({
     el: $('#footer'),
     initialize: function initialize(options) {
@@ -11,7 +11,8 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/layout/footer.html']
       this.render();
     },
     events: {
-      'click .modal-link': 'onModalLink'
+      'click .modal-link': 'onModalLink',
+      'click #launch-tutorial-link': 'onHelpLink'
     },
     getModals: function getModals(city) {
       if (!city) return [];
@@ -33,6 +34,14 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/layout/footer.html']
       if (!_typeof(modelFn) === 'function') return false;
       modelFn(evt.target.dataset.modal);
       return false;
+    },
+    onHelpLink: function onHelpLink(evt) {
+      var state = this.state;
+      if (typeof evt.preventDefault === 'function') evt.preventDefault();
+      var tutorial = new Tutorial({
+        state: state
+      });
+      tutorial.render(0);
     },
     getFooterLinks: function getFooterLinks(city) {
       var rsp = {

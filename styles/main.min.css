@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import "../lib/toastr/toastr.min.css";
 @import "../lib/autocomplete/autocomplete.min.css";
+@import "../lib/driver/driver.css";
 button, input[type=button], input[type=reset], input[type=submit],
 button {
   -webkit-appearance: none;
@@ -5228,4 +5229,94 @@ body.modal-active {
   #modals table td:last-child {
     padding-left: 0.5em;
   }
+}
+
+/* The Modal (background) */
+#splash {
+  display: none;
+  position: fixed;
+  z-index: 1000000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+#splash h1 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+#splash a {
+  color: inherit;
+  text-decoration: underline;
+}
+#splash a:focus {
+  outline: 2px solid #000;
+}
+
+/* Modal Content/Box */
+.splash-content {
+  font-size: 16px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+}
+
+/* The Close Button */
+button#splash-close {
+  float: right;
+  position: relative;
+  right: -29px;
+  top: -27px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #0047ba;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+button#splash-close:hover {
+  background: #ccc;
+}
+button#splash-close:focus {
+  outline: 2px solid #000;
+}
+button#splash-close span {
+  margin-bottom: 2px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#splash-controls-wrapper {
+  text-align: center;
+  margin-top: 25px;
+}
+#splash-controls-wrapper button {
+  border: 1px solid #0047ba;
+  padding: 8px 14px;
+  margin-right: 8px;
+}
+#splash-controls-wrapper button:hover {
+  background: #ccc;
+}
+#splash-controls-wrapper button:focus {
+  outline: 2px solid #000;
+}
+#splash-controls-wrapper #opt-in-wrapper {
+  margin-top: 25px;
+}
+#splash-controls-wrapper #opt-in-wrapper label {
+  cursor: pointer;
+  display: inline-block;
 }
