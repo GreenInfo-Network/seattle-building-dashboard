@@ -88,6 +88,9 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       color: this.getColor(chartData.lead.field, building.get(chartData.lead.field)),
       label: chartData.lead.label
     };
+
+    // console.log(o.chart.lead);
+
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
       o.chart.lead.nodata = chartData.lead.nodata;
     }
@@ -327,7 +330,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     },
     // Keep popup in map view after showing more details
     adjustPopup: function adjustPopup(layer) {
-      console.log('adjustPopup');
       var container = $(layer._container);
       var latlng = layer.getLatLng();
       var pt = this.leafletMap.latLngToContainerPoint(latlng);
@@ -338,7 +340,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       }
     },
     onClearMapPopupTrigger: function onClearMapPopupTrigger() {
-      console.log('onClearMapPopupTrigger...');
       this.onClearPopups();
     },
     onClearPopups: function onClearPopups() {
@@ -428,6 +429,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         building: buildingId
       };
       var selectedBuildings = this.makeSelectedBuildingsState(buildingId);
+      console.log(selectedBuildings);
       if (selectedBuildings) {
         state.selected_buildings = selectedBuildings;
       }
@@ -490,8 +492,11 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
       var stylesheet = new CartoStyleSheet(buildings.tableName, calculator, layerMode);
+      // console.log(calculator);
+      // console.log(stylesheet);
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var cartocss = stylesheet.toCartoCSS();
+      // console.log(cartocss);
       var interactivity = this.state.get('city').get('property_id');
       return {
         sql: sql,
@@ -507,6 +512,8 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       // skip if we are loading `cartoLayer`
       if (this.cartoLoading) return;
+      console.log('user_name: ', this.allBuildings.cartoDbUser);
+      console.log('sublayers: ', this.toCartoSublayer());
       this.cartoLoading = true;
       cartodb.createLayer(this.leafletMap, {
         user_name: this.allBuildings.cartoDbUser,
