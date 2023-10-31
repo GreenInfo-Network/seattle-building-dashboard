@@ -13,17 +13,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'models/building_color_bucket_calculator', 'text!templates/map/building_info.html'], function ($, _, Backbone, CityBuildings, BuildingColorBucketCalculator, BuildingInfoTemplate) {
   var baseCartoCSS = {
     dots: ['{marker-fill: #CCC;' + 'marker-fill-opacity: 0.9;' + 'marker-line-color: #FFF;' + 'marker-line-width: 0.5;' + 'marker-line-opacity: 1;' + 'marker-placement: point;' + 'marker-multi-policy: largest;' + 'marker-type: ellipse;' + 'marker-allow-overlap: true;' + 'marker-clip: false;}'],
-    footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;}']
+    footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;}'],
+    // A hatch polygon that only applies to buildings with null values for the given measure
+    // we make the pattern transparent for all non-null values in building_color_bucket_calculator.js
+    footprints_hatch: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/hatch_double_cross_grey_45_narrow_thin_transparent.png);' + 'polygon-pattern-opacity: 1;}']
   };
-  var CartoStyleSheet = function CartoStyleSheet(tableName, bucketCalculator, mode) {
+  var CartoStyleSheet = function CartoStyleSheet(tableName, hatchCss, bucketCalculator, mode) {
     this.tableName = tableName;
+    this.hatchCss = hatchCss;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
   };
   CartoStyleSheet.prototype.toCartoCSS = function () {
     var bucketCSS = this.bucketCalculator.toCartoCSS();
     var tableName = this.tableName;
-    var styles = _toConsumableArray(baseCartoCSS[this.mode]).concat(bucketCSS);
+    var mode = this.mode;
+    var hatch = this.hatchCss;
+    if (hatch && mode === 'footprints') mode = "".concat(mode, "_hatch");
+    var styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
     styles = _.reject(styles, function (s) {
       return !s;
     });
@@ -429,7 +436,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         building: buildingId
       };
       var selectedBuildings = this.makeSelectedBuildingsState(buildingId);
-      console.log(selectedBuildings);
       if (selectedBuildings) {
         state.selected_buildings = selectedBuildings;
       }
@@ -487,16 +493,14 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         return lyr.field_name === layer;
       });
       var fieldName = cityLayer.field_name;
+      var hatchCss = cityLayer.hatch_null_css;
       var buckets = cityLayer.range_slice_count;
       var colorStops = cityLayer.color_range;
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
-      var stylesheet = new CartoStyleSheet(buildings.tableName, calculator, layerMode);
-      // console.log(calculator);
-      // console.log(stylesheet);
+      var stylesheet = new CartoStyleSheet(buildings.tableName, hatchCss, calculator, layerMode);
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var cartocss = stylesheet.toCartoCSS();
-      // console.log(cartocss);
       var interactivity = this.state.get('city').get('property_id');
       return {
         sql: sql,
@@ -512,8 +516,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       // skip if we are loading `cartoLayer`
       if (this.cartoLoading) return;
-      console.log('user_name: ', this.allBuildings.cartoDbUser);
-      console.log('sublayers: ', this.toCartoSublayer());
       this.cartoLoading = true;
       cartodb.createLayer(this.leafletMap, {
         user_name: this.allBuildings.cartoDbUser,

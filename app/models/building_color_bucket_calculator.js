@@ -41,18 +41,27 @@ define(['underscore', 'd3'], function (_, d3) {
     var gradient = this.colorGradient();
     var cssFillType = this.cssFillType;
     var css;
+
+    // for polygons (only) we have to add a rule to "undo" the default polygon pattern
+    // otherwise it applies to all polygons
+    var defaultHatchCSSOpacityRule = 'polygon-pattern-opacity: 0;';
     if (this.thresholds) {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, function (stop, i) {
         var min = _.min(gradient.invertExtent(stop));
+        var cssText;
         if (i === 0) {
-          return "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+          cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+          return cssText;
         }
-        return "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}");
+        return cssText;
       });
     } else {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, function (stop) {
         var min = _.min(gradient.invertExtent(stop));
-        return "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+        var cssText;
+        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+        return cssText;
       });
     }
     return css;
