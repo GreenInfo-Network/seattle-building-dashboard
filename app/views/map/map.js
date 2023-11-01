@@ -29,6 +29,12 @@ define(['jquery', 'underscore', 'backbone', 'views/map/building_layer', 'views/m
           sort: default_layer,
           reset_all: true
         });
+
+        // reset the map to defaults
+        // Note: these are not the defaults based on URL params, but rather global city defaults from seattle.json
+        var mapview = _this.state.get('mapview');
+        var leafletMap = mapview.leafletMap;
+        leafletMap.setView(city.center, city.zoom);
         return false;
       });
     },
