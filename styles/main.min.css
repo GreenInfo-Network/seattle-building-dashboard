@@ -3526,6 +3526,21 @@ div#simple-tooltip.cartodb-tooltip {
   padding: 10px;
   text-transform: uppercase;
 }
+#scorecard #print-scorecard {
+  width: auto;
+  height: 38px;
+  font-weight: 500;
+  padding: 10px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  background: #0047ba;
+  color: #FFF;
+}
+@media print {
+  #scorecard #print-scorecard {
+    display: none;
+  }
+}
 #scorecard #scorecard-content {
   position: relative;
   width: 100%;
@@ -4693,11 +4708,6 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard #links table .link-cell {
   color: #5d5d5d;
-}
-@media print {
-  #scorecard #links table .link-cell {
-    display: none;
-  }
 }
 #scorecard #links table .link-num {
   width: 2rem;
