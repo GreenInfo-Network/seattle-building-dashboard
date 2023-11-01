@@ -92,6 +92,7 @@ define(['underscore', 'd3'], function (_, d3) {
     if (this.thresholds) {
       scale = d3.scale.threshold().domain(this.thresholds).range(stops);
     } else {
+      // this quantile scale function brings in the entire sorted array of 3663 values 
       scale = d3.scale.quantile().domain(fieldValues).range(stops);
     }
 

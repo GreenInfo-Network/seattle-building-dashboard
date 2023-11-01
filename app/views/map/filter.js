@@ -202,7 +202,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'ionrangeslider', 'models/buil
       var $section = this.$section();
       var filterRange = this.layer.filter_range;
       var rangeSliceCount = this.layer.range_slice_count;
-      if (fieldName === 'total_ghg_emissions_intensity') debugger;
       var extent = this.bucketCalculator.toExtent();
       var gradientCalculator = this.gradientCalculator;
       var filterTemplate = _.template(FilterTemplate);
