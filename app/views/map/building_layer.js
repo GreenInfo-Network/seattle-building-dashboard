@@ -445,6 +445,9 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       this.state.set(state);
     },
     onFeatureOver: function onFeatureOver(e, latlng, _unused, data) {
+      // change the cursor to pointer, indicating that we can click a given building
+      this.mapElm.css('cursor', 'pointer');
+
       // get the name of the id field to lookup, which is different for footprints and dots
       var propertyId = this.state.get('city').get('property_id');
       if (this.buildingLayerWatcher.mode !== 'dots') {
@@ -472,6 +475,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       });
     },
     onFeatureOut: function onFeatureOut() {
+      // change back to the default cursor
       this.mapElm.css('cursor', '');
 
       // hide the tooltip
@@ -529,8 +533,10 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
       var stylesheet = new CartoStyleSheet(buildings.tableName, hatchCss, calculator, layerMode);
-      var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var cartocss = stylesheet.toCartoCSS();
+      console.log(layerMode);
+      console.log(cartocss);
+      var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var interactivity = this.state.get('city').get('property_id');
       return {
         sql: sql,
@@ -546,6 +552,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       // skip if we are loading `cartoLayer`
       if (this.cartoLoading) return;
+      console.log('render');
       this.cartoLoading = true;
       cartodb.createLayer(this.leafletMap, {
         user_name: this.allBuildings.cartoDbUser,

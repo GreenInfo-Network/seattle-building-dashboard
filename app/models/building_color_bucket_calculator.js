@@ -53,7 +53,7 @@ define(['underscore', 'd3'], function (_, d3) {
           cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
           return cssText;
         }
-        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}");
+        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
         return cssText;
       });
     } else {
