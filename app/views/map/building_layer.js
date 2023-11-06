@@ -534,8 +534,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
       var stylesheet = new CartoStyleSheet(buildings.tableName, hatchCss, calculator, layerMode);
       var cartocss = stylesheet.toCartoCSS();
-      console.log(layerMode);
-      console.log(cartocss);
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var interactivity = this.state.get('city').get('property_id');
       return {
@@ -552,7 +550,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
 
       // skip if we are loading `cartoLayer`
       if (this.cartoLoading) return;
-      console.log('render');
       this.cartoLoading = true;
       cartodb.createLayer(this.leafletMap, {
         user_name: this.allBuildings.cartoDbUser,
