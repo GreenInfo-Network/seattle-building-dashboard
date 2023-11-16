@@ -43,7 +43,7 @@ define(['underscore', 'd3'], function (_, d3) {
     var css;
 
     // for polygons (only) we have to add a rule to "undo" the default polygon pattern
-    // otherwise it applies to all polygons
+    // otherwise it applies to all polygons - we only want it to show for the default, nodata polygons
     var defaultHatchCSSOpacityRule = 'polygon-pattern-opacity: 0;';
     if (this.thresholds) {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, function (stop, i) {

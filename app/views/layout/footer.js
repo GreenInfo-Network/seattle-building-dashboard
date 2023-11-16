@@ -46,12 +46,14 @@ define(['jquery', 'underscore', 'backbone', 'views/layout/tutorial', 'text!templ
     getFooterLinks: function getFooterLinks(city) {
       var rsp = {
         about: '/',
-        download: '/'
+        download: '/',
+        feedback: '/'
       };
       var footerLinks = city && city.get && city.get('footer');
       if (!footerLinks) footerLinks = {};
       rsp.about = footerLinks.about_link || '/';
       rsp.download = footerLinks.download_link || '/';
+      rsp.feedback = footerLinks.feedback_link || '/';
       return rsp;
     },
     render: function render() {
