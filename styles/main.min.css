@@ -1726,6 +1726,22 @@ div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .
   padding-bottom: 1rem;
   vertical-align: baseline;
 }
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td.nodata a {
+  text-decoration: underline;
+  color: #0047ba;
+}
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td.nodata {
+  padding-bottom: 0;
+  font-size: 1em !important;
+  line-height: 1.25 !important;
+}
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td span.out-of-compliance {
+  font-weight: 600;
+  font-size: 1.25em !important;
+  color: #b33e44;
+  margin-bottom: 6px;
+  display: block;
+}
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td:first-child {
   font-size: 2.5em;
   font-weight: 500;
@@ -1772,12 +1788,6 @@ div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .barchart--labels .max {
   float: right;
   text-align: right;
-}
-div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart td.nodata {
-  font-size: 0.85em !important;
-}
-div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart td.nodata a {
-  color: #0047ba;
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info button {
   width: 100%;

@@ -165,7 +165,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var id = building.id;
 
       // for building details first card "energy per square foot"
-      var site_eui_wn = building.site_eui_wn;
+      var site_eui_wn = building.site_eui_wn || '';
       var building_eui_wn = building.building_type_eui_wn;
       var eui_difference = (site_eui_wn - building_eui_wn) / building_eui_wn * 100;
       var eui_direction = eui_difference < 0 ? 'decreased' : 'increased';
@@ -662,7 +662,7 @@ define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fuelu
       var selectedValueText = selectedValueTextGroup.append('text');
 
       // add EUI or ESS value
-      var buildingValue = chartdata.building_value.toLocaleString() || null;
+      var buildingValue = chartdata.building_value ? chartdata.building_value.toLocaleString() : null;
       selectedValueText.append('tspan').attr('x', 0).text(buildingValue).style('fill', '#000').classed('value', true);
 
       // add units
