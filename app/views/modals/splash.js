@@ -53,6 +53,7 @@ define(['jquery', 'underscore', 'backbone', 'views/layout/tutorial', 'text!templ
     },
     render: function render() {
       this.$el.show();
+      $('.splash-content').focus();
       return this;
     }
   });
