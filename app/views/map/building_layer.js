@@ -468,9 +468,20 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       // update the tooltip
       var tooltip = $('div.cartodb-tooltip');
       tooltip.html("<strong>".concat(name, "</strong><br>Building ID: <strong>").concat(id, "</strong>"));
+      var winwidth = $(window).width();
+      var top = 60;
+      var left = 335;
+      if (winwidth < 1200) {
+        top = 50;
+        left = 290;
+      }
+      if (winwidth < 850) {
+        top = 50;
+        left = 250;
+      }
       tooltip.css({
-        top: e.pageY - 60,
-        left: e.pageX - 335,
+        top: e.pageY - top,
+        left: e.pageX - left,
         display: 'block'
       });
     },
