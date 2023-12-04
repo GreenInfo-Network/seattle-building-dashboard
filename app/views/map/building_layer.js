@@ -405,10 +405,16 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     onBuildingChange: function onBuildingChange() {
       var building_id = this.state.get('building');
       var isShowing = building_id === this._popupid;
+      console.log('-----------------');
+      console.log('hitting onBuildingChagne');
+      console.log('(!building_id || isShowing) is true? ', (!building_id || isShowing) === true);
+      // debugger;
       if (!this.allBuildings.length) return;
       if (!building_id || isShowing) return;
       if (!this.mapView.getControls()) return;
-
+      console.log('... and made it past early exits');
+      console.log('building ID: ', building_id);
+      console.log('popup ID: ', this._popupid);
       // The only reference to popup_dirty, is this used? 
       this.popup_dirty = false;
       var propertyId = this.state.get('city').get('property_id');
