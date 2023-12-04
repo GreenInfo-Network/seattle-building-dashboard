@@ -75,8 +75,8 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
             state.set({
               selected_buildings: []
             }); // deselect any selected bldgs
-            console.log('HERE?');
           },
+
           popover: {
             title: 'Search',
             description: 'Use the Search bar to find a building based on its name, address, or Seattle OSE building ID.'
