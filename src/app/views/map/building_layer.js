@@ -143,8 +143,9 @@ define([
 
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
       o.chart.lead.nodata = chartData.lead.nodata;
+      // if state building, then flag that also
+      if (building.get('state_bldg')) o.chart.lead.state_bldg = true;
     }
-
 
     o.chart.barchart = {
       value: building.get(chartData.barchart.field),
