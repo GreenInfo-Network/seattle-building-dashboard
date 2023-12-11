@@ -222,7 +222,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
             }
           }
         }, {
-          element: '#building-details-cards-wrapper',
+          element: '#building-intro-row',
           onHighlighted: function onHighlighted() {
             document.querySelector('.driver-popover').focus();
           },
@@ -232,7 +232,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
             description: 'The customized Building Report displays the building’s Site EUI and GHG Intensity for the selected reporting year and frames them in the context of their peers. The report also displays the energy consumption and GHG emission breakdown by fuel type (e.g. electricity, natural gas, district steam).'
           }
         }, {
-          element: '#change-chart',
+          element: '#compare-shift-chart',
           onHighlighted: function onHighlighted() {
             document.querySelector('.driver-popover').focus();
           },
