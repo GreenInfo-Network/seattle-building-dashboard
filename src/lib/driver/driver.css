@@ -19,6 +19,9 @@
 .driver-fade .driver-overlay {
   animation: animate-fade-in 0.2s ease-in-out;
 }
+.driver-overlay.driver-overlay-animated {
+  z-index: 999999 !important;
+}
 .driver-fade .driver-popover {
   animation: animate-fade-in 0.2s;
 }
