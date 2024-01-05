@@ -259,7 +259,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           },
           // STEP 13
           popover: {
-            title: 'Building performance standard',
+            title: 'Utility Incentives',
             description: 'Users can also find utility incentive opportunities at the bottom of the report.'
           }
         }]
