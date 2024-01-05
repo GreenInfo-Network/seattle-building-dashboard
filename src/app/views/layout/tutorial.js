@@ -91,7 +91,7 @@ define([
 			    	popover: { 
 						// STEP 2
 			    		title: 'Filter buildings', 
-			    		description: 'Filter buildings based on criteria like neighborhood, council district or reporting year',
+			    		description: 'Filter buildings based on criteria like neighborhood, council district or reporting year.',
 			  			onNextClick: () => {
 			  				// Add an image of the menu - this is overall easier to control than selectize
 			  				// and we don't have any focus conflicts (see next step)
@@ -119,7 +119,7 @@ define([
             // STEP 3
 			    	popover: { 
 			    		title: 'Filter buildings', 
-			    		description: 'Users can also filter buildings by property type' 
+			    		description: 'Users can also filter buildings by property type.' 
 			    	},
 			    	onDeselected: () => {
 			    		// delete the menu image
@@ -141,9 +141,10 @@ define([
 			  	},
 			    { element: '#total_ghg_emissions_intensity', 
 			    	onHighlighted: () => { document.querySelector('.driver-popover').focus(); },
+			    	// STEP 5
 			    	popover: { 
 			    		title: 'Map display', 
-			    		description: 'YUsers can visualize buildings by GHG intensity in kilograms of carbon dioxide equivalent (CO2e) per square foot.',
+			    		description: 'Users can visualize buildings by GHG intensity in kilograms of carbon dioxide equivalent (CO2e) per square foot.',
 			        onNextClick: () => {
 			          // Collapse the accordion
 			          $('input#category-greenhouse-gas-emissions-expanded').click();
@@ -200,7 +201,7 @@ define([
 			    	popover: { 
               // STEP 9
 			    		title: 'Compare buildings', 
-			    		description: 'Buildings that are selected in succession will populate the Building Comparison tab. If you click on Building Comparison, a side-by-side comparison will expand from the bottom of the screen. Select different display metrics via the left pane',			    	
+			    		description: 'Buildings that are selected in succession will populate the Building Comparison tab. If you click on Building Comparison, a side-by-side comparison will expand from the bottom of the screen. Select different display metrics via the left pane.',			    	
 				    	onNextClick: () => {
 				    		// Click "Show Report"
 				    		$('button#view-report').click();
@@ -216,7 +217,7 @@ define([
 			    	popover: {
               // STEP 10
 			    		title: 'Building performance details', 
-			    		description: 'The customized Building Report displays the building’s Site EUI and GHG Intensity for the selected reporting year and frames them in the context of their peers. The report also displays the energy consumption and GHG emission breakdown by fuel type (e.g. electricity, natural gas, district steam).',
+			    		description: 'The customized Building Report displays the building’s Site EUI and GHG Intensity for the selected reporting year and frames them in the context of their peers.',
 			    	},
 			    },
 			    { element: '#compare-shift-chart', 
@@ -227,7 +228,7 @@ define([
 			    		description: 'The report displays performance trends of the same building over time against a typical building of the same property type.',
 			    	},
 			    },
-          { element: '#compare-shift-chart', 
+          { element: '#performance-standard-chart', 
 			    	onHighlighted: () => { document.querySelector('.driver-popover').focus(); },
             // STEP 12 (new)
 			    	popover: { 
@@ -235,7 +236,7 @@ define([
 			    		description: 'For commercial buildings 50,000 SF and larger, the report displays current energy performance versus an approximate Washington Clean Buildings Performance Standard EUI target.',
 			    	},
 			    },
-			    { element: '#performance-standard-chart', 
+			    { element: '#links', 
 			    	onHighlighted: () => { document.querySelector('.driver-popover').focus(); },
 			    	// STEP 13
             popover: { 
