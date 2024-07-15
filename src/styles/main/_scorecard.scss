@@ -45,6 +45,7 @@ $steam-color: #f7c34e;
     position: relative;
     width: 100%;
     max-width: 960px;
+    min-width: 920px;
     margin: 0 auto;
   }
 
@@ -891,7 +892,7 @@ $steam-color: #f7c34e;
         }
       }
       div#performance-standard-bar-chart-x-axis-label {
-        color: #000;
+        color: #B2B2B2;
         font-size: 12px;
         position: relative;
         top: -37px;
@@ -1498,6 +1499,8 @@ $steam-color: #f7c34e;
     .scorecard-wrapper {
       width: 8in;
       max-width: 8in;
+      // helps with alignment of abs pos EUI labels when printing  
+      min-width: 945px;
     }
 
     .sc-toggle {
