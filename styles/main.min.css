@@ -3526,6 +3526,7 @@ div#simple-tooltip.cartodb-tooltip {
   position: relative;
   width: 100%;
   max-width: 960px;
+  min-width: 920px;
   margin: 0 auto;
 }
 #scorecard #back-to-map-link {
@@ -4377,7 +4378,7 @@ div#simple-tooltip.cartodb-tooltip {
   width: 152px;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-x-axis-label {
-  color: #000;
+  color: #B2B2B2;
   font-size: 12px;
   position: relative;
   top: -37px;
@@ -4858,6 +4859,7 @@ div#simple-tooltip.cartodb-tooltip {
   #scorecard .scorecard-wrapper {
     width: 8in;
     max-width: 8in;
+    min-width: 945px;
   }
   #scorecard .sc-toggle {
     display: none;
