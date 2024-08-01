@@ -19,7 +19,7 @@
     "zoom": 14,
     "categoryDefaults": [],
     "cartoDbUser": "cityenergy-seattle",
-    "table_name": "benchmarking_production",
+    "table_name": "benchmarking_test",
     "property_id": "id",
     "property_name": "property_name",
     "building_type": "property_type",
@@ -204,27 +204,27 @@
             "default_layer": "total_ghg_emissions"
         },
         "2017": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         },
         "2018": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         },
          "2019": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         },
          "2020": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         },
          "2021": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         },
          "2022": {
-            "table_name": "benchmarking_production",
+            "table_name": "benchmarking_test",
             "default_layer": "total_ghg_emissions"
         }
     },
