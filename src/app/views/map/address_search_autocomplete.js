@@ -134,7 +134,7 @@ define([
       this.autocomplete = new autoComplete({ // eslint-disable-line no-undef
         selector: '#address-search',
         menuClass: 'address-search-results',
-        minChars: 3,
+        minChars: 1,
         delay: 200,
         offsetTop: 10,
         cache: false,
