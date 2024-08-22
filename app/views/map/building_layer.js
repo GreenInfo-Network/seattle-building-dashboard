@@ -481,6 +481,9 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         top = 50;
         left = 250;
       }
+      // if we're iframed, then we need to adjust the tooltip position
+      // tbh I'm not sure why 20 is the magic number, but it works in testing with a 136px header
+      if (window !== window.parent) top = top + 20;
       tooltip.css({
         top: e.pageY - top,
         left: e.pageX - left,
