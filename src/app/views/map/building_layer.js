@@ -556,7 +556,6 @@ define([
       // if we're iframed, then we need to adjust the tooltip position
       // tbh I'm not sure why 20 is the magic number, but it works in testing with a 136px header
       if (window !== window.parent) top = top + 20;
-      console.log('top', top)
 
       tooltip.css({
         top: e.pageY - top,
