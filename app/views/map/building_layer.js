@@ -467,28 +467,17 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       var id = building.get('id');
       var name = building.get('property_name');
 
-      // update the tooltip
-      var tooltip = $('div.cartodb-tooltip');
+      // get the tooltip element with d3
+      var tooltip = d3.select('div.cartodb-tooltip');
+      // update the tooltip with the building name and id
       tooltip.html("<strong>".concat(name, "</strong><br>Building ID: <strong>").concat(id, "</strong>"));
-      var winwidth = $(window).width();
-      var top = 60;
-      var left = 335;
-      if (winwidth < 1200) {
-        top = 50;
-        left = 290;
-      }
-      if (winwidth < 850) {
-        top = 50;
-        left = 250;
-      }
-      // if we're iframed, then we need to adjust the tooltip position
-      // tbh I'm not sure why 20 is the magic number, but it works in testing with a 136px header
-      if (window !== window.parent) top = top + 20;
-      tooltip.css({
-        top: e.pageY - top,
-        left: e.pageX - left,
-        display: 'block'
-      });
+
+      // get the coordinates of the building that is being hovered,
+      // and convert to container points
+      var coords = this.leafletMap.latLngToContainerPoint(latlng);
+
+      // show and position the tootlip
+      tooltip.style('display', 'block').style('top', coords.y - 15 + "px").style('left', coords.x + 15 + "px");
     },
     onFeatureOut: function onFeatureOut() {
       // change back to the default cursor
