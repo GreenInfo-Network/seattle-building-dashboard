@@ -2,8 +2,9 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'selectize',
   'text!templates/map/year_control.html',
-], function($, _, Backbone, YearControlTemplate) {
+], function($, _, Backbone, selectize, YearControlTemplate) {
   var YearControlView = Backbone.View.extend({
     $container: $('#year-select-container'),
     className: 'year-control',
@@ -32,15 +33,17 @@ define([
         current_year: this.state.get('year'),
       }));
 
+      this.$el.find('select').selectize();
+
       return this;
     },
 
     events: {
-      'change input': 'selectYear',
+      'change': 'selectYear',
     },
 
     selectYear: function(event) {
-      var year = $(event.target).val();
+      var year = event.target.value;
       this.state.set({ year: year });
     },
   });
