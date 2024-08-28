@@ -245,7 +245,7 @@ picture {
   color: #0047ba;
 }
 
-.year-control label, .building-report label, #map-controls h2, #map-controls .map-control, #map-controls .more-info, .map-category-control label {
+.building-report label, #map-controls h2, #map-controls .map-control, #map-controls .more-info, .map-category-control label {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -702,12 +702,45 @@ header {
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   vertical-align: top;
+  padding: 0.5em 0;
+}
+#year-select-container .selectize-input {
+  width: 88px;
+  background: #0047ba;
+  color: #fff;
+  border: 1px solid #FFF;
+  border-radius: 18px;
+  height: 30.78px;
+  padding: 0.4em 1.2em;
+}
+#year-select-container .selectize-input.dropdown-active {
+  border-radius: 18px 18px 0 0;
+}
+#year-select-container .selectize-input.dropdown-active:after {
+  border-color: transparent transparent #fff;
+}
+#year-select-container .selectize-input:after {
+  border-color: #fff transparent transparent;
+  margin-top: -2px;
+}
+#year-select-container .selectize-dropdown {
+  background: #0047ba;
+  color: #fff;
+  border: 0;
+  white-space: nowrap;
+  border-radius: 0 0 18px 18px;
+}
+#year-select-container .selectize-dropdown .active {
+  background-color: #001488;
+  color: #fff;
+}
+#year-select-container .selectize-dropdown, #year-select-container .selectize-input, #year-select-container .selectize-input input {
+  font-size: 1em;
 }
 
 #map-controls {
   position: absolute;
   height: 100%;
-  width: 100%;
   overflow: hidden;
   left: 0;
   z-index: 10;
@@ -787,17 +820,22 @@ header {
 }
 
 #building-proptype-selector {
-  width: 70%;
-  margin-top: 0.5rem;
+  width: 190px;
+  position: absolute;
+  left: 45em;
+  padding: 0.5em 0;
 }
 #building-proptype-selector .selectize-input {
   background: #0047ba;
   color: #fff;
-  border: 0;
+  border: 1px solid #FFF;
   border-radius: 18px;
+  height: 30.78px;
+  padding: 0.4em 1.2em;
 }
 #building-proptype-selector .selectize-input:after {
   border-color: #fff transparent transparent;
+  margin-top: -2px;
 }
 #building-proptype-selector .selectize-input.dropdown-active {
   border-radius: 18px 18px 0 0;
@@ -817,7 +855,7 @@ header {
   color: #fff;
 }
 #building-proptype-selector .selectize-dropdown, #building-proptype-selector .selectize-input, #building-proptype-selector .selectize-input input {
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .toolbar {
@@ -998,6 +1036,7 @@ header {
 
 #map-controls {
   width: 30%;
+  max-width: 465px;
 }
 .compare-mode #map-controls {
   width: 100%;
@@ -1017,7 +1056,7 @@ header {
 #map-controls #map-controls-header {
   position: relative;
   width: 100%;
-  height: 6.5em;
+  height: 3.75em;
   background-color: #f2f2f2;
   -webkit-box-shadow: inset 0 -1px #0047ba;
           box-shadow: inset 0 -1px #0047ba;
@@ -1534,61 +1573,6 @@ header {
   fill-opacity: 0.4;
 }
 
-.year-control {
-  border-bottom: 0.1em solid transparent;
-  line-height: 1;
-}
-.year-control li {
-  position: relative;
-  display: inline-block;
-}
-.year-control input {
-  display: none;
-}
-.year-control label {
-  line-height: 1;
-}
-.year-control label::after {
-  height: 0.5em;
-  width: 0.5em;
-  border-radius: 50%;
-  display: block;
-  content: " ";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-top: -0.2em;
-  margin-left: -0.25em;
-}
-.year-control li + li {
-  margin-left: 0.75em;
-}
-
-.year-control {
-  font-weight: 500;
-  border-bottom-color: rgba(0, 42, 110, 0.7);
-  text-align: center;
-}
-.year-control input + label {
-  cursor: pointer;
-  color: #003487;
-  opacity: 0.85;
-  margin-bottom: 0.4em;
-}
-.year-control input + label::after {
-  opacity: 0.6;
-  background-color: #002a6e;
-}
-.year-control input:checked + label {
-  color: white;
-  opacity: 1;
-  cursor: default;
-}
-.year-control input:checked + label::after {
-  opacity: 1;
-  background-color: white;
-}
-
 #footer {
   position: fixed;
   display: table;
@@ -2044,7 +2028,7 @@ div#simple-tooltip.cartodb-tooltip {
   top: 0;
 }
 .compare-mode #map-controls-bar .compare-closer {
-  height: 2.5em;
+  height: -0.25em;
 }
 .compare-mode #map-controls-bar .toggle .toggle-close {
   display: block;
