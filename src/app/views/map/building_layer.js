@@ -30,7 +30,7 @@ define([
       'line-opacity: 0.5;' + 
       // we need to include these declarations, even if we're not using the pattern (e.g for Energy Star Score)
       // because CARTO balks if we include pattern-opacity in later declarations, without having first declared the pattern-file
-      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/hatch_double_cross_grey_45_narrow_thin_transparent.png);' + 
+      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 
       'polygon-pattern-opacity: 0;}'
     ],
     // A hatch polygon that only applies to buildings with null values for the given measure
@@ -41,7 +41,7 @@ define([
       'line-width: 1;' +
       'line-color: #FFF;' +
       'line-opacity: 0.5;' +
-      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/hatch_double_cross_grey_45_narrow_thin_transparent.png);' + 
+      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 
       'polygon-pattern-opacity: 1;}'
     ]
   };
@@ -66,7 +66,6 @@ define([
 
     styles = _.reject(styles, function(s) { return !s; });
     styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
-
     return styles.join('\n');
   };
 
