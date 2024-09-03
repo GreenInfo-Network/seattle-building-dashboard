@@ -43,7 +43,18 @@ define([
       'line-opacity: 0.5;' +
       'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 
       'polygon-pattern-opacity: 1;}'
+    ],
+    // same, but with a different hatch pattern for high zoom levels, see #119
+    footprints_hatch_highzoom: [
+      '{polygon-fill: #CCC;' +
+      'polygon-opacity: 0.9;' +
+      'line-width: 1;' +
+      'line-color: #FFF;' +
+      'line-opacity: 0.5;' +
+      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_hizoom.png);' + 
+      'polygon-pattern-opacity: 1;}'
     ]
+
   };
 
   const CartoStyleSheet = function(tableName, hatchCss, bucketCalculator, mode) {
@@ -59,14 +70,33 @@ define([
 
     let mode = this.mode;
     let hatch = this.hatchCss;
+    let styles;
 
-    if (hatch && mode === 'footprints') mode = `${mode}_hatch`;
+    if (hatch && mode === 'footprints') { 
+      // regular styles for footprints above "atZoom" level
+      let style1 = [...baseCartoCSS['footprints_hatch']].concat(bucketCSS);
+      style1 = _.reject(style1, function(s) { return !s; });
+      style1 = _.map(style1, function(s) { return `#${tableName} ${s}`; });
+      style1 = style1.join('\n');
+      
+      // second copy of styles for footprints above an arbitrary higher zoom level, currently 18
+      let style2 = [...baseCartoCSS['footprints_hatch_highzoom']].concat(bucketCSS);
+      style2 = _.reject(style2, function(s) { return !s; });
+      style2 = _.map(style2, function(s) { return `#${tableName} ${s}`; });
+      style2 = style2.join('\n');
 
-    let styles = [...baseCartoCSS[mode]].concat(bucketCSS);
-
-    styles = _.reject(styles, function(s) { return !s; });
-    styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
-    return styles.join('\n');
+      // zoom styling requires a separate wrap around the same set of styles, 
+      // with a zoom condition and brackets
+      styles = `${style1}\n[zoom > 18] {\n${style2}\n}`;
+ 
+    } else {
+      styles = [...baseCartoCSS[mode]].concat(bucketCSS);
+      styles = _.reject(styles, function(s) { return !s; });
+      styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
+      styles = styles.join('\n');
+    }
+  
+    return styles;
   };
 
 
