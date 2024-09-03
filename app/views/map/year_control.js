@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'selectize', 'text!templates/map/yea
       this.$el.appendTo(this.$container);
       var template = _.template(YearControlTemplate);
       this.$el.html(template({
-        years: _.keys(city.get('years')),
+        years: _.keys(city.get('years')).sort().reverse(),
         current_year: this.state.get('year')
       }));
       this.$el.find('select').selectize();

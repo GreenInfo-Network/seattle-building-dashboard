@@ -19,7 +19,9 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 'polygon-pattern-opacity: 0;}'],
     // A hatch polygon that only applies to buildings with null values for the given measure
     // we make the pattern transparent for all non-null values in building_color_bucket_calculator.js
-    footprints_hatch: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 'polygon-pattern-opacity: 1;}']
+    footprints_hatch: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 'polygon-pattern-opacity: 1;}'],
+    // same, but with a different hatch pattern for high zoom levels, see #119
+    footprints_hatch_highzoom: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_hizoom.png);' + 'polygon-pattern-opacity: 1;}']
   };
   var CartoStyleSheet = function CartoStyleSheet(tableName, hatchCss, bucketCalculator, mode) {
     this.tableName = tableName;
@@ -32,15 +34,42 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     var tableName = this.tableName;
     var mode = this.mode;
     var hatch = this.hatchCss;
-    if (hatch && mode === 'footprints') mode = "".concat(mode, "_hatch");
-    var styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
-    styles = _.reject(styles, function (s) {
-      return !s;
-    });
-    styles = _.map(styles, function (s) {
-      return "#".concat(tableName, " ").concat(s);
-    });
-    return styles.join('\n');
+    var styles;
+    if (hatch && mode === 'footprints') {
+      // regular styles for footprints above "atZoom" level
+      var style1 = _toConsumableArray(baseCartoCSS['footprints_hatch']).concat(bucketCSS);
+      style1 = _.reject(style1, function (s) {
+        return !s;
+      });
+      style1 = _.map(style1, function (s) {
+        return "#".concat(tableName, " ").concat(s);
+      });
+      style1 = style1.join('\n');
+
+      // second copy of styles for footprints above an arbitrary higher zoom level, currently 18
+      var style2 = _toConsumableArray(baseCartoCSS['footprints_hatch_highzoom']).concat(bucketCSS);
+      style2 = _.reject(style2, function (s) {
+        return !s;
+      });
+      style2 = _.map(style2, function (s) {
+        return "#".concat(tableName, " ").concat(s);
+      });
+      style2 = style2.join('\n');
+
+      // zoom styling requires a separate wrap around the same set of styles, 
+      // with a zoom condition and brackets
+      styles = "".concat(style1, "\n[zoom > 18] {\n").concat(style2, "\n}");
+    } else {
+      styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
+      styles = _.reject(styles, function (s) {
+        return !s;
+      });
+      styles = _.map(styles, function (s) {
+        return "#".concat(tableName, " ").concat(s);
+      });
+      styles = styles.join('\n');
+    }
+    return styles;
   };
   var BuildingInfoPresenter = function BuildingInfoPresenter(city, allBuildings, buildingId, idKey, controls, layerName, defaultColor) {
     this.city = city;
