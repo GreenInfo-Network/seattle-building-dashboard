@@ -27,39 +27,21 @@ define([
       'polygon-opacity: 0.9;' +
       'line-width: 1;' +
       'line-color: #FFF;' +
-      'line-opacity: 0.5;' + 
-      // we need to include these declarations, even if we're not using the pattern (e.g for Energy Star Score)
-      // because CARTO balks if we include pattern-opacity in later declarations, without having first declared the pattern-file
-      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 
-      'polygon-pattern-opacity: 0;}'
+      'line-opacity: 0.5;}'
     ],
-    // A hatch polygon that only applies to buildings with null values for the given measure
-    // we make the pattern transparent for all non-null values in building_color_bucket_calculator.js
-    footprints_hatch: [
+    footprints_null_outline: [
       '{polygon-fill: #CCC;' +
       'polygon-opacity: 0.9;' +
-      'line-width: 1;' +
-      'line-color: #FFF;' +
-      'line-opacity: 0.5;' +
-      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 
-      'polygon-pattern-opacity: 1;}'
-    ],
-    // same, but with a different hatch pattern for high zoom levels, see #119
-    footprints_hatch_highzoom: [
-      '{polygon-fill: #CCC;' +
-      'polygon-opacity: 0.9;' +
-      'line-width: 1;' +
-      'line-color: #FFF;' +
-      'line-opacity: 0.5;' +
-      'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_hizoom.png);' + 
-      'polygon-pattern-opacity: 1;}'
+      'line-width: 2;' +
+      'line-color: #636363;' +
+      'line-opacity: 0.5;}'
     ]
 
   };
 
-  const CartoStyleSheet = function(tableName, hatchCss, bucketCalculator, mode) {
+  const CartoStyleSheet = function(tableName, nullOutlineCss, bucketCalculator, mode) {
     this.tableName = tableName;
-    this.hatchCss = hatchCss;
+    this.nullOutlineCss = nullOutlineCss;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
   };
@@ -69,32 +51,15 @@ define([
     const tableName = this.tableName;
 
     let mode = this.mode;
-    let hatch = this.hatchCss;
-    let styles;
+    let outline = this.nullOutlineCss;
 
-    if (hatch && mode === 'footprints') { 
-      // regular styles for footprints above "atZoom" level
-      let style1 = [...baseCartoCSS['footprints_hatch']].concat(bucketCSS);
-      style1 = _.reject(style1, function(s) { return !s; });
-      style1 = _.map(style1, function(s) { return `#${tableName} ${s}`; });
-      style1 = style1.join('\n');
-      
-      // second copy of styles for footprints above an arbitrary higher zoom level, currently 18
-      let style2 = [...baseCartoCSS['footprints_hatch_highzoom']].concat(bucketCSS);
-      style2 = _.reject(style2, function(s) { return !s; });
-      style2 = _.map(style2, function(s) { return `#${tableName} ${s}`; });
-      style2 = style2.join('\n');
+    if (outline && mode === 'footprints') mode = 'footprints_null_outline';
 
-      // zoom styling requires a separate wrap around the same set of styles, 
-      // with a zoom condition and brackets
-      styles = `${style1}\n[zoom > 18] {\n${style2}\n}`;
- 
-    } else {
-      styles = [...baseCartoCSS[mode]].concat(bucketCSS);
-      styles = _.reject(styles, function(s) { return !s; });
-      styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
-      styles = styles.join('\n');
-    }
+    let styles = [...baseCartoCSS[mode]].concat(bucketCSS);
+
+    styles = _.reject(styles, function(s) { return !s; });
+    styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
+    styles = styles.join('\n');
   
     return styles;
   };
@@ -168,6 +133,7 @@ define([
       label: chartData.lead.label
     };
 
+    // lead field in "popup_chart" from seattle.json is site_eui_wn
     // console.log(o.chart.lead);
 
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
@@ -645,7 +611,7 @@ define([
       });
 
       var fieldName = cityLayer.field_name;
-      var hatchCss = cityLayer.hatch_null_css;
+      var nullOutlineCss = cityLayer.null_outline_css
 
       var buckets = cityLayer.range_slice_count;
       var colorStops = cityLayer.color_range;
@@ -656,7 +622,7 @@ define([
                               buildings, fieldName, buckets,
                               colorStops, cssFillType, thresholds);
 
-      var stylesheet = new CartoStyleSheet(buildings.tableName, hatchCss, calculator, layerMode);
+      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode);
       var cartocss = stylesheet.toCartoCSS();
 
       var sql = (layerMode === 'dots') ?
