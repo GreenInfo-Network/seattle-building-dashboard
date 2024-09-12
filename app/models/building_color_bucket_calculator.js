@@ -42,25 +42,27 @@ define(['underscore', 'd3'], function (_, d3) {
     var cssFillType = this.cssFillType;
     var css;
 
-    // for polygons (only) we have to add a rule to "undo" the default polygon pattern
-    // otherwise it applies to all polygons - we only want it to show for the default, nodata polygons
-    var defaultHatchCSSOpacityRule = 'polygon-pattern-opacity: 0;';
+    // for polygons (only) we have to add a rule to "undo" the default polygon line:
+    // some fields get a different outline in their base CSS, that only applies to NULL (defined by null_outline_css in seattle.json)
+    // but all other non-null values, get a white outline
+    // this will be very redundant, but it works
+    var defaultPolygonLineStyle = 'line-color: #FFF';
     if (this.thresholds) {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, function (stop, i) {
         var min = _.min(gradient.invertExtent(stop));
         var cssText;
         if (i === 0) {
-          cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+          cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultPolygonLineStyle, "}") : "[".concat(fieldName, "<").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
           return cssText;
         }
-        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultPolygonLineStyle, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
         return cssText;
       });
     } else {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, function (stop) {
         var min = _.min(gradient.invertExtent(stop));
         var cssText;
-        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultHatchCSSOpacityRule, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
+        cssText = cssFillType === 'polygon-fill' ? "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "; ").concat(defaultPolygonLineStyle, "}") : "[".concat(fieldName, ">=").concat(min, "]{").concat(cssFillType, ":").concat(stop, "}");
         return cssText;
       });
     }

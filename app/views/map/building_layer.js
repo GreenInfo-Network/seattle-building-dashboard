@@ -13,19 +13,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'models/building_color_bucket_calculator', 'text!templates/map/building_info.html'], function ($, _, Backbone, CityBuildings, BuildingColorBucketCalculator, BuildingInfoTemplate) {
   var baseCartoCSS = {
     dots: ['{marker-fill: #CCC;' + 'marker-fill-opacity: 0.9;' + 'marker-line-color: #FFF;' + 'marker-line-width: 0.5;' + 'marker-line-opacity: 1;' + 'marker-placement: point;' + 'marker-multi-policy: largest;' + 'marker-type: ellipse;' + 'marker-allow-overlap: true;' + 'marker-clip: false;}'],
-    footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' +
-    // we need to include these declarations, even if we're not using the pattern (e.g for Energy Star Score)
-    // because CARTO balks if we include pattern-opacity in later declarations, without having first declared the pattern-file
-    'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 'polygon-pattern-opacity: 0;}'],
-    // A hatch polygon that only applies to buildings with null values for the given measure
-    // we make the pattern transparent for all non-null values in building_color_bucket_calculator.js
-    footprints_hatch: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_2x.png);' + 'polygon-pattern-opacity: 1;}'],
-    // same, but with a different hatch pattern for high zoom levels, see #119
-    footprints_hatch_highzoom: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;' + 'polygon-pattern-file: url(https://seattle-buildings-polygon-hatch-images.s3.us-west-1.amazonaws.com/seamless_hatch_hizoom.png);' + 'polygon-pattern-opacity: 1;}']
+    footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;}'],
+    footprints_null_outline: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 2;' + 'line-color: #636363;' + 'line-opacity: 0.5;}']
   };
-  var CartoStyleSheet = function CartoStyleSheet(tableName, hatchCss, bucketCalculator, mode) {
+  var CartoStyleSheet = function CartoStyleSheet(tableName, nullOutlineCss, bucketCalculator, mode) {
     this.tableName = tableName;
-    this.hatchCss = hatchCss;
+    this.nullOutlineCss = nullOutlineCss;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
   };
@@ -33,42 +26,16 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     var bucketCSS = this.bucketCalculator.toCartoCSS();
     var tableName = this.tableName;
     var mode = this.mode;
-    var hatch = this.hatchCss;
-    var styles;
-    if (hatch && mode === 'footprints') {
-      // regular styles for footprints above "atZoom" level
-      var style1 = _toConsumableArray(baseCartoCSS['footprints_hatch']).concat(bucketCSS);
-      style1 = _.reject(style1, function (s) {
-        return !s;
-      });
-      style1 = _.map(style1, function (s) {
-        return "#".concat(tableName, " ").concat(s);
-      });
-      style1 = style1.join('\n');
-
-      // second copy of styles for footprints above an arbitrary higher zoom level, currently 18
-      var style2 = _toConsumableArray(baseCartoCSS['footprints_hatch_highzoom']).concat(bucketCSS);
-      style2 = _.reject(style2, function (s) {
-        return !s;
-      });
-      style2 = _.map(style2, function (s) {
-        return "#".concat(tableName, " ").concat(s);
-      });
-      style2 = style2.join('\n');
-
-      // zoom styling requires a separate wrap around the same set of styles, 
-      // with a zoom condition and brackets
-      styles = "".concat(style1, "\n[zoom > 18] {\n").concat(style2, "\n}");
-    } else {
-      styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
-      styles = _.reject(styles, function (s) {
-        return !s;
-      });
-      styles = _.map(styles, function (s) {
-        return "#".concat(tableName, " ").concat(s);
-      });
-      styles = styles.join('\n');
-    }
+    var outline = this.nullOutlineCss;
+    if (outline && mode === 'footprints') mode = 'footprints_null_outline';
+    var styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
+    styles = _.reject(styles, function (s) {
+      return !s;
+    });
+    styles = _.map(styles, function (s) {
+      return "#".concat(tableName, " ").concat(s);
+    });
+    styles = styles.join('\n');
     return styles;
   };
   var BuildingInfoPresenter = function BuildingInfoPresenter(city, allBuildings, buildingId, idKey, controls, layerName, defaultColor) {
@@ -128,6 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       label: chartData.lead.label
     };
 
+    // lead field in "popup_chart" from seattle.json is site_eui_wn
     // console.log(o.chart.lead);
 
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
@@ -561,12 +529,12 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
         return lyr.field_name === layer;
       });
       var fieldName = cityLayer.field_name;
-      var hatchCss = cityLayer.hatch_null_css;
+      var nullOutlineCss = cityLayer.null_outline_css;
       var buckets = cityLayer.range_slice_count;
       var colorStops = cityLayer.color_range;
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
-      var stylesheet = new CartoStyleSheet(buildings.tableName, hatchCss, calculator, layerMode);
+      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode);
       var cartocss = stylesheet.toCartoCSS();
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var interactivity = this.state.get('city').get('property_id');
