@@ -39,11 +39,19 @@ define([
 
   };
 
-  const CartoStyleSheet = function(tableName, nullOutlineCss, bucketCalculator, mode) {
+  const CartoStyleSheet = function(tableName, nullOutlineCss, bucketCalculator, mode, fieldName) {
     this.tableName = tableName;
     this.nullOutlineCss = nullOutlineCss;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
+    this.fieldName = fieldName;
+
+    // hack: these field names get a null style IF site_eui_wn is null
+    this.fieldNamesToNull = [
+      'total_ghg_emissions',
+      'total_ghg_emissions_intensity',
+      'energy_star_score'
+    ]
   };
 
   CartoStyleSheet.prototype.toCartoCSS = function(){
@@ -55,12 +63,21 @@ define([
 
     if (outline && mode === 'footprints') mode = 'footprints_null_outline';
 
-    let styles = [...baseCartoCSS[mode]].concat(bucketCSS);
+    let startingCSS = [];
+    if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
+      const fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
+      const lineColor = this.fieldName === 'energy_star_score' ? ' line-color: #636363}' : 
+      startingCSS = [`[${this.fieldName}>=0][site_eui_wn=null]{${fillType}:#CCC;${lineColor}`];
+    }
+
+    startingCSS = [...baseCartoCSS[mode]].concat(startingCSS)
+
+    let styles = [...startingCSS].concat(bucketCSS);
 
     styles = _.reject(styles, function(s) { return !s; });
     styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
     styles = styles.join('\n');
-  
+    
     return styles;
   };
 
@@ -622,7 +639,7 @@ define([
                               buildings, fieldName, buckets,
                               colorStops, cssFillType, thresholds);
 
-      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode);
+      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode, fieldName);
       var cartocss = stylesheet.toCartoCSS();
 
       var sql = (layerMode === 'dots') ?
