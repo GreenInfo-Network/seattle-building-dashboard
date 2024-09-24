@@ -63,10 +63,15 @@ define([
 
     if (outline && mode === 'footprints') mode = 'footprints_null_outline';
 
+    // a CartoCSS hack we have to employ in order to symbolize some fields as null, when EUI is null
+    // to do this we inject a new rule, in the form of 
+    // "#benchmarking_production [total_ghg_emissions>=0][site_eui_wn=null]{polygon-fill:#CCC; line-color: #636363}"
+    // if the incoming field is not in that list of fields, then we don't do that (startingCSS is an empty array)
     let startingCSS = [];
     if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
       const fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
-      const lineColor = this.fieldName === 'energy_star_score' ? ' line-color: #636363}' : 
+      // another map style hack: Energy Star does not get an outline for null, but the others do
+      const lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363}';
       startingCSS = [`[${this.fieldName}>=0][site_eui_wn=null]{${fillType}:#CCC;${lineColor}`];
     }
 
@@ -77,7 +82,7 @@ define([
     styles = _.reject(styles, function(s) { return !s; });
     styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
     styles = styles.join('\n');
-    
+
     return styles;
   };
 
