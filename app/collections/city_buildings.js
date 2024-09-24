@@ -146,15 +146,19 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       return result;
     },
     parse: function parse(data) {
-      // Housecleaning: Trim d['property_type'] because it (sometimes) includes newlines
-      // TODO: Is there a better place to do this?
-      //     : Can we do this upstream in data processing so we don't have to do it every time the app loads?
-      // data.rows.forEach(function(o) {
-      //   Object.keys(o).forEach(function(key) {
-      //     o[key] = key === 'property_type' ? o['property_type'].trim() : o[key];
-      //   });
-      // });
-
+      // Housecleaning: If site_eui_wn is null, then the following should also be set:
+      // TODO: This should really be done upstream in R before the data goes to CARTO
+      // * total_ghg_emissions => null
+      // * total_ghg_emissions_intesity => null
+      // * energy_star_score => null
+      data.rows.forEach(function (row) {
+        if (row.site_eui_wn === null) {
+          // do the updates
+          row.total_ghg_emissions = null;
+          row.total_ghg_emissions_intensity = null;
+          row.energy_star_score = null;
+        }
+      });
       return data.rows;
     },
     toSql: function toSql(year, categories, range) {

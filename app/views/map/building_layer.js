@@ -16,11 +16,15 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     footprints: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 1;' + 'line-color: #FFF;' + 'line-opacity: 0.5;}'],
     footprints_null_outline: ['{polygon-fill: #CCC;' + 'polygon-opacity: 0.9;' + 'line-width: 2;' + 'line-color: #636363;' + 'line-opacity: 0.5;}']
   };
-  var CartoStyleSheet = function CartoStyleSheet(tableName, nullOutlineCss, bucketCalculator, mode) {
+  var CartoStyleSheet = function CartoStyleSheet(tableName, nullOutlineCss, bucketCalculator, mode, fieldName) {
     this.tableName = tableName;
     this.nullOutlineCss = nullOutlineCss;
     this.bucketCalculator = bucketCalculator;
     this.mode = mode;
+    this.fieldName = fieldName;
+
+    // hack: these field names get a null style IF site_eui_wn is null
+    this.fieldNamesToNull = ['total_ghg_emissions', 'total_ghg_emissions_intensity', 'energy_star_score'];
   };
   CartoStyleSheet.prototype.toCartoCSS = function () {
     var bucketCSS = this.bucketCalculator.toCartoCSS();
@@ -28,7 +32,20 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     var mode = this.mode;
     var outline = this.nullOutlineCss;
     if (outline && mode === 'footprints') mode = 'footprints_null_outline';
-    var styles = _toConsumableArray(baseCartoCSS[mode]).concat(bucketCSS);
+
+    // a CartoCSS hack we have to employ in order to symbolize some fields as null, when EUI is null
+    // to do this we inject a new rule, in the form of 
+    // "#benchmarking_production [total_ghg_emissions>=0][site_eui_wn=null]{polygon-fill:#CCC; line-color: #636363}"
+    // if the incoming field is not in that list of fields, then we don't do that (startingCSS is an empty array)
+    var startingCSS = [];
+    if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
+      var fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
+      // another map style hack: Energy Star does not get an outline for null, but the others do
+      var lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363}';
+      startingCSS = ["[".concat(this.fieldName, ">=0][site_eui_wn=null]{").concat(fillType, ":#CCC;").concat(lineColor)];
+    }
+    startingCSS = _toConsumableArray(baseCartoCSS[mode]).concat(startingCSS);
+    var styles = _toConsumableArray(startingCSS).concat(bucketCSS);
     styles = _.reject(styles, function (s) {
       return !s;
     });
@@ -534,7 +551,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
       var colorStops = cityLayer.color_range;
       var thresholds = cityLayer.thresholds ? state.get('layer_thresholds') : null;
       var calculator = new BuildingColorBucketCalculator(buildings, fieldName, buckets, colorStops, cssFillType, thresholds);
-      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode);
+      var stylesheet = new CartoStyleSheet(buildings.tableName, nullOutlineCss, calculator, layerMode, fieldName);
       var cartocss = stylesheet.toCartoCSS();
       var sql = layerMode === 'dots' ? buildings.toSql(year, state.get('categories'), state.get('filters')) : this.footprintGenerateSql.sql(buildings.toSqlComponents(year, state.get('categories'), state.get('filters'), 'b.'));
       var interactivity = this.state.get('city').get('property_id');
