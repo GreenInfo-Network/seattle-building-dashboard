@@ -702,7 +702,7 @@ header {
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   vertical-align: top;
-  padding: 0.5em 0;
+  padding: 0.95em 0 0.5em;
 }
 #year-select-container .selectize-input {
   width: 88px;
@@ -820,7 +820,7 @@ header {
 }
 
 #building-proptype-selector {
-  width: 205px;
+  width: 220px;
   position: absolute;
   left: 45em;
   padding: 0.5em 0;
