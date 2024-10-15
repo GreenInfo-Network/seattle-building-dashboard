@@ -858,6 +858,11 @@ header {
   font-size: 1em;
 }
 
+@media screen and (min-width: 1200px) {
+  #building-proptype-selector {
+    width: 240px;
+  }
+}
 .toolbar {
   background-color: #0047ba;
   color: white;
