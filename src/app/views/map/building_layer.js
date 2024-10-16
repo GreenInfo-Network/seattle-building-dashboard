@@ -71,18 +71,16 @@ define([
     if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
       const fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
       // another map style hack: Energy Star does not get an outline for null, but the others do
-      const lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363}';
-      startingCSS = [`[${this.fieldName}>=0][site_eui_wn=null]{${fillType}:#CCC;${lineColor}`];
+      const lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363';
+      startingCSS = [`[${this.fieldName}>=0][site_eui_wn=null]{${fillType}:#CCC;${lineColor}}`];
     }
 
     startingCSS = [...baseCartoCSS[mode]].concat(startingCSS)
-
     let styles = [...startingCSS].concat(bucketCSS);
 
     styles = _.reject(styles, function(s) { return !s; });
     styles = _.map(styles, function(s) { return `#${tableName} ${s}`; });
     styles = styles.join('\n');
-
     return styles;
   };
 
