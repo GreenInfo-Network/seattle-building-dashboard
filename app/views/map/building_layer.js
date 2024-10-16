@@ -41,8 +41,8 @@ define(['jquery', 'underscore', 'backbone', 'collections/city_buildings', 'model
     if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
       var fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
       // another map style hack: Energy Star does not get an outline for null, but the others do
-      var lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363}';
-      startingCSS = ["[".concat(this.fieldName, ">=0][site_eui_wn=null]{").concat(fillType, ":#CCC;").concat(lineColor)];
+      var lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363';
+      startingCSS = ["[".concat(this.fieldName, ">=0][site_eui_wn=null]{").concat(fillType, ":#CCC;").concat(lineColor, "}")];
     }
     startingCSS = _toConsumableArray(baseCartoCSS[mode]).concat(startingCSS);
     var styles = _toConsumableArray(startingCSS).concat(bucketCSS);
