@@ -29,6 +29,8 @@ define([
       this.parentEl = options.parentEl;
       this.template = _.template(BuildingTemplate);
 
+      this.listenTo(this.state, 'change:tab', this.onChangeTab);
+
       this.charts = {};
 
       return this;
@@ -37,6 +39,10 @@ define([
     events: {
       'click .sc-toggle--input': 'toggleView',
       'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart'
+    },
+
+    onChangeTab: function () {
+      this.render();
     },
 
     close: function () {
@@ -360,7 +366,7 @@ define([
           total_ghg,
           ghg_direction,
           ghg_direction_statement,
-          setTab: () => console.log('hello')
+          tab: this.state.get('tab')
         })
       );
 

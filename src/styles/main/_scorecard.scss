@@ -36,7 +36,7 @@ $text-size-large: 1.15rem;
 $text-size-extra-large: 1.4rem;
 
 $standard-border-radius: 12px;
-$small-border-radius: 12px;
+$small-border-radius: 4px;
 
 $off-blue: #f5f5f5;
 $green: #007749;
@@ -223,6 +223,22 @@ $dark-blue: #0046ad;
       max-width: 450px;
       width: 35%;
 
+      &-header {
+        display: flex;
+        gap: 0.5rem;
+
+        &-text {
+          display: flex;
+          flex-direction: column;
+        }
+
+        &-icon {
+          display: flex;
+          align-items: center;
+          flex-shrink: 0;
+        }
+      }
+
       &-name {
       }
 
@@ -243,7 +259,7 @@ $dark-blue: #0046ad;
         padding: 8px 12px;
         justify-content: center;
         align-items: center;
-        border-radius: $standard-border-radius;
+        border-radius: $small-border-radius;
         color: $white;
         width: fit-content;
       }

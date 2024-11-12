@@ -2,11 +2,23 @@
   <div class="building-container">
     <!-- SIDEBAR -->
     <div class="building-sidebar">
-      <div class="building-sidebar-name text-copy-large"><%= name %></div>
-      <div class="building-sidebar-tab text-header">{TAB}</div>
-      <div class="building-sidebar-perf-report text-subheader">
-        <%= year %> Performance report
+      <div class="building-sidebar-header">
+        <div class="building-sidebar-header-text">
+          <div class="building-sidebar-name text-copy-large"><%= name %></div>
+          <div class="building-sidebar-tab text-header">{TAB}</div>
+          <div class="building-sidebar-perf-report text-subheader">
+            <%= year %> Performance report
+          </div>
+        </div>
+        <div class="building-sidebar-header-icon">
+          <% if (tab === 'energy_targets') { %>
+          <img src="images/energy_targets.png" />
+          <% } %> <% if (tab === 'emissions_targets') { %>
+          <img src="images/emissions_targets.png" />
+          <% } %>
+        </div>
       </div>
+
       <div class="building-sidebar-description text-copy">{TAB DEP DESC}</div>
       <div class="building-sidebar-button text-subheader">Learn more</div>
     </div>
