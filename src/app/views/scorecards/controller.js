@@ -88,6 +88,10 @@ define([
     onBuildingReportActive: function () {
       this.activekey = 'report_active';
       this.viewclass = BuildingScorecard;
+      // Set initial tab on load
+      if (this.state.get('report_active') === true) {
+        this.state.set({ tab: 'benchmark_overview' });
+      }
       this.render();
     },
 
