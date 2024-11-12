@@ -43,6 +43,7 @@ $green: #007749;
 $white: #ffffff;
 $paragraph: #333;
 $gray: #969ba4;
+$light-gray: #f1f1f1;
 $dark-blue: #0046ad;
 
 // TODO use open sans
@@ -275,8 +276,73 @@ $dark-blue: #0046ad;
         justify-content: center;
         align-items: flex-start;
         border-radius: $standard-border-radius;
-        background: $off-blue;
+        background-color: $off-blue;
         line-height: 160%;
+        gap: 0.5rem;
+      }
+
+      &-overview {
+        &-top {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+
+        &-bottom {
+          display: flex;
+          gap: 0.5rem;
+          width: 100%;
+        }
+
+        &-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+
+          &-icon {
+            height: 4rem;
+            img {
+              height: 100%;
+              width: auto;
+            }
+          }
+        }
+
+        &-container {
+          background-color: $white;
+          display: flex;
+          flex-direction: column;
+          padding: 32px 40px;
+          border-radius: $standard-border-radius;
+          flex-grow: 1;
+          flex-basis: 50%;
+          gap: 0.5rem;
+        }
+
+        &-button {
+          cursor: pointer;
+          border-radius: $small-border-radius;
+          background-color: $light-gray;
+          border: 1px solid $gray;
+          display: flex;
+          padding: 8px 12px;
+          align-items: center;
+          gap: 0.5rem;
+          width: fit-content;
+          color: $dark-blue;
+        }
+
+        &-metric {
+          display: flex;
+          align-items: baseline;
+          gap: 0.5rem;
+
+          &-number {
+          }
+
+          &-unit {
+          }
+        }
       }
     }
   }
