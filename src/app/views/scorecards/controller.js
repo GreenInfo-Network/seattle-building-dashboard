@@ -5,18 +5,34 @@ define([
   './building_scorecard',
   './city_scorecard',
   './links',
-  'text!templates/scorecards/scorecard.html'
-], function($, _, Backbone, BuildingScorecard, CityScorecard, Links, ScorecardTemplate){
+  'text!templates/scorecards/scorecard-2.html'
+], function (
+  $,
+  _,
+  Backbone,
+  BuildingScorecard,
+  CityScorecard,
+  Links,
+  ScorecardTemplate
+) {
   const ScorecardController = Backbone.View.extend({
     el: $('#scorecard'),
 
-    initialize: function(options){
+    initialize: function (options) {
       this.state = options.state;
       this.mapView = options.mapView;
 
       this.listenTo(this.state, 'change:allbuildings', this.onBuildingsChange);
-      this.listenTo(this.state, 'change:report_active', this.onBuildingReportActive);
-      this.listenTo(this.state, 'change:city_report_active', this.onCityReportActive);
+      this.listenTo(
+        this.state,
+        'change:report_active',
+        this.onBuildingReportActive
+      );
+      this.listenTo(
+        this.state,
+        'change:city_report_active',
+        this.onCityReportActive
+      );
 
       const scorecard = this.state.get('scorecard');
       this.listenTo(scorecard, 'change:view', this.onViewChange);
@@ -33,11 +49,11 @@ define([
         fixedZero: d3.format(',.0f'),
         abbreviate: (n, fmtr) => {
           if (n >= 1000000) {
-            return [fmtr(n/1000000), 'million'];
+            return [fmtr(n / 1000000), 'million'];
           }
 
           if (n > 1000) {
-            return [fmtr(n/1000), 'thousand'];
+            return [fmtr(n / 1000), 'thousand'];
           }
 
           return fmtr(n, '');
@@ -47,19 +63,19 @@ define([
 
     events: {
       'click #back-to-map-link': 'closeReport',
-      'click #comparison-view-link': 'showComparisonView',
+      'click #comparison-view-link': 'showComparisonView'
     },
 
-    onBuildingsChange: function() {
+    onBuildingsChange: function () {
       if (this.dirty) this.render();
     },
 
-    onViewChange: function() {
+    onViewChange: function () {
       this.updateViewClass();
       if (this.view && this.view.onViewChange) this.view.onViewChange();
     },
 
-    updateViewClass: function() {
+    updateViewClass: function () {
       var scorecardState = this.state.get('scorecard');
       var view = scorecardState.get('view');
 
@@ -68,19 +84,19 @@ define([
       this.$el.attr('class', `active ${klass}`);
     },
 
-    onBuildingReportActive: function() {
+    onBuildingReportActive: function () {
       this.activekey = 'report_active';
       this.viewclass = BuildingScorecard;
       this.render();
     },
 
-    onCityReportActive: function() {
+    onCityReportActive: function () {
       this.activekey = 'city_report_active';
       this.viewclass = CityScorecard;
       this.render();
     },
 
-    showComparisonView: function(evt) {
+    showComparisonView: function (evt) {
       evt.preventDefault();
       this.state.trigger('clearMapPopup');
       this.state.set({
@@ -90,12 +106,12 @@ define([
       });
     },
 
-    closeReport: function(evt) {
+    closeReport: function (evt) {
       evt.preventDefault();
       this.state.set({ [this.activekey]: false });
     },
 
-    toggleView: function(evt) {
+    toggleView: function (evt) {
       evt.preventDefault();
 
       var scorecardState = this.state.get('scorecard');
@@ -109,17 +125,17 @@ define([
         return false;
       }
 
-      scorecardState.set({ 'view': value });
+      scorecardState.set({ view: value });
     },
 
-    loadView: function(view) {
+    loadView: function (view) {
       this.removeView();
       this.view = view;
 
       this.view.render();
     },
 
-    removeView: function() {
+    removeView: function () {
       if (this.view) {
         this.view.close();
         this.view.remove();
@@ -127,13 +143,13 @@ define([
       this.view = null;
     },
 
-    getLinksTable: function() {
+    getLinksTable: function () {
       const city = this.state.get('city');
       const table = city && city.get && city.get('scorecard');
       return (table && table.links_table) || 'links';
     },
 
-    renderLinks: function(building, building_type, isBuildingRenderer) {
+    renderLinks: function (building, building_type, isBuildingRenderer) {
       if (this.linksView) this.removeLinks();
 
       if (!isBuildingRenderer) return;
@@ -147,7 +163,7 @@ define([
       });
     },
 
-    removeLinks: function() {
+    removeLinks: function () {
       if (this.linksView) {
         this.linksView.close();
         this.linksView.remove();
@@ -156,7 +172,7 @@ define([
       this.linksView = null;
     },
 
-    getSubViewOptions: function() {
+    getSubViewOptions: function () {
       return {
         el: '#scorecard-content',
         state: this.state,
@@ -166,7 +182,7 @@ define([
       };
     },
 
-    showScorecard: function() {
+    showScorecard: function () {
       this.$el.toggleClass('active', true);
 
       const building = this.state.get('building');
@@ -190,13 +206,15 @@ define([
         building_type = 'citywide';
       }
 
-      this.$el.html(this.template({
-        building_view: this.viewclass === BuildingScorecard,
-        comments,
-        name,
-        energy_star_score,
-        year
-      }));
+      this.$el.html(
+        this.template({
+          building_view: this.viewclass === BuildingScorecard,
+          comments,
+          name,
+          energy_star_score,
+          year
+        })
+      );
 
       this.renderLinks(building, building_type, isBuildingRenderer);
 
@@ -207,7 +225,7 @@ define([
       this.loadView(view);
     },
 
-    hideScorecard: function() {
+    hideScorecard: function () {
       this.$el.toggleClass('active', false);
       this.removeLinks();
       this.removeView();
@@ -215,7 +233,7 @@ define([
       this.$el.html('');
     },
 
-    render: function(){
+    render: function () {
       const buildings = this.state.get('allbuildings');
       const active = this.state.get(this.activekey);
 

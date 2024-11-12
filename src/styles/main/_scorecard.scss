@@ -1,12 +1,12 @@
 @import '../base/_basic_grid';
 @import '../base/_bs_spacing';
 
-$sc-blue: #0047BA;
-$sc-green: #90AE60;
-$sc-orange: #DE8F41;
-$sc-red: #C04F31;
-$sc-yellow: #F7C34D;
-$sc-white: #FFFFFF;
+$sc-blue: #0047ba;
+$sc-green: #90ae60;
+$sc-orange: #de8f41;
+$sc-red: #c04f31;
+$sc-yellow: #f7c34d;
+$sc-white: #ffffff;
 $sc-grey: #707070;
 $sc-offwhite: #f1f1f1;
 
@@ -21,9 +21,250 @@ $sc-font-lg: 1.5rem;
 $sc-font-lgr: 4rem;
 
 // Energy source colors
-$gas-color: #C24E2B;
+$gas-color: #c24e2b;
 $electric-color: #0048ba;
 $steam-color: #f7c34e;
+
+// ------------------------------------------------------------------------
+// $text-size-small: 0.875rem;
+// $text-size-regular: 1rem;
+// $text-size-large: 1.25rem;
+// $text-size-extra-large: 1.5rem;
+$text-size-small: 0.775rem;
+$text-size-regular: 0.9rem;
+$text-size-large: 1.15rem;
+$text-size-extra-large: 1.4rem;
+
+$standard-border-radius: 12px;
+$small-border-radius: 12px;
+
+$off-blue: #f5f5f5;
+$green: #007749;
+$white: #ffffff;
+$paragraph: #333;
+$gray: #969ba4;
+$dark-blue: #0046ad;
+
+// TODO use open sans
+.text-copy {
+  font-size: $text-size-regular;
+  // light
+  font-weight: 300;
+  color: $paragraph;
+}
+
+.text-subheader {
+  font-size: $text-size-regular;
+  // bold
+  font-weight: 700;
+  color: $paragraph;
+}
+
+.text-header {
+  font-size: $text-size-large;
+  // bold
+  font-weight: 700;
+  color: $paragraph;
+}
+
+.text-copy-link {
+  font-size: $text-size-regular;
+  // semibold
+  font-weight: 600;
+  color: $paragraph;
+}
+
+.text-asterisk {
+  font-size: $text-size-small;
+  // light
+  font-weight: 300;
+  color: $paragraph;
+}
+
+.text-button {
+  font-size: $text-size-small;
+  // bold
+  font-weight: 700;
+  color: $paragraph;
+}
+
+.text-chart {
+  font-size: $text-size-small;
+  // semibold
+  font-weight: 600;
+  color: $paragraph;
+}
+
+.text-table {
+  font-size: $text-size-small;
+  // regular
+  font-weight: 400;
+  color: $paragraph;
+}
+
+.text-table-header {
+  font-size: $text-size-small;
+  // semibold
+  font-weight: 600;
+  color: $paragraph;
+}
+
+.text-copy-large {
+  font-size: $text-size-extra-large;
+  // regular
+  font-weight: 400;
+  color: $paragraph;
+}
+
+.scorecard {
+  &-top-bar {
+    display: flex;
+    height: 4rem;
+    background-color: $dark-blue;
+    color: $white;
+
+    &-left {
+      max-width: 450px;
+      width: 35%;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    &-right {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 1rem;
+    }
+
+    &-logo {
+      color: $white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    &-tabs-container {
+      display: flex;
+      gap: 0.5rem;
+      height: 100%;
+      align-items: end;
+    }
+
+    &-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 10px;
+      background-color: $white;
+      border-top-left-radius: $small-border-radius;
+      border-top-right-radius: $small-border-radius;
+      bottom: 0;
+      cursor: pointer;
+    }
+
+    &-buttons-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    &-button {
+      color: $white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      cursor: pointer;
+
+      &-icon {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+#scorecard-2 {
+  // TODO Go back to none?
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: $sc-white;
+  overflow: auto;
+  z-index: $zIndexMax;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  &.active {
+    display: block;
+  }
+
+  .building {
+    &-container {
+      display: flex;
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      min-width: 920px;
+      height: fit-content;
+      margin: 0 auto;
+    }
+
+    &-sidebar {
+      max-width: 450px;
+      width: 35%;
+
+      &-name {
+      }
+
+      &-tab {
+      }
+
+      &-perf-report {
+        color: $gray;
+        text-transform: uppercase;
+      }
+
+      &-description {
+      }
+
+      &-button {
+        background-color: $green;
+        display: flex;
+        padding: 8px 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: $standard-border-radius;
+        color: $white;
+        width: fit-content;
+      }
+    }
+
+    &-main {
+      flex-grow: 1;
+
+      &-chart-container {
+        display: flex;
+        padding: 32px 40px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        border-radius: $standard-border-radius;
+        background: $off-blue;
+        line-height: 160%;
+      }
+    }
+  }
+}
+
+// ------------------------------------------------------------------------
 
 #scorecard {
   display: none;
@@ -66,11 +307,10 @@ $steam-color: #f7c34e;
     text-transform: uppercase;
     font-size: 0.75rem;
     background: $blue;
-    color: #FFF;
+    color: #fff;
     @media print {
       display: none;
     }
-
   }
 
   #scorecard-content {
@@ -87,22 +327,36 @@ $steam-color: #f7c34e;
     text-transform: uppercase;
     line-height: 1;
 
-    &.small { font-size: 16px; }
-    &.large { font-size: $sc-font-lg; }
-    &.xlarge { font-size: $sc-font-lgr; }
+    &.small {
+      font-size: 16px;
+    }
+    &.large {
+      font-size: $sc-font-lg;
+    }
+    &.xlarge {
+      font-size: $sc-font-lgr;
+    }
     &.number {
       margin: 0.5rem 0;
     }
 
-    &.light { font-weight: $sc-weight-lt; }
-    &.normal-weight { font-weight: $sc-weight; }
+    &.light {
+      font-weight: $sc-weight-lt;
+    }
+    &.normal-weight {
+      font-weight: $sc-weight;
+    }
 
-    &.orange { color: $sc-orange; }
-    &.white { color: $sc-white; }
+    &.orange {
+      color: $sc-orange;
+    }
+    &.white {
+      color: $sc-white;
+    }
 
     &.nodata {
       font-size: 2.5rem;
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
   }
 
@@ -111,7 +365,9 @@ $steam-color: #f7c34e;
     font-size: 0.75rem;
   }
 
-  .bold { font-weight: $sc-weight-bd; }
+  .bold {
+    font-weight: $sc-weight-bd;
+  }
 
   .sc-txt {
     margin: 0;
@@ -121,27 +377,47 @@ $steam-color: #f7c34e;
     font-weight: $sc-weight;
     line-height: 1.2;
 
-    &.white { color: $sc-white; }
-    &.orange { color: $sc-orange; }
-    &.blue-new { color: $blue-new; }
-    &.grey { color: $sc-grey; }
+    &.white {
+      color: $sc-white;
+    }
+    &.orange {
+      color: $sc-orange;
+    }
+    &.blue-new {
+      color: $blue-new;
+    }
+    &.grey {
+      color: $sc-grey;
+    }
 
-    &.tiny { font-size: $sc-font-tiny; }
-    &.small { font-size: 16px; }
-    &.x-small { font-size: 14px; }
+    &.tiny {
+      font-size: $sc-font-tiny;
+    }
+    &.small {
+      font-size: 16px;
+    }
+    &.x-small {
+      font-size: 14px;
+    }
 
-    &.light { font-weight: $sc-weight-lt; }
-    &.bold { font-weight: $sc-weight-bd; }
+    &.light {
+      font-weight: $sc-weight-lt;
+    }
+    &.bold {
+      font-weight: $sc-weight-bd;
+    }
 
-    &.pg { line-height: 1.2; }
+    &.pg {
+      line-height: 1.2;
+    }
 
     @media print {
-      font-size: $sc-font-std * .75;
+      font-size: $sc-font-std * 0.75;
     }
   }
 
   .sc-details-value {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 
     label {
       display: inline-block;
@@ -154,7 +430,7 @@ $steam-color: #f7c34e;
       padding: 1rem;
 
       @media print {
-        padding: .5rem;
+        padding: 0.5rem;
       }
     }
 
@@ -162,14 +438,14 @@ $steam-color: #f7c34e;
       margin-bottom: 2rem;
 
       @media print {
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
       }
 
       .sc-heading {
         margin-bottom: 8px;
 
         @media print {
-          margin-bottom: .25rem;
+          margin-bottom: 0.25rem;
         }
       }
     }
@@ -281,15 +557,15 @@ $steam-color: #f7c34e;
             margin-bottom: -5px;
           }
         }
-  
+
         div#building-details-wrapper {
           display: flex;
           flex-direction: row;
-      
+
           div.building-details-col {
             padding: 5px 0 5px 15px;
             width: 200px;
-            
+
             &:first-child {
               border-right: 1px solid $blue-new;
               padding-left: 0;
@@ -303,7 +579,7 @@ $steam-color: #f7c34e;
           div#building-details-values {
             font-size: 16px;
             font-weight: 400;
-          
+
             @media print {
               font-size: 13px;
             }
@@ -334,12 +610,11 @@ $steam-color: #f7c34e;
         @media print {
           font-size: 12px;
         }
-
       }
 
       div.building-details-card {
         position: relative;
-        font-size: 16px;      
+        font-size: 16px;
         min-width: 260px;
         width: auto;
         height: 100%;
@@ -362,8 +637,10 @@ $steam-color: #f7c34e;
         div.building-details-card-icon {
           position: absolute;
           background: $blue-new;
-          width: 52px; height: 48px;
-          bottom: 0; right: 0;
+          width: 52px;
+          height: 48px;
+          bottom: 0;
+          right: 0;
           border-radius: 5px 0 5px 0;
 
           background-repeat: no-repeat;
@@ -382,26 +659,24 @@ $steam-color: #f7c34e;
               background-size: 65%;
               background-position: 7px 10px;
             }
-
           }
 
           &.eui {
-            background-image: url('../images/scorecard/lightbulb.svg');            
+            background-image: url('../images/scorecard/lightbulb.svg');
             background-size: 55%;
             background-position: 12px 7px;
 
             @media print {
               background-size: 50%;
-            background-position: 9px 7px;
+              background-position: 9px 7px;
             }
-
           }
         }
 
         div.building-details-card-measure {
           line-height: 1;
           margin-bottom: 15px;
-  
+
           @media print {
             margin-bottom: 10px;
           }
@@ -409,7 +684,7 @@ $steam-color: #f7c34e;
           span.building-details-card-measure-number {
             font-size: 38px;
             font-weight: 500;
-            
+
             @media print {
               font-size: 25px;
             }
@@ -453,17 +728,15 @@ $steam-color: #f7c34e;
             line-height: 1.15;
             margin-left: 8px;
             span.text-increased {
-              color: #C04F31;
+              color: #c04f31;
             }
             span.text-decreased {
-              color: #90AE60;
+              color: #90ae60;
             }
 
             @media print {
               font-size: 14px;
             }
-
-
           }
         }
       }
@@ -473,7 +746,7 @@ $steam-color: #f7c34e;
   // New State Requirement: Action is required alert
   div#state-requirement-wrapper {
     color: $blue_new;
-    background: #E5EBF6;
+    background: #e5ebf6;
     border-radius: 0px 0px 5px 5px;
     border-top: 1px solid $blue_new;
     padding: 16px;
@@ -490,7 +763,8 @@ $steam-color: #f7c34e;
       display: flex;
       flex-direction: row;
       div#state-requirement-icon {
-        width: 16px; height: 20px;
+        width: 16px;
+        height: 20px;
         background-image: url('../images/scorecard/info-icon.svg');
         background-repeat: no-repeat;
         background-size: 100%;
@@ -534,12 +808,12 @@ $steam-color: #f7c34e;
         }
       }
     }
-  
+
     .hr {
       margin: 1.7em 0.15em;
       height: 2px;
       border-top: 1px solid $blue_new;
-      opacity: 50%; 
+      opacity: 50%;
     }
 
     div#fuel-use-future {
@@ -560,7 +834,7 @@ $steam-color: #f7c34e;
       }
 
       div#fuel-use-future-list {
-        display: flex; 
+        display: flex;
         flex-direction: column;
         margin-top: 1em;
 
@@ -634,14 +908,21 @@ $steam-color: #f7c34e;
       }
 
       p#compare-label {
-        text-align: left; 
-              
+        text-align: left;
+
         .change-txt {
-          &.lower.eui, &.higher.ess, &.decreased { color: #90AE60; }
-          &.higher.eui, &.lower.ess, &.increased { color: #C04F31; }
+          &.lower.eui,
+          &.higher.ess,
+          &.decreased {
+            color: #90ae60;
+          }
+          &.higher.eui,
+          &.lower.ess,
+          &.increased {
+            color: #c04f31;
+          }
         }
       }
-
     }
 
     #change-chart {
@@ -698,7 +979,7 @@ $steam-color: #f7c34e;
 
           &.selected-building {
             font-size: 12px;
-            color: #0047BA;
+            color: #0047ba;
           }
         }
       }
@@ -725,7 +1006,7 @@ $steam-color: #f7c34e;
         }
 
         a {
-          color: $blue_new; 
+          color: $blue_new;
           text-decoration: underline;
         }
       }
@@ -755,7 +1036,6 @@ $steam-color: #f7c34e;
           min-height: 44px;
         }
 
-
         span.performance-standard-bubble-measure {
           font-size: 26px;
           font-weight: 500;
@@ -784,7 +1064,6 @@ $steam-color: #f7c34e;
             width: 23px;
             height: 23px;
           }
-
         }
 
         span.performance-standard-bubble-description {
@@ -796,9 +1075,8 @@ $steam-color: #f7c34e;
           @media print {
             font-size: 14px;
           }
-
         }
-      
+
         span.bubble-icon {
           background: $blue-new;
           width: 36px;
@@ -806,7 +1084,7 @@ $steam-color: #f7c34e;
           border-radius: 0 7px 7px 0;
           position: absolute;
           right: 0;
-          
+
           &.calendar {
             background-image: url('../images/scorecard/calendar.svg');
             background-repeat: no-repeat;
@@ -821,7 +1099,6 @@ $steam-color: #f7c34e;
       }
     }
     div#performance-standard-bar-chart-container {
-
       div#performance-standard-bar-chart {
         width: 100%;
         height: 140px;
@@ -829,20 +1106,20 @@ $steam-color: #f7c34e;
 
         .bar-outline {
           fill: #fff;
-          stroke: #B2B2B2;
+          stroke: #b2b2b2;
         }
 
         .tick-label {
-          fill: #B2B2B2;
+          fill: #b2b2b2;
           font-size: 12px;
         }
- 
+
         .hide-line > .tick-line {
           stroke-width: 0;
         }
 
         .tick-line {
-          stroke: #B2B2B2;
+          stroke: #b2b2b2;
           stroke-width: 1px;
         }
 
@@ -868,12 +1145,12 @@ $steam-color: #f7c34e;
         div.chart-label-meets-target {
           position: absolute;
           font-size: 12px;
-          color: #90AE60;
+          color: #90ae60;
           background-image: url('../images/scorecard/arrow-icon-sm-green.svg');
           background-repeat: no-repeat;
           background-position: -2px -3px;
           background-size: 23px;
-          // needed for background image 
+          // needed for background image
           width: 113px;
           text-align: right;
         }
@@ -881,18 +1158,18 @@ $steam-color: #f7c34e;
         div.chart-label-misses-target {
           position: absolute;
           font-size: 12px;
-          color: #C04F31;
+          color: #c04f31;
           background-image: url('../images/scorecard/arrow-icon-sm-red.svg');
           background-repeat: no-repeat;
           background-position: 12px 7px;
           background-position: 132px -3px;
           background-size: 23px;
-          // needed for background image 
+          // needed for background image
           width: 152px;
         }
       }
       div#performance-standard-bar-chart-x-axis-label {
-        color: #B2B2B2;
+        color: #b2b2b2;
         font-size: 12px;
         position: relative;
         top: -37px;
@@ -922,10 +1199,10 @@ $steam-color: #f7c34e;
   // COMPARE CHART
   // Energy Use Compared to Average Chart
   // Energy Star Score Compared to Average Chart
-  // 
+  //
   .scorecard-compare-chart {
     border: 1px solid $blue_new;
-    border-radius: 5px;    
+    border-radius: 5px;
 
     #sc-toggle-wrapper {
       display: flex;
@@ -935,7 +1212,7 @@ $steam-color: #f7c34e;
 
       .sc-toggle {
         padding: 0.5rem;
-        background: #E5EBF6;
+        background: #e5ebf6;
         margin-top: -1rem;
         margin-right: -1rem;
         height: 85px;
@@ -946,7 +1223,7 @@ $steam-color: #f7c34e;
         }
 
         .sc-heading {
-          margin-bottom: .25rem;
+          margin-bottom: 0.25rem;
         }
 
         .sc-toggle-row {
@@ -969,7 +1246,7 @@ $steam-color: #f7c34e;
             text-transform: uppercase;
           }
 
-          input[type="checkbox"] {
+          input[type='checkbox'] {
             display: none;
           }
 
@@ -991,7 +1268,7 @@ $steam-color: #f7c34e;
             }
           }
 
-          input[type=checkbox]:checked ~ .cb .cb-inner {
+          input[type='checkbox']:checked ~ .cb .cb-inner {
             display: block;
           }
         }
@@ -1054,7 +1331,6 @@ $steam-color: #f7c34e;
             font-weight: 500;
             color: white;
           }
-
         }
 
         // .change-arrow {
@@ -1081,8 +1357,16 @@ $steam-color: #f7c34e;
         // }
 
         .change-txt {
-          &.lower.eui, &.higher.ess, &.decreased { color: #90AE60; }
-          &.higher.eui, &.lower.ess, &.increased { color: #C04F31; }
+          &.lower.eui,
+          &.higher.ess,
+          &.decreased {
+            color: #90ae60;
+          }
+          &.higher.eui,
+          &.lower.ess,
+          &.increased {
+            color: #c04f31;
+          }
         }
       }
 
@@ -1100,11 +1384,11 @@ $steam-color: #f7c34e;
         }
 
         .bar rect {
-          fill: #F1F1F1;
+          fill: #f1f1f1;
           shape-rendering: crispEdges;
 
           &.selected {
-            fill: #DE8F41;
+            fill: #de8f41;
           }
 
           &.avg-bar {
@@ -1118,7 +1402,7 @@ $steam-color: #f7c34e;
 
         .y.axis path {
           fill: none;
-          stroke: #CBCBCB;
+          stroke: #cbcbcb;
         }
 
         text {
@@ -1127,7 +1411,8 @@ $steam-color: #f7c34e;
           text-transform: lowercase;
         }
 
-        .y.axis text, .label text {
+        .y.axis text,
+        .label text {
           fill: $tick-color;
         }
 
@@ -1175,7 +1460,8 @@ $steam-color: #f7c34e;
             color: $real-orange;
           }
 
-          .label, .units {
+          .label,
+          .units {
             font-size: 10px;
             font-weight: 400;
             text-transform: uppercase;
@@ -1303,10 +1589,10 @@ $steam-color: #f7c34e;
 
   // Footer Links
   #links {
-    background: #F1F1F1;
+    background: #f1f1f1;
 
     @media print {
-      background: #FFFFFF;
+      background: #ffffff;
     }
 
     table {
@@ -1353,10 +1639,9 @@ $steam-color: #f7c34e;
         }
 
         a {
-          color: #003DA5;
+          color: #003da5;
           text-decoration: underline;
         }
-
       }
 
       .link-link {
@@ -1384,7 +1669,7 @@ $steam-color: #f7c34e;
           }
 
           @media print {
-            padding: .5em;
+            padding: 0.5em;
             font-size: 13px;
           }
         }
@@ -1406,7 +1691,6 @@ $steam-color: #f7c34e;
       }
 
       tr.ad {
-
         td {
           text-align: center;
         }
@@ -1416,7 +1700,6 @@ $steam-color: #f7c34e;
           margin-top: 2rem;
         }
       }
-
     }
   }
 
@@ -1472,7 +1755,9 @@ $steam-color: #f7c34e;
       }
     }
 
-    .header { font-size: 0.75rem; }
+    .header {
+      font-size: 0.75rem;
+    }
 
     .gray-bk {
       background: $sc-offwhite;
@@ -1492,14 +1777,14 @@ $steam-color: #f7c34e;
     }
 
     & * {
-      -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
-      color-adjust: exact !important;                 /*Firefox*/
+      -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+      color-adjust: exact !important; /*Firefox*/
     }
 
     .scorecard-wrapper {
       width: 8in;
       max-width: 8in;
-      // helps with alignment of abs pos EUI labels when printing  
+      // helps with alignment of abs pos EUI labels when printing
       min-width: 945px;
     }
 
@@ -1511,7 +1796,9 @@ $steam-color: #f7c34e;
       margin-top: 0;
     }
 
-    #back-to-map-link { display: none; }
+    #back-to-map-link {
+      display: none;
+    }
 
     #scorecard-view {
       display: block !important;
@@ -1522,7 +1809,8 @@ $steam-color: #f7c34e;
       display: none;
     }
 
-    .scorecard--section, .scorecard--details {
+    .scorecard--section,
+    .scorecard--details {
       page-break-inside: avoid;
       break-inside: avoid;
     }
@@ -1612,5 +1900,3 @@ $steam-color: #f7c34e;
     display: none;
   }
 }
-
-
