@@ -63,7 +63,8 @@ define([
 
     events: {
       'click #back-to-map-link': 'closeReport',
-      'click #comparison-view-link': 'showComparisonView'
+      'click #comparison-view-link': 'showComparisonView',
+      'click .scorecard-tab-click': 'setTab'
     },
 
     onBuildingsChange: function () {
@@ -102,13 +103,20 @@ define([
       this.state.set({
         [this.activekey]: false,
         building: null,
-        building_compare_active: true
+        building_compare_active: true,
+        tab: null
       });
+    },
+
+    setTab: function (evt) {
+      const nextTab = evt?.target?.id;
+      if (!nextTab) return;
+      this.state.set({ tab: nextTab });
     },
 
     closeReport: function (evt) {
       evt.preventDefault();
-      this.state.set({ [this.activekey]: false });
+      this.state.set({ [this.activekey]: false, tab: null });
     },
 
     toggleView: function (evt) {

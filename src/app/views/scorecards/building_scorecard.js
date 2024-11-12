@@ -359,7 +359,8 @@ define([
           eui_direction_statement,
           total_ghg,
           ghg_direction,
-          ghg_direction_statement
+          ghg_direction_statement,
+          setTab: () => console.log('hello')
         })
       );
 
