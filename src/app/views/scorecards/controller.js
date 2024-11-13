@@ -90,7 +90,9 @@ define([
       this.viewclass = BuildingScorecard;
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
-        this.state.set({ tab: 'benchmark_overview' });
+        // TODO set back to benchmark_overview
+        // this.state.set({ tab: 'benchmark_overview' });
+        this.state.set({ tab: 'emissions_targets' });
       }
       this.render();
     },

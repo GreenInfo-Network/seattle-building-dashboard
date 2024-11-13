@@ -68,13 +68,14 @@
         </div>
         <% } %>
       </div>
-
       <div class="building-sidebar-button text-subheader">Learn more</div>
     </div>
+
     <!-- MAIN CONTENT -->
     <div class="building-main">
       <!-- BENCHMARKING OVERVIEW -->
-      <div class="building-main-benchmarking-overview">
+      <% if (tab === 'benchmark_overview') { %>
+      <div class="building-main-section">
         <!-- Overview -->
         <div class="building-main-chart-container">
           <div class="building-main-overview-top">
@@ -153,7 +154,45 @@
           <div class="text-subheader">ENERGY PERFORMANCE OVER TIME</div>
         </div>
       </div>
-      <!--  -->
+      <% } %>
+      <!-- EMISSIONS TARGETS -->
+      <% if (tab === 'emissions_targets') { %>
+      <div class="building-main-section">
+        <!-- Seattle BEPS Requirements -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">SEATTLE BEPS REQUIREMENTS</div>
+        </div>
+        <!-- First GHGI Target -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">FIRST GHGI TARGET</div>
+        </div>
+        <!-- Plan for Future Targets -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">PLAN FOR FUTURE TARGETS</div>
+        </div>
+        <!-- Take action -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">TAKE ACTION</div>
+        </div>
+      </div>
+      <% } %>
+      <!-- ENERGY TARGETS -->
+      <% if (tab === 'energy_targets') { %>
+      <div class="building-main-section">
+        <!-- Washington CBPS Requirements -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">WASHINGTON CBPS REQUIREMENTS</div>
+        </div>
+        <!-- First compliance interval -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">FIRST COMPLIANCE INTERVAL</div>
+        </div>
+        <!-- Take action -->
+        <div class="building-main-chart-container">
+          <div class="text-subheader">TAKE ACTION</div>
+        </div>
+      </div>
+      <% } %>
     </div>
   </div>
 </div>
