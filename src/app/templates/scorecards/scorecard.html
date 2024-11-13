@@ -4,8 +4,9 @@
   <div class="scorecard-wrapper no-energy-star-score">
     <% } %>
 
+    <!-- TODO come back and make sure city scorecard works -->
     <!-- Navigation -->
-    <div class="scorecard--nav">
+    <!-- <div class="scorecard--nav">
       <a id="back-to-map-link" class="sc-link" href="#">&lt; Back to Map</a>
       <button id="print-scorecard" onclick="window.print();">
         Print Report
@@ -20,7 +21,67 @@
       <h1 class="sc-header"><%= year %> Energy Use and Emissions Report</h1>
       <img src="images/seattle_ose_logo_blue.png" />
       <% } %>
+    </div> -->
+
+    <% if (building_view) { %>
+    <div class="scorecard-top-bar">
+      <div class="scorecard-top-bar-left">
+        <div class="scorecard-top-bar-logo text-copy-link">
+          <img src="images/seattle_icon_circle.png" />
+          Seattle Office of Sustainability and Environment
+        </div>
+      </div>
+      <div class="scorecard-top-bar-right">
+        <div class="scorecard-top-bar-tabs-container">
+          <div
+            id="benchmark_overview"
+            class="scorecard-top-bar-tab text-button scorecard-tab-click"
+          >
+            Benchmarking overview
+          </div>
+          <div
+            id="emissions_targets"
+            class="scorecard-top-bar-tab text-button scorecard-tab-click"
+          >
+            Emissions targets
+          </div>
+          <div
+            id="energy_targets"
+            class="scorecard-top-bar-tab text-button scorecard-tab-click"
+          >
+            Energy targets
+          </div>
+        </div>
+        <div class="scorecard-top-bar-buttons-container">
+          <!-- TODO add action to share button -->
+          <div class="scorecard-top-bar-button text-button">
+            <div class="scorecard-top-bar-button-icon">
+              <img src="images/share.png" />
+            </div>
+            Share
+          </div>
+          <div
+            class="scorecard-top-bar-button text-button"
+            onclick="window.print();"
+          >
+            <div class="scorecard-top-bar-button-icon">
+              <img src="images/print.png" />
+            </div>
+            Print
+          </div>
+          <div
+            id="back-to-map-link"
+            class="scorecard-top-bar-button text-button"
+          >
+            <div class="scorecard-top-bar-button-icon">
+              <img src="images/return_to_map.png" />
+            </div>
+            Return to map
+          </div>
+        </div>
+      </div>
     </div>
+    <% } %>
 
     <!-- Dynamic content -->
     <div id="scorecard-content">
@@ -32,8 +93,9 @@
     <% } %>
 
     <!-- Links -->
+    <% if (!building_view) { %>
     <div id="links" class="scorecard--section"></div>
-    <% } %>
+    <% } %> <% } %>
 
     <div class="scorecard--print-footer">
       <img src="images/seattle-energy-benchmarking.png" />

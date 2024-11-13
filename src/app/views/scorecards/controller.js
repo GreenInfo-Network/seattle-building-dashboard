@@ -2,10 +2,10 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  './building_scorecard-2',
+  './building_scorecard',
   './city_scorecard',
   './links',
-  'text!templates/scorecards/scorecard-2.html'
+  'text!templates/scorecards/scorecard.html'
 ], function (
   $,
   _,
