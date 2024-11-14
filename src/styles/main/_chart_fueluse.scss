@@ -1,48 +1,38 @@
 #fuel-use-chart {
   width: 100%;
 
-  .energy-consumption-bar-chart-container {
+  .fueluse {
     font-size: 0.8rem;
-    height: 150px;
+    height: 250px;
+    width: 100%;
 
     svg {
       height: 100%;
       width: 100%;
     }
 
-    .bar-item,
-    .bar-label {
-      &.gas {
-        fill: rgba($gas-color, 0.75);
+    .fueluse-bar {
+      &-gas {
+        rect {
+          fill: rgba($gas-color, 0.75);
+        }
       }
 
-      &.electricity {
-        fill: rgba($electric-color, 0.75);
+      &-electricity {
+        rect {
+          fill: rgba($electric-color, 0.75);
+        }
       }
 
-      &.steam {
-        fill: rgba($steam-color, 0.75);
+      &-steam {
+        rect {
+          fill: rgba($steam-color, 0.75);
+        }
       }
-    }
 
-    .bar-label {
-      text-anchor: middle;
-    }
-
-    .bar-chart-label {
-      fill: $brownish-gray;
-      text-anchor: end;
-
-      &-name {
-        font-weight: 500;
-      }
-    }
-
-    .bar-chart-total {
-      fill: $brownish-gray;
-
-      &-value {
-        font-weight: 500;
+      &-percentages {
+        fill: white;
+        text-anchor: middle;
       }
     }
   }

@@ -223,12 +223,11 @@ define([
     },
 
     renderEnergyConsumptionChart: function (data, totals) {
-      const parent = d3
-        .select(this.viewParent)
-        .select('.energy-consumption-bar-chart-container');
+      const parent = d3.select(this.viewParent).select('.fueluse');
+
       if (!parent.node()) return;
 
-      const margin = { top: 20, right: 10, bottom: 20, left: 10 };
+      const margin = { top: 25, right: 0, bottom: 25, left: 0 };
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
       const width = outerWidth - margin.left - margin.right;
@@ -236,9 +235,6 @@ define([
       const svg = parent
         .append('svg')
         .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`);
-
-      // Extra padding here for dynamic labels on either end of the bars
-      const totalBarWidth = width * 0.7;
 
       const chartData = data.map((row, i) => {
         return {
@@ -260,23 +256,29 @@ define([
 
       const labels = {
         emissions: {
-          label: 'Resulting Emissions',
-          labelUnits: '(% ghg)'
+          label: 'Metric Tons',
+          labelUnits: '(MT CO2e)',
+          totalUnits: 'MT CO2e'
         },
         usage: {
-          label: 'Energy Consumed',
-          labelUnits: '(% kBtu)'
+          label: 'Energy Used',
+          labelUnits: '(kBtu)',
+          totalUnits: 'kBtu'
         }
       };
 
-      const energyConsumedGroup = svg.append('g');
+      const chartGroup = svg.append('g');
+
+      const chartHeight = outerHeight - margin.top - margin.bottom;
+
       this.renderBarChart(
-        energyConsumedGroup,
+        chartGroup,
         chartData,
         labels,
         totals,
-        10,
-        width
+        width,
+        chartHeight,
+        margin
       );
     },
 
@@ -285,15 +287,22 @@ define([
       data,
       labels,
       totals,
-      yOffset,
-      chartWidth
+      chartWidth,
+      chartHeight,
+      margin
     ) {
+      const FONT_SIZE = 12;
+      const X_AXIS_PADDING = 6;
+
       const svg = parent
         .append('g')
-        .attr('transform', `translate(0, ${yOffset})`);
+        .attr(
+          'transform',
+          `translate(0, ${margin.top + X_AXIS_PADDING + FONT_SIZE})`
+        );
 
-      const width = chartWidth;
-      const height = 100;
+      const width = chartWidth / 2;
+      const height = chartHeight - margin.top - margin.bottom;
 
       let groups = ['emissions', 'usage'];
       let subgroups = [...new Set(data.map(d => d.key).flat())];
@@ -312,23 +321,62 @@ define([
         return acc;
       }, []);
 
-      // Add X axis
+      // Add bottom X axis
       var x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
 
-      svg
+      const xAxisA = svg
         .append('g')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x).tickSizeOuter(0));
+        .attr('transform', `translate(0, ${Number(height) + X_AXIS_PADDING})`)
+        .call(
+          d3
+            .axisBottom(x)
+            .tickSize(0)
+            .tickSizeOuter(0)
+            .tickFormat(d => {
+              return `${labels[d]?.label}`;
+            })
+        );
+
+      const xAxisB = svg
+        .append('g')
+        .attr(
+          'transform',
+          `translate(0, ${Number(height) + X_AXIS_PADDING + FONT_SIZE})`
+        )
+        .call(
+          d3
+            .axisBottom(x)
+            .tickSize(0)
+            .tickSizeOuter(0)
+            .tickFormat(d => {
+              return `${labels[d]?.labelUnits}`;
+            })
+        );
+
+      // Make the x axis line invisible
+      xAxisA.select('.domain').attr('stroke', 'transparent');
+      xAxisB.select('.domain').attr('stroke', 'transparent');
+
+      // Add top X axis
+      const xAxisTop = svg
+        .append('g')
+        .attr('transform', `translate(0, ${-1 * X_AXIS_PADDING})`)
+        .call(
+          d3
+            .axisTop(x)
+            .tickSize(0)
+            .tickSizeOuter(0)
+            .tickFormat(d => {
+              return `${totals[d]} ${labels[d]?.totalUnits}`;
+            })
+        );
+
+      // Make the x axis line invisible
+      xAxisTop.select('.domain').attr('stroke', 'transparent');
 
       // Add Y axis
       var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-      svg.append('g').call(d3.axisLeft(y));
-
-      // color palette = one color per subgroup
-      var color = d3
-        .scaleOrdinal()
-        .domain(subgroups)
-        .range(['red', 'aqua', 'yellow']);
+      // svg.append('g').call(d3.axisLeft(y));
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(chartData);
@@ -341,8 +389,8 @@ define([
         .data(stackedData)
         .enter()
         .append('g')
-        .attr('fill', function (d) {
-          return color(d.key);
+        .attr('class', d => {
+          return `fueluse-bar fueluse-bar-${d.key}`;
         })
         .selectAll('rect')
         // enter a second time = loop subgroup per subgroup to add all rectangles
@@ -361,6 +409,45 @@ define([
           return y(d[0]) - y(d[1]);
         })
         .attr('width', x.bandwidth());
+
+      const EMISSIONS_INDEX = 0;
+      const USAGE_INDEX = 1;
+
+      // Emissions percentages
+      svg
+        .selectAll('.fueluse-bar')
+        .append('text')
+        .attr('class', 'fueluse-bar-percentages')
+        .attr('font-size', FONT_SIZE)
+        .attr('x', function (d) {
+          const barWidth = x.bandwidth();
+          return x(d[EMISSIONS_INDEX].data.group) + barWidth / 2;
+        })
+        .attr('y', function (d) {
+          const height = y(d[EMISSIONS_INDEX][0]) - y(d[EMISSIONS_INDEX][1]);
+          return y(d[EMISSIONS_INDEX][1]) + height;
+        })
+        .text(d => {
+          return `${d[EMISSIONS_INDEX]?.data?.[d?.key]}%`;
+        });
+
+      // Usage percentages
+      svg
+        .selectAll('.fueluse-bar')
+        .append('text')
+        .attr('class', 'fueluse-bar-percentages')
+        .attr('font-size', FONT_SIZE)
+        .attr('x', function (d) {
+          const barWidth = x.bandwidth();
+          return x(d[USAGE_INDEX].data.group) + barWidth / 2;
+        })
+        .attr('y', function (d) {
+          const height = y(d[USAGE_INDEX][0]) - y(d[USAGE_INDEX][1]);
+          return y(d[USAGE_INDEX][1]) + height;
+        })
+        .text(d => {
+          return `${d[USAGE_INDEX]?.data?.[d?.key]}%`;
+        });
     },
 
     render: function () {
