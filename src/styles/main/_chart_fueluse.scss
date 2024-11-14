@@ -1,24 +1,8 @@
-#fueluse-chart {
-  margin-top: 1rem;
+#fuel-use-chart {
+  width: 100%;
 
-  @media print {
-    margin-top: .25rem;
-  }
-
-  .fc-row {
-    &.notes {
-      p {
-        margin-top: 1rem;
-
-        &:first-of-type {
-          margin-top: 0;
-        }
-      }
-    }
-  }
-
-  .bar-chart-container {
-    font-size: .8rem;
+  .energy-consumption-bar-chart-container {
+    font-size: 0.8rem;
     height: 150px;
 
     svg {

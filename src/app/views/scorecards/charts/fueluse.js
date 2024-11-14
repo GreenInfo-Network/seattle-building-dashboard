@@ -322,115 +322,355 @@ define([
       };
 
       const energyConsumedGroup = svg.append('g');
-      this.renderBarChart(energyConsumedGroup, chartData, labels, totals, 10, width, totalBarWidth, 30, 'usage');
+      this.renderBarChart(
+        energyConsumedGroup,
+        chartData,
+        labels,
+        totals,
+        10,
+        width,
+        totalBarWidth,
+        30,
+        'usage'
+      );
 
-      const emissionsGroup = svg.append('g')
+      const emissionsGroup = svg
+        .append('g')
         .attr('transform', `translate(0, 60)`);
-      this.renderBarChart(emissionsGroup, chartData, labels, totals, 15, width, totalBarWidth, 30, 'emissions');
+      this.renderBarChart(
+        emissionsGroup,
+        chartData,
+        labels,
+        totals,
+        15,
+        width,
+        totalBarWidth,
+        30,
+        'emissions'
+      );
     },
 
-    renderBarChart: function(parent, data, labels, totals, yOffset, chartWidth, barWidth, barHeight, metric) {
-      const chartGroup = parent.append('g')
+    // renderBarChart: function (
+    //   parent,
+    //   data,
+    //   labels,
+    //   totals,
+    //   yOffset,
+    //   chartWidth,
+    //   barWidth,
+    //   barHeight,
+    //   metric
+    // ) {
+    //   const chartGroup = parent
+    //     .append('g')
+    //     .attr('transform', `translate(0, ${yOffset})`);
+
+    //   // Width of text on either side of bars
+    //   const textWidth = (chartWidth - barWidth) / 2;
+    //   const barStart = textWidth;
+    //   const barGroup = chartGroup
+    //     .append('g')
+    //     .attr('transform', `translate(${barStart}, 15)`);
+    //   barGroup
+    //     .selectAll('.bar-item')
+    //     .data(data)
+    //     .enter()
+    //     .append('rect')
+    //     .attr('class', d => d.key)
+    //     .classed('bar-item', true)
+    //     .attr('height', barHeight)
+    //     .attr('width', d => d[metric].pct_actual * barWidth)
+    //     .attr('x', d => d[metric].pctBefore * barWidth);
+
+    //   const labelGroup = chartGroup
+    //     .append('g')
+    //     .classed('bar-chart-label', true)
+    //     .attr('transform', `translate(${barStart - 5}, 25)`);
+
+    //   labelGroup
+    //     .append('text')
+    //     .attr('x', 0)
+    //     .text(labels[metric].label)
+    //     .call(wrap, textWidth);
+
+    //   labelGroup.selectAll('tspan').classed('bar-chart-label-name', true);
+
+    //   labelGroup
+    //     .select('text')
+    //     .append('tspan')
+    //     .attr('x', 0)
+    //     .attr('dy', '1.1em')
+    //     .text(labels[metric].labelUnits);
+
+    //   const totalGroup = chartGroup
+    //     .append('g')
+    //     .attr('transform', `translate(${barStart + barWidth + 5}, 25)`);
+
+    //   const totalText = totalGroup
+    //     .append('text')
+    //     .classed('bar-chart-total', true);
+
+    //   totalText
+    //     .append('tspan')
+    //     .attr('x', 0)
+    //     .classed('bar-chart-total-value', true)
+    //     .text(totals[metric]);
+    //   totalText
+    //     .append('tspan')
+    //     .attr('dx', '.25em')
+    //     .text(metric === 'usage' ? 'kBtu' : 'metric tons');
+
+    //   const barLabels = chartGroup
+    //     .append('g')
+    //     .attr('transform', `translate(0, 10)`)
+    //     .classed('bar-labels', true);
+    //   const barLabelText = barLabels
+    //     .selectAll('.bar-label')
+    //     .data(data)
+    //     .enter()
+    //     .append('text')
+    //     .attr('class', d => d.key)
+    //     .classed('bar-label', true)
+    //     .attr(
+    //       'x',
+    //       d =>
+    //         barStart +
+    //         (d[metric].pctBefore + d[metric].pct_actual / 2) * barWidth
+    //     )
+    //     .text(d => {
+    //       if (metric === 'usage') return `${d.label} ${d[metric].pct}%`;
+    //       return `${d[metric].pct}%`;
+    //     });
+
+    //   barLabelText.call(detectHorizontalCollision);
+
+    //   function detectHorizontalCollision() {
+    //     this.each(function () {
+    //       const node = this;
+    //       const box = node.getBBox();
+
+    //       // Only have to detect horizontally, vertically will be on the same
+    //       const x0 = box.x;
+    //       const x1 = x0 + box.width;
+
+    //       barLabelText.each(function () {
+    //         if (this !== node) {
+    //           const otherBox = this.getBBox();
+    //           const otherX0 = otherBox.x;
+
+    //           // Only interested in labels that should be to the left of other
+    //           // labels
+    //           if (x0 < otherX0 && x1 > otherX0) {
+    //             const overlapSize = x1 - otherX0 + 2;
+    //             d3.select(node).attr('dx', -(overlapSize / 2));
+
+    //             d3.select(this).attr('dx', overlapSize / 2);
+    //           }
+    //         }
+    //       });
+    //     });
+    //   }
+    // },
+
+    renderBarChart: function (
+      parent,
+      data,
+      labels,
+      totals,
+      yOffset,
+      chartWidth,
+      barWidth,
+      barHeight,
+      metric
+    ) {
+      const svg = parent
+        .append('g')
         .attr('transform', `translate(0, ${yOffset})`);
 
-      // Width of text on either side of bars
-      const textWidth = (chartWidth - barWidth) / 2;
-      const barStart = textWidth;
-      const barGroup = chartGroup.append('g')
-        .attr('transform', `translate(${barStart}, 15)`);
-      barGroup.selectAll('.bar-item')
-        .data(data)
+      const width = chartWidth;
+      const height = 100;
+
+      let groups = ['emissions', 'usage'];
+      let subGroups = [...new Set(data.map(d => d.key).flat())];
+
+      let chartData = data.reduce(
+        (acc, d) => {
+          acc.emissions[d.key] = d?.emissions?.pct;
+          acc.usage[d.key] = d?.usage?.pct;
+          return acc;
+        },
+        { emissions: {}, usage: {} }
+      );
+
+      chartData = Object.entries(chartData).reduce((acc, [k, v]) => {
+        acc.push({ group: k, ...v });
+        return acc;
+      }, []);
+
+      // Add X axis
+      var x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
+
+      svg
+        .append('g')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(d3.axisBottom(x).tickSizeOuter(0));
+
+      // Add Y axis
+      var y = d3.scaleLinear().domain([0, 60]).range([height, 0]);
+      svg.append('g').call(d3.axisLeft(y));
+
+      // color palette = one color per subgroup
+      var color = d3
+        .scaleOrdinal()
+        .domain(subgroups)
+        .range(['#e41a1c', '#377eb8', '#4daf4a']);
+
+      //stack the data? --> stack per subgroup
+      var stackedData = d3.stack().keys(subgroups)(data);
+
+      // Show the bars
+      svg
+        .append('g')
+        .selectAll('g')
+        // Enter in the stack data = loop key per key = group per group
+        .data(stackedData)
         .enter()
-          .append('rect')
-          .attr('class', d => d.key)
-          .classed('bar-item', true)
-          .attr('height', barHeight)
-          .attr('width', d => d[metric].pct_actual * barWidth)
-          .attr('x', d => d[metric].pctBefore * barWidth);
-
-      const labelGroup = chartGroup.append('g')
-        .classed('bar-chart-label', true)
-        .attr('transform', `translate(${barStart - 5}, 25)`);
-
-      labelGroup.append('text')
-        .attr('x', 0)
-        .text(labels[metric].label)
-        .call(wrap, textWidth);
-
-      labelGroup.selectAll('tspan')
-        .classed('bar-chart-label-name', true);
-
-      labelGroup.select('text').append('tspan')
-        .attr('x', 0)
-        .attr('dy', '1.1em')
-        .text(labels[metric].labelUnits);
-
-      const totalGroup = chartGroup.append('g')
-        .attr('transform', `translate(${barStart + barWidth + 5}, 25)`);
-
-      const totalText = totalGroup.append('text')
-        .classed('bar-chart-total', true);
-
-      totalText.append('tspan')
-        .attr('x', 0)
-        .classed('bar-chart-total-value', true)
-        .text(totals[metric]);
-      totalText.append('tspan')
-        .attr('dx', '.25em')
-        .text(metric === 'usage' ? 'kBtu' : 'metric tons');
-
-      const barLabels = chartGroup.append('g')
-        .attr('transform', `translate(0, 10)`)
-        .classed('bar-labels', true);
-      const barLabelText = barLabels.selectAll('.bar-label')
-        .data(data)
+        .append('g')
+        .attr('fill', function (d) {
+          return color(d.key);
+        })
+        .selectAll('rect')
+        // enter a second time = loop subgroup per subgroup to add all rectangles
+        .data(function (d) {
+          return d;
+        })
         .enter()
-        .append('text')
-        .attr('class', d => d.key)
-        .classed('bar-label', true)
-        .attr('x', d => barStart + (d[metric].pctBefore + d[metric].pct_actual / 2) * barWidth)
-        .text(d => {
-          if (metric === 'usage') return `${d.label} ${d[metric].pct}%`;
-          return `${d[metric].pct}%`;
-        });
+        .append('rect')
+        .attr('x', function (d) {
+          return x(d.data.group);
+        })
+        .attr('y', function (d) {
+          return y(d[1]);
+        })
+        .attr('height', function (d) {
+          return y(d[0]) - y(d[1]);
+        })
+        .attr('width', x.bandwidth());
 
-      barLabelText.call(detectHorizontalCollision);
+      // --------------------------------------------------
 
-      function detectHorizontalCollision() {
-        this.each(function() {
-          const node = this;
-          const box = node.getBBox();
+      // // Width of text on either side of bars
+      // const textWidth = (chartWidth - barWidth) / 2;
+      // const barStart = textWidth;
+      // const barGroup = chartGroup
+      //   .append('g')
+      //   .attr('transform', `translate(${barStart}, 15)`);
+      // barGroup
+      //   .selectAll('.bar-item')
+      //   .data(data)
+      //   .enter()
+      //   .append('rect')
+      //   .attr('class', d => d.key)
+      //   .classed('bar-item', true)
+      //   .attr('height', barHeight)
+      //   .attr('width', d => d[metric].pct_actual * barWidth)
+      //   .attr('x', d => d[metric].pctBefore * barWidth);
 
-          // Only have to detect horizontally, vertically will be on the same
-          const x0 = box.x;
-          const x1 = x0 + box.width;
+      // const labelGroup = chartGroup
+      //   .append('g')
+      //   .classed('bar-chart-label', true)
+      //   .attr('transform', `translate(${barStart - 5}, 25)`);
 
-          barLabelText.each(function() {
-            if (this !== node) {
-              const otherBox = this.getBBox();
-              const otherX0 = otherBox.x;
+      // labelGroup
+      //   .append('text')
+      //   .attr('x', 0)
+      //   .text(labels[metric].label)
+      //   .call(wrap, textWidth);
 
-              // Only interested in labels that should be to the left of other
-              // labels
-              if (x0 < otherX0 && x1 > otherX0) {
-                const overlapSize = (x1 - otherX0) + 2;
-                d3.select(node)
-                  .attr('dx', -(overlapSize / 2));
+      // labelGroup.selectAll('tspan').classed('bar-chart-label-name', true);
 
-                d3.select(this)
-                  .attr('dx', overlapSize / 2);
-              }
-            }
-          });
-        });
-      }
+      // labelGroup
+      //   .select('text')
+      //   .append('tspan')
+      //   .attr('x', 0)
+      //   .attr('dy', '1.1em')
+      //   .text(labels[metric].labelUnits);
+
+      // const totalGroup = chartGroup
+      //   .append('g')
+      //   .attr('transform', `translate(${barStart + barWidth + 5}, 25)`);
+
+      // const totalText = totalGroup
+      //   .append('text')
+      //   .classed('bar-chart-total', true);
+
+      // totalText
+      //   .append('tspan')
+      //   .attr('x', 0)
+      //   .classed('bar-chart-total-value', true)
+      //   .text(totals[metric]);
+      // totalText
+      //   .append('tspan')
+      //   .attr('dx', '.25em')
+      //   .text(metric === 'usage' ? 'kBtu' : 'metric tons');
+
+      // const barLabels = chartGroup
+      //   .append('g')
+      //   .attr('transform', `translate(0, 10)`)
+      //   .classed('bar-labels', true);
+      // const barLabelText = barLabels
+      //   .selectAll('.bar-label')
+      //   .data(data)
+      //   .enter()
+      //   .append('text')
+      //   .attr('class', d => d.key)
+      //   .classed('bar-label', true)
+      //   .attr(
+      //     'x',
+      //     d =>
+      //       barStart +
+      //       (d[metric].pctBefore + d[metric].pct_actual / 2) * barWidth
+      //   )
+      //   .text(d => {
+      //     if (metric === 'usage') return `${d.label} ${d[metric].pct}%`;
+      //     return `${d[metric].pct}%`;
+      //   });
+
+      // barLabelText.call(detectHorizontalCollision);
+
+      // function detectHorizontalCollision() {
+      //   this.each(function () {
+      //     const node = this;
+      //     const box = node.getBBox();
+
+      //     // Only have to detect horizontally, vertically will be on the same
+      //     const x0 = box.x;
+      //     const x1 = x0 + box.width;
+
+      //     barLabelText.each(function () {
+      //       if (this !== node) {
+      //         const otherBox = this.getBBox();
+      //         const otherX0 = otherBox.x;
+
+      //         // Only interested in labels that should be to the left of other
+      //         // labels
+      //         if (x0 < otherX0 && x1 > otherX0) {
+      //           const overlapSize = x1 - otherX0 + 2;
+      //           d3.select(node).attr('dx', -(overlapSize / 2));
+
+      //           d3.select(this).attr('dx', overlapSize / 2);
+      //         }
+      //       }
+      //     });
+      //   });
+      // }
     },
 
-    render: function() {
+    render: function () {
       return this.template(this.chartData());
     },
 
-    afterRender: function() {
+    afterRender: function () {
       const chartData = this.chartData();
       this.renderEnergyConsumptionChart(chartData.fuels, chartData.totals);
     }

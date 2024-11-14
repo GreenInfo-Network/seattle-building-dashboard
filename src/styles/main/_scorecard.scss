@@ -221,6 +221,7 @@ $light-gray: #f1f1f1;
       min-width: 920px;
       height: fit-content;
       margin: 0 auto;
+      gap: 1rem;
     }
 
     &-sidebar {
@@ -880,68 +881,6 @@ $light-gray: #f1f1f1;
             line-height: 1.1;
             margin-top: 4px;
             font-size: 14px;
-          }
-        }
-      }
-    }
-  }
-
-  // Fuel Use Chart
-  // "Climate Pollution Impact of Energy Use"
-  div#fuel-use-chart {
-    page-break-inside: avoid;
-    break-inside: avoid;
-
-    div#fueluse-chart {
-      div#energy-consumption-chart-heading {
-        text-transform: none;
-      }
-      .fc-row {
-        &.notes {
-          margin-top: -15px;
-        }
-      }
-    }
-
-    .hr {
-      margin: 1.7em 0.15em;
-      height: 2px;
-      border-top: 1px solid $blue_new;
-      opacity: 50%;
-    }
-
-    div#fuel-use-future {
-      padding: 0 1.75em;
-
-      div#fuel-use-learn-more {
-        a {
-          color: $blue_new;
-          text-decoration: underline;
-          line-height: 1.2;
-          display: inline-block;
-          margin-top: 4px;
-        }
-      }
-
-      h3#fuel-use-future-heading {
-        text-transform: none;
-      }
-
-      div#fuel-use-future-list {
-        display: flex;
-        flex-direction: column;
-        margin-top: 1em;
-
-        div.fuel-use-future-listitem {
-          display: flex;
-          align-items: center;
-          height: 45px;
-          span.future-icon {
-            width: 50px;
-            text-align: center;
-            img {
-              width: auto;
-            }
           }
         }
       }
