@@ -7,8 +7,6 @@ define([
   'text!templates/scorecards/charts/fueluse.html'
 ], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
-    className: 'fueluse-chart',
-
     TYPICAL_CAR_EMMISSION: 4.7,
 
     initialize: function (options) {
@@ -223,7 +221,7 @@ define([
     },
 
     renderEnergyConsumptionChart: function (data, totals) {
-      const parent = d3.select(this.viewParent).select('.fueluse');
+      const parent = d3.select(this.viewParent).select('.fueluse-chart');
 
       if (!parent.node()) return;
 
@@ -293,6 +291,7 @@ define([
     ) {
       const FONT_SIZE = 12;
       const X_AXIS_PADDING = 6;
+      const PERCENTAGE_BOTTOM_PADDING = 3;
 
       const svg = parent
         .append('g')
@@ -301,7 +300,7 @@ define([
           `translate(0, ${margin.top + X_AXIS_PADDING + FONT_SIZE})`
         );
 
-      const width = chartWidth / 2;
+      const width = chartWidth;
       const height = chartHeight - margin.top - margin.bottom;
 
       let groups = ['emissions', 'usage'];
@@ -322,7 +321,11 @@ define([
       }, []);
 
       // Add bottom X axis
-      var x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
+      var x = d3
+        .scaleBand()
+        .domain(groups)
+        .range([0, width])
+        .paddingInner([0.1]);
 
       const xAxisA = svg
         .append('g')
@@ -374,6 +377,9 @@ define([
       // Make the x axis line invisible
       xAxisTop.select('.domain').attr('stroke', 'transparent');
 
+      var ticks = svg.selectAll('.tick text');
+      ticks.attr('class', 'fueluse-bar-axis-text text-chart');
+
       // Add Y axis
       var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
       // svg.append('g').call(d3.axisLeft(y));
@@ -417,7 +423,7 @@ define([
       svg
         .selectAll('.fueluse-bar')
         .append('text')
-        .attr('class', 'fueluse-bar-percentages')
+        .attr('class', 'text-tiny fueluse-bar-percentages')
         .attr('font-size', FONT_SIZE)
         .attr('x', function (d) {
           const barWidth = x.bandwidth();
@@ -425,7 +431,7 @@ define([
         })
         .attr('y', function (d) {
           const height = y(d[EMISSIONS_INDEX][0]) - y(d[EMISSIONS_INDEX][1]);
-          return y(d[EMISSIONS_INDEX][1]) + height;
+          return y(d[EMISSIONS_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
         })
         .text(d => {
           return `${d[EMISSIONS_INDEX]?.data?.[d?.key]}%`;
@@ -435,7 +441,7 @@ define([
       svg
         .selectAll('.fueluse-bar')
         .append('text')
-        .attr('class', 'fueluse-bar-percentages')
+        .attr('class', 'text-tiny fueluse-bar-percentages')
         .attr('font-size', FONT_SIZE)
         .attr('x', function (d) {
           const barWidth = x.bandwidth();
@@ -443,7 +449,7 @@ define([
         })
         .attr('y', function (d) {
           const height = y(d[USAGE_INDEX][0]) - y(d[USAGE_INDEX][1]);
-          return y(d[USAGE_INDEX][1]) + height;
+          return y(d[USAGE_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
         })
         .text(d => {
           return `${d[USAGE_INDEX]?.data?.[d?.key]}%`;

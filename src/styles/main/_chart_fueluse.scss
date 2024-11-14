@@ -1,38 +1,88 @@
-#fuel-use-chart {
+#fueluse-chart {
   width: 100%;
 
   .fueluse {
-    font-size: 0.8rem;
-    height: 250px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
 
-    svg {
-      height: 100%;
+    &-chart-container {
+      display: flex;
       width: 100%;
+      gap: 1rem;
     }
 
-    .fueluse-bar {
-      &-gas {
-        rect {
-          fill: rgba($gas-color, 0.75);
+    &-legend {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+
+      &-swatch {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        &-color {
+          width: 1rem;
+          height: 1rem;
+          border-radius: 2px;
+
+          &.gas {
+            background-color: $gas-color;
+          }
+
+          &.electric {
+            background-color: $electric-color;
+          }
+
+          &.steam {
+            background-color: $steam-color;
+          }
+        }
+
+        &-text {
         }
       }
+    }
 
-      &-electricity {
-        rect {
-          fill: rgba($electric-color, 0.75);
-        }
+    &-chart {
+      font-size: 0.8rem;
+      height: 250px;
+      width: 50%;
+
+      svg {
+        height: 100%;
+        width: 100%;
       }
 
-      &-steam {
-        rect {
-          fill: rgba($steam-color, 0.75);
+      .fueluse-bar {
+        &-gas {
+          rect {
+            fill: rgba($gas-color, 0.75);
+          }
         }
-      }
 
-      &-percentages {
-        fill: white;
-        text-anchor: middle;
+        &-electricity {
+          rect {
+            fill: rgba($electric-color, 0.75);
+          }
+        }
+
+        &-steam {
+          rect {
+            fill: rgba($steam-color, 0.75);
+          }
+        }
+
+        &-percentages {
+          fill: white;
+          text-anchor: middle;
+        }
+
+        &-axis-text {
+          fill: $paragraph;
+        }
       }
     }
   }
