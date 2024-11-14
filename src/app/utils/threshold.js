@@ -1,4 +1,4 @@
-define(['underscore', 'd3'], function(_, d3) {
+define(['underscore', 'd3'], function (_, d3) {
   const getThresholds = (thresholds, proptype, yr) => {
     if (!thresholds[proptype]) {
       return {
@@ -19,23 +19,28 @@ define(['underscore', 'd3'], function(_, d3) {
 
   //
   const makeLabels = thresholds => {
-    return _.reduce(thresholds, (acc, item, idx) => {
-      if (thresholds[idx + 1]) {
-        const max = thresholds[idx + 1] - 0.1;
-        acc.push(`${item}-${max.toFixed(1)}`);
-      } else {
-        acc.push(`≥${item}`);
-      }
+    return _.reduce(
+      thresholds,
+      (acc, item, idx) => {
+        if (thresholds[idx + 1]) {
+          const max = thresholds[idx + 1] - 0.1;
+          acc.push(`${item}-${max.toFixed(1)}`);
+        } else {
+          acc.push(`≥${item}`);
+        }
 
-      return acc;
-    }, [`<${thresholds[0]}`]);
+        return acc;
+      },
+      [`<${thresholds[0]}`]
+    );
   };
 
   //
   const thresholdIndexScale = thresholds => {
-    return d3.scale.threshold()
-          .domain(thresholds)
-          .range(d3.range(0, thresholds.length + 1));
+    return d3
+      .scaleThreshold()
+      .domain(thresholds)
+      .range(d3.range(0, thresholds.length + 1));
   };
 
   return {

@@ -2,6 +2,7 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'd3',
   '../../../lib/wrap',
   './charts/fueluse',
   './charts/performance_standard',
@@ -14,6 +15,7 @@ define([
   $,
   _,
   Backbone,
+  d3,
   wrap,
   FuelUseView,
   PerformanceStandardView,
@@ -238,9 +240,9 @@ define([
         _bins = this.calculateEnergyStarBins(config.thresholds.energy_star);
       }
 
-      var data = d3.layout
+      var data = d3
         .histogram()
-        .bins(_bins)
+        .thresholds(_bins)
         .value(function (d) {
           return d[compareField];
         })(buildingsOfType);

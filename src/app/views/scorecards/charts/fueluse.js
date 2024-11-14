@@ -5,13 +5,13 @@ define([
   'd3',
   '../../../../lib/wrap',
   'text!templates/scorecards/charts/fueluse.html'
-], function($, _, Backbone, d3, wrap, FuelUseTemplate) {
+], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
     className: 'fueluse-chart',
 
     TYPICAL_CAR_EMMISSION: 4.7,
 
-    initialize: function(options){
+    initialize: function (options) {
       this.template = _.template(FuelUseTemplate);
       this.formatters = options.formatters;
       this.data = options.data;
@@ -36,7 +36,7 @@ define([
       ];
     },
 
-    getMean: function(key, data) {
+    getMean: function (key, data) {
       if (data.pluck) {
         return d3.mean(data.pluck(key));
       } else {
@@ -44,7 +44,7 @@ define([
       }
     },
 
-    getSum: function(key, data) {
+    getSum: function (key, data) {
       if (data.pluck) {
         return d3.sum(data.pluck(key));
       } else {
@@ -52,21 +52,17 @@ define([
       }
     },
 
-    pctFormat: function(n) {
-      var val = n * 100;
-      return d3.format('.0f')(val);
-    },
-
-    validNumber: function(n) {
+    validNumber: function (n) {
       return _.isNumber(n) && _.isFinite(n);
     },
 
-    validFuel: function(pct, amt) {
-      return this.validNumber(pct) && pct > 0 &&
-            this.validNumber(amt) && amt > 0;
+    validFuel: function (pct, amt) {
+      return (
+        this.validNumber(pct) && pct > 0 && this.validNumber(amt) && amt > 0
+      );
     },
 
-    getBuildingFuels: function(fuels, data) {
+    getBuildingFuels: function (fuels, data) {
       fuels.forEach(d => {
         const emmission_pct = this.getMean(d.key + '_ghg_percent', data);
         const emmission_amt = this.getMean(d.key + '_ghg', data);
@@ -78,7 +74,9 @@ define([
         d.emissions.pct = d.emissions.pct_raw = emmission_pct * 100;
         d.emissions.pct_actual = emmission_pct;
         d.emissions.amt = emmission_amt;
-        d.emissions.cars = this.formatters.fixedOne(emmission_amt / this.TYPICAL_CAR_EMMISSION);
+        d.emissions.cars = this.formatters.fixedOne(
+          emmission_amt / this.TYPICAL_CAR_EMMISSION
+        );
 
         d.usage = {};
         d.usage.isValid = this.validFuel(usage_pct, usage_amt);
@@ -90,10 +88,9 @@ define([
       return fuels.filter(d => d.usage.isValid || d.emissions.isValid);
     },
 
-    getCityWideFuels: function(fuels, data) {
+    getCityWideFuels: function (fuels, data) {
       let total_emissions = data.total_emissions;
       let total_usage = data.total_consump;
-
 
       fuels.forEach(d => {
         const emission_key = `pct_${d.key}_ghg`;
@@ -118,19 +115,21 @@ define([
       });
     },
 
-    fixPercents: function(fuels, prop) {
-      const values = fuels.map((d, i) => {
-        const decimal = +((d[prop].pct_raw % 1));
-        const val = Math.floor(d[prop].pct_raw);
-        return {
-          idx: i,
-          val,
-          iszero: val === 0,
-          decimal: val === 0 ? 1 : decimal
-        };
-      }).sort((a, b) => {
-        return b.decimal - a.decimal;
-      });
+    fixPercents: function (fuels, prop) {
+      const values = fuels
+        .map((d, i) => {
+          const decimal = +(d[prop].pct_raw % 1);
+          const val = Math.floor(d[prop].pct_raw);
+          return {
+            idx: i,
+            val,
+            iszero: val === 0,
+            decimal: val === 0 ? 1 : decimal
+          };
+        })
+        .sort((a, b) => {
+          return b.decimal - a.decimal;
+        });
 
       const sum = d3.sum(values, d => d.val);
 
@@ -170,7 +169,7 @@ define([
       });
     },
 
-    chartData: function() {
+    chartData: function () {
       const data = this.data;
 
       let total_ghg_emissions;
@@ -186,7 +185,10 @@ define([
       } else {
         fuels = this.getBuildingFuels([...this.fuels], data);
         total_ghg_emissions = this.getSum('total_ghg_emissions', data);
-        total_ghg_emissions_intensity = this.getSum('total_ghg_emissions_intensity', data);
+        total_ghg_emissions_intensity = this.getSum(
+          'total_ghg_emissions_intensity',
+          data
+        );
         total_usage = this.getSum('total_kbtu', data);
       }
 
@@ -194,13 +196,15 @@ define([
       this.fixPercents(fuels, 'emissions');
       this.fixPercents(fuels, 'usage');
 
-      var all_electric = fuels.filter(d => d.key == 'electricity').reduce((z, e) => e.usage.pct > 99, false);
+      var all_electric = fuels
+        .filter(d => d.key == 'electricity')
+        .reduce((z, e) => e.usage.pct > 99, false);
 
       var totals = {
         usage_raw: total_usage,
-        usage: d3.format(',d')(d3.round(total_usage, 0)),
+        usage: d3.format(',d')(Math.round(total_usage)),
         emissions_raw: total_ghg_emissions,
-        emissions: d3.format(',d')(d3.round(total_ghg_emissions, 0))
+        emissions: d3.format(',d')(Math.round(total_ghg_emissions))
       };
 
       return {
@@ -212,77 +216,16 @@ define([
         isCity: this.isCity,
         building_name: this.building_name,
         year: this.year,
-        cars: this.formatters.fixedOne(total_ghg_emissions / this.TYPICAL_CAR_EMMISSION)
+        cars: this.formatters.fixedOne(
+          total_ghg_emissions / this.TYPICAL_CAR_EMMISSION
+        )
       };
     },
 
-    getLabelSizes: function(labels) {
-      const sizes = [];
-
-      labels.each(function(){
-        const pw = this.offsetWidth;
-        const cw = this.firstChild.offsetWidth;
-
-        if (pw === 0) return;
-
-        sizes.push({
-          elm: this,
-          pw,
-          cw,
-          dirty: cw > pw,
-          pct: +(this.style.width.replace('%', ''))
-        });
-      });
-
-      return sizes;
-    },
-
-    adjSizes: function(labels, ct) {
-      const sizes = this.getLabelSizes(labels);
-
-      if (!sizes.length) return;
-
-      let ctr = ct || 0;
-      ctr += 1;
-      if (ctr > 100) return;
-
-      const dirty = _.findIndex(sizes, d => d.dirty);
-
-      if (dirty > -1) {
-        const available = sizes.filter(d => !d.dirty);
-
-        let additional = 0;
-
-        available.forEach(d => {
-          additional += 1;
-          d3.select(d.elm).style('width', (d.pct - 1) + '%');
-        });
-
-        d3.select(sizes[dirty].elm).style('width', (sizes[dirty].pct + additional) + '%');
-
-        this.adjSizes(labels, ctr);
-      }
-    },
-
-    hideLabels: function(labels) {
-      const sizes = this.getLabelSizes(labels);
-      sizes.forEach(d => {
-        if (d.dirty) {
-          d3.select(d.elm.firstChild).style('display', 'none');
-        }
-      });
-    },
-
-    findQuartile(quartiles, value) {
-      let i = 1;
-      for (; i <= quartiles.length; i++) {
-        if (value < quartiles[i - 1]) return i;
-      }
-      return i - 1;
-    },
-
-    renderEnergyConsumptionChart: function(data, totals) {
-      const parent = d3.select(this.viewParent).select('.energy-consumption-bar-chart-container');
+    renderEnergyConsumptionChart: function (data, totals) {
+      const parent = d3
+        .select(this.viewParent)
+        .select('.energy-consumption-bar-chart-container');
       if (!parent.node()) return;
 
       const margin = { top: 20, right: 10, bottom: 20, left: 10 };
@@ -290,22 +233,27 @@ define([
       const outerHeight = parent.node().offsetHeight;
       const width = outerWidth - margin.left - margin.right;
 
-      const svg = parent.append('svg')
+      const svg = parent
+        .append('svg')
         .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`);
 
       // Extra padding here for dynamic labels on either end of the bars
-      const totalBarWidth = width * (0.7);
+      const totalBarWidth = width * 0.7;
 
       const chartData = data.map((row, i) => {
         return {
           ...row,
           emissions: {
             ...row.emissions,
-            pctBefore: d3.sum(data.map((d, k) => k >= i ? 0 : d.emissions.pct_actual))
+            pctBefore: d3.sum(
+              data.map((d, k) => (k >= i ? 0 : d.emissions.pct_actual))
+            )
           },
           usage: {
             ...row.usage,
-            pctBefore: d3.sum(data.map((d, k) => k >= i ? 0 : d.usage.pct_actual))
+            pctBefore: d3.sum(
+              data.map((d, k) => (k >= i ? 0 : d.usage.pct_actual))
+            )
           }
         };
       });
@@ -491,7 +439,7 @@ define([
       const height = 100;
 
       let groups = ['emissions', 'usage'];
-      let subGroups = [...new Set(data.map(d => d.key).flat())];
+      let subgroups = [...new Set(data.map(d => d.key).flat())];
 
       let chartData = data.reduce(
         (acc, d) => {
