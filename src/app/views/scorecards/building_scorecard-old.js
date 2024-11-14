@@ -8,8 +8,7 @@ define([
   './charts/shift',
   './charts/comments',
   'models/building_color_bucket_calculator',
-  'text!templates/scorecards/building.html',
-  './temp-extract'
+  'text!templates/scorecards/building.html'
 ], function (
   $,
   _,
@@ -20,8 +19,7 @@ define([
   ShiftView,
   CommentView,
   BuildingColorBucketCalculator,
-  BuildingTemplate,
-  tempExtract
+  BuildingTemplate
 ) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function (options) {
@@ -93,9 +91,7 @@ define([
         .map(d => +d)
         .sort((a, b) => {
           return a - b;
-        })
-        .concat(['2023']);
-
+        });
       if (this.scoreCardData && this.scoreCardData.id === id) {
         this.show(buildings, this.scoreCardData.data, year, years);
       } else {
@@ -121,47 +117,6 @@ define([
             payload.rows.forEach(d => {
               data[d.year] = { ...d };
             });
-
-            // TODO all this needs an update once we pull real data
-            // ------------------------------------------------------------
-
-            const extract2023 = tempExtract();
-
-            // left old, right new
-            const equivalents = {
-              reported_gross_floor_area: 'PropertyGFATotal',
-              cbps_euit: 'CBPSEUItarget'
-            };
-
-            data = Object.fromEntries(
-              Object.entries(data).map(([k, v]) => {
-                if (equivalents[k]) {
-                  return [equivalents[k], v];
-                } else {
-                  return [k, v];
-                }
-              })
-            );
-
-            const last = data['2022'];
-
-            for (const key of Object.keys(last)) {
-              if (typeof last[key] !== extract2023[key]) {
-                if (typeof last[key] === 'number') {
-                  extract2023[key] = Number(extract2023[key]);
-                }
-                // console.warn(
-                //   `(${key}) old type ${typeof last[
-                //     key
-                //   ]}, new type ${typeof extract2023[key]} `
-                // );
-              }
-            }
-
-            // Setting 2023 as 2022 for now
-            data['2022'] = extract2023;
-
-            // ------------------------------------------------------------
 
             this.scoreCardData = {
               id: this.state.get('building'),
@@ -295,7 +250,7 @@ define([
       var building = building_data[selected_year];
       const view = this.state.get('scorecard').get('view');
       var name = building.property_name;
-      var sqft = +(building.propertygfabuildings);
+      var sqft = +building.reported_gross_floor_area;
       var prop_type = building.property_type;
       var id = building.id;
 
