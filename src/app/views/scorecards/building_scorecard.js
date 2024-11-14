@@ -199,7 +199,7 @@ define([
       var building = building_data[selected_year];
       const view = this.state.get('scorecard').get('view');
       var name = building.property_name;
-      var sqft = +(building.reported_gross_floor_area);
+      var sqft = +(building.propertygfabuildings);
       var prop_type = building.property_type;
       var id = building.id;
 

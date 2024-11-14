@@ -58,7 +58,7 @@
         {"field": "reported_address", "template": "{reported_address}"},
         {"field": "zip", "template": "Seattle, WA {zip}", "skipFormatter": true},
         {"field": "property_type", "template": "<strong>{property_type}</strong>"},
-        {"field": "reported_gross_floor_area", "template": "<strong>{reported_gross_floor_area}</strong> ft²"},
+        {"field": "propertygfabuildings", "template": "<strong>{propertygfabuildings}</strong> ft²"},
         {"field": "id", "label": "Building ID ",  "skipFormatter": true},
         {"field": "yearbuilt", "label": "Built in ", "skipFormatter": true}
     ],
@@ -172,7 +172,7 @@
         },
         {
             "title": "Property Size",
-            "field_name": "reported_gross_floor_area",
+            "field_name": "propertygfabuildings",
             "display_type": "range",
             "range_slice_count": 18,
             "color_range": ["#b8cba9","#007749"],
