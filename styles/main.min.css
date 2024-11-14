@@ -741,6 +741,7 @@ header {
 #map-controls {
   position: absolute;
   height: 100%;
+  width: 100%;
   overflow: hidden;
   left: 0;
   z-index: 10;
@@ -1045,6 +1046,7 @@ header {
 }
 .compare-mode #map-controls {
   width: 100%;
+  max-width: none;
 }
 #map-controls #map-controls-bk {
   position: absolute;

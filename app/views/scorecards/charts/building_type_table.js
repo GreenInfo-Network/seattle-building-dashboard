@@ -69,7 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'text!templates/scorecards/cha
         var site_eui = building.get('site_eui');
         var built = building.get('yearbuilt');
         var ess = building.get('energy_star_score');
-        var size = building.get('reported_gross_floor_area');
+        var size = building.get('propertygfabuildings');
         if (!types.hasOwnProperty(typ)) {
           types[typ] = _this2.defaultRow();
           types[typ].thresholds = _this2.getThresholds(typ);
