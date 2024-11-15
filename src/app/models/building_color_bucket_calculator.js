@@ -1,8 +1,12 @@
-define([
-  'underscore',
-  'd3'
-], function(_, d3) {
-  const BuildingColorBucketCalculator = function(buildings, fieldName, buckets, colorStops, cssFillType, thresholds) {
+define(['underscore', 'd3'], function (_, d3) {
+  const BuildingColorBucketCalculator = function (
+    buildings,
+    fieldName,
+    buckets,
+    colorStops,
+    cssFillType,
+    thresholds
+  ) {
     this.buildings = buildings;
     this.fieldName = fieldName;
     this.buckets = buckets;
@@ -18,26 +22,27 @@ define([
     this.memoized.gradientStops = this.calcGradientStops();
   };
 
-  BuildingColorBucketCalculator.prototype.calcBucketStops = function() {
+  BuildingColorBucketCalculator.prototype.calcBucketStops = function () {
     const range = this.colorStops;
     const buckets = this.buckets;
     const rangeCount = _.max([range.length - 1, 1]);
     const domain = _.range(0, buckets, buckets / rangeCount).concat(buckets);
 
-    return _.map(domain, function(bucket) { return _.max([0, bucket - 1]); });
+    return _.map(domain, function (bucket) {
+      return _.max([0, bucket - 1]);
+    });
   };
 
-
-  BuildingColorBucketCalculator.prototype.calcGradientStops = function() {
+  BuildingColorBucketCalculator.prototype.calcGradientStops = function () {
     var range = this.colorStops;
     var buckets = this.buckets;
     var bucketStops = this.toBucketStops();
-    var gradientScale = d3.scale.linear().range(range).domain(bucketStops);
+    var gradientScale = d3.scaleLinear().range(range).domain(bucketStops);
 
     return _.map(_.range(buckets), gradientScale);
   };
 
-  BuildingColorBucketCalculator.prototype.cartoCSS = function() {
+  BuildingColorBucketCalculator.prototype.cartoCSS = function () {
     if (this.memoized.cartoCSS.hasOwnProperty(this.fieldName)) {
       return this.memoized.cartoCSS[this.fieldName];
     }
@@ -59,30 +64,40 @@ define([
         const min = _.min(gradient.invertExtent(stop));
         let cssText;
         if (i === 0) {
-          cssText = cssFillType === 'polygon-fill' ? `[${fieldName}<${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}` :
-            `[${fieldName}<${min}]{${cssFillType}:${stop}}`;
+          cssText =
+            cssFillType === 'polygon-fill'
+              ? `[${fieldName}<${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}`
+              : `[${fieldName}<${min}]{${cssFillType}:${stop}}`;
           return cssText;
         }
-        cssText = cssFillType === 'polygon-fill' ? `[${fieldName}>=${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}` : `[${fieldName}>=${min}]{${cssFillType}:${stop}}`;
+        cssText =
+          cssFillType === 'polygon-fill'
+            ? `[${fieldName}>=${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}`
+            : `[${fieldName}>=${min}]{${cssFillType}:${stop}}`;
         return cssText;
       });
     } else {
       css = this.memoized.cartoCSS[this.fieldName] = _.map(stops, stop => {
         const min = _.min(gradient.invertExtent(stop));
-        let cssText
-        cssText = cssFillType === 'polygon-fill' ? `[${fieldName}>=${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}` : `[${fieldName}>=${min}]{${cssFillType}:${stop}}`;
-        return cssText; 
+        let cssText;
+        cssText =
+          cssFillType === 'polygon-fill'
+            ? `[${fieldName}>=${min}]{${cssFillType}:${stop}; ${defaultPolygonLineStyle}}`
+            : `[${fieldName}>=${min}]{${cssFillType}:${stop}}`;
+        return cssText;
       });
     }
     return css;
   };
 
-  BuildingColorBucketCalculator.prototype.getFieldValues = function() {
+  BuildingColorBucketCalculator.prototype.getFieldValues = function () {
     if (this.memoized.fieldValues.hasOwnProperty(this.fieldName)) {
       return this.memoized.fieldValues[this.fieldName];
     }
 
-    this.memoized.fieldValues[this.fieldName] = this.buildings.pluck(this.fieldName);
+    this.memoized.fieldValues[this.fieldName] = this.buildings.pluck(
+      this.fieldName
+    );
 
     this._minFieldValue = _.min(this.memoized.fieldValues[this.fieldName]);
     this._maxFieldValue = _.max(this.memoized.fieldValues[this.fieldName]);
@@ -90,7 +105,7 @@ define([
     return this.memoized.fieldValues[this.fieldName];
   };
 
-  BuildingColorBucketCalculator.prototype.colorGradient = function() {
+  BuildingColorBucketCalculator.prototype.colorGradient = function () {
     if (this.memoized.colorGradients.hasOwnProperty(this.fieldName)) {
       return this.memoized.colorGradients[this.fieldName];
     }
@@ -106,10 +121,10 @@ define([
 
     let scale;
     if (this.thresholds) {
-      scale = d3.scale.threshold().domain(this.thresholds).range(stops);
+      scale = d3.scaleThreshold().domain(this.thresholds).range(stops);
     } else {
-      // this quantile scale function brings in the entire sorted array of 3663 values 
-      scale = d3.scale.quantile().domain(fieldValues).range(stops);
+      // this quantile scale function brings in the entire sorted array of 3663 values
+      scale = d3.scaleQuantile().domain(fieldValues).range(stops);
     }
 
     /*
@@ -129,20 +144,20 @@ define([
   };
 
   // Calculated in constructor
-  BuildingColorBucketCalculator.prototype.toBucketStops = function() {
+  BuildingColorBucketCalculator.prototype.toBucketStops = function () {
     return this.memoized.bucketStops;
   };
 
   // Calculated in constructor
-  BuildingColorBucketCalculator.prototype.toGradientStops = function() {
+  BuildingColorBucketCalculator.prototype.toGradientStops = function () {
     return this.memoized.gradientStops;
   };
 
-  BuildingColorBucketCalculator.prototype.toCartoCSS = function() {
+  BuildingColorBucketCalculator.prototype.toCartoCSS = function () {
     return this.cartoCSS();
   };
 
-  BuildingColorBucketCalculator.prototype.toColor = function(value) {
+  BuildingColorBucketCalculator.prototype.toColor = function (value) {
     var gradient = this.colorGradient();
 
     return gradient(value);
