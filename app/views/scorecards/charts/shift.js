@@ -116,8 +116,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var width = baseWidth - margin.left - margin.right;
       var height = baseHeight - margin.top - margin.bottom;
       var svg = rootElm.append('svg').attr('viewBox', "0 0 ".concat(baseWidth, " ").concat(baseHeight)).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-      var x = d3.scale.linear().range([0, width]).domain(years);
-      var y = d3.scale.linear().domain(valueExtent).range([height, 0]);
+      var x = d3.scaleLinear().range([0, width]).domain(years);
+      var y = d3.scaleLinear().domain(valueExtent).range([height, 0]);
       var line = d3.svg.line().x(function (d) {
         return x(d.year);
       }).y(function (d) {

@@ -1,10 +1,6 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -18,6 +14,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/fueluse.html'], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
+    className: 'fueluse-chart',
     TYPICAL_CAR_EMMISSION: 4.7,
     initialize: function initialize(options) {
       this.template = _.template(FuelUseTemplate);
@@ -55,6 +52,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           return d[key];
         }));
       }
+    },
+    pctFormat: function pctFormat(n) {
+      var val = n * 100;
+      return d3.format('.0f')(val);
     },
     validNumber: function validNumber(n) {
       return _.isNumber(n) && _.isFinite(n);
@@ -182,9 +183,9 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }, false);
       var totals = {
         usage_raw: total_usage,
-        usage: d3.format(',d')(Math.round(total_usage)),
+        usage: d3.format(',d')(d3.round(total_usage, 0)),
         emissions_raw: total_ghg_emissions,
-        emissions: d3.format(',d')(Math.round(total_ghg_emissions))
+        emissions: d3.format(',d')(d3.round(total_ghg_emissions, 0))
       };
       return {
         fuels: fuels,
@@ -198,19 +199,75 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         cars: this.formatters.fixedOne(total_ghg_emissions / this.TYPICAL_CAR_EMMISSION)
       };
     },
+    getLabelSizes: function getLabelSizes(labels) {
+      var sizes = [];
+      labels.each(function () {
+        var pw = this.offsetWidth;
+        var cw = this.firstChild.offsetWidth;
+        if (pw === 0) return;
+        sizes.push({
+          elm: this,
+          pw: pw,
+          cw: cw,
+          dirty: cw > pw,
+          pct: +this.style.width.replace('%', '')
+        });
+      });
+      return sizes;
+    },
+    adjSizes: function adjSizes(labels, ct) {
+      var sizes = this.getLabelSizes(labels);
+      if (!sizes.length) return;
+      var ctr = ct || 0;
+      ctr += 1;
+      if (ctr > 100) return;
+      var dirty = _.findIndex(sizes, function (d) {
+        return d.dirty;
+      });
+      if (dirty > -1) {
+        var available = sizes.filter(function (d) {
+          return !d.dirty;
+        });
+        var additional = 0;
+        available.forEach(function (d) {
+          additional += 1;
+          d3.select(d.elm).style('width', d.pct - 1 + '%');
+        });
+        d3.select(sizes[dirty].elm).style('width', sizes[dirty].pct + additional + '%');
+        this.adjSizes(labels, ctr);
+      }
+    },
+    hideLabels: function hideLabels(labels) {
+      var sizes = this.getLabelSizes(labels);
+      sizes.forEach(function (d) {
+        if (d.dirty) {
+          d3.select(d.elm.firstChild).style('display', 'none');
+        }
+      });
+    },
+    findQuartile: function findQuartile(quartiles, value) {
+      var i = 1;
+      for (; i <= quartiles.length; i++) {
+        if (value < quartiles[i - 1]) return i;
+      }
+      return i - 1;
+    },
     renderEnergyConsumptionChart: function renderEnergyConsumptionChart(data, totals) {
-      var parent = d3.select(this.viewParent).select('.fueluse-chart');
+      var parent = d3.select(this.viewParent).select('.energy-consumption-bar-chart-container');
       if (!parent.node()) return;
       var margin = {
-        top: 25,
-        right: 0,
-        bottom: 25,
-        left: 0
+        top: 20,
+        right: 10,
+        bottom: 20,
+        left: 10
       };
       var outerWidth = parent.node().offsetWidth;
       var outerHeight = parent.node().offsetHeight;
       var width = outerWidth - margin.left - margin.right;
       var svg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
+
+      // Extra padding here for dynamic labels on either end of the bars
+      var totalBarWidth = width * 0.7;
       var chartData = data.map(function (row, i) {
         return _objectSpread(_objectSpread({}, row), {}, {
           emissions: _objectSpread(_objectSpread({}, row.emissions), {}, {
@@ -227,125 +284,75 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       });
       var labels = {
         emissions: {
-          label: 'Metric Tons',
-          labelUnits: '(MT CO2e)',
-          totalUnits: 'MT CO2e'
+          label: 'Resulting Emissions',
+          labelUnits: '(% ghg)'
         },
         usage: {
-          label: 'Energy Used',
-          labelUnits: '(kBtu)',
-          totalUnits: 'kBtu'
+          label: 'Energy Consumed',
+          labelUnits: '(% kBtu)'
         }
       };
-      var chartGroup = svg.append('g');
-      var chartHeight = outerHeight - margin.top - margin.bottom;
-      this.renderBarChart(chartGroup, chartData, labels, totals, width, chartHeight, margin);
+      var energyConsumedGroup = svg.append('g');
+      this.renderBarChart(energyConsumedGroup, chartData, labels, totals, 10, width, totalBarWidth, 30, 'usage');
+      var emissionsGroup = svg.append('g').attr('transform', "translate(0, 60)");
+      this.renderBarChart(emissionsGroup, chartData, labels, totals, 15, width, totalBarWidth, 30, 'emissions');
     },
-    renderBarChart: function renderBarChart(parent, data, labels, totals, chartWidth, chartHeight, margin) {
-      var FONT_SIZE = 12;
-      var X_AXIS_PADDING = 6;
-      var PERCENTAGE_BOTTOM_PADDING = 3;
-      var svg = parent.append('g').attr('transform', "translate(0, ".concat(margin.top + X_AXIS_PADDING + FONT_SIZE, ")"));
-      var width = chartWidth;
-      var height = chartHeight - margin.top - margin.bottom;
-      var groups = ['emissions', 'usage'];
-      var subgroups = _toConsumableArray(new Set(data.map(function (d) {
+    renderBarChart: function renderBarChart(parent, data, labels, totals, yOffset, chartWidth, barWidth, barHeight, metric) {
+      var chartGroup = parent.append('g').attr('transform', "translate(0, ".concat(yOffset, ")"));
+
+      // Width of text on either side of bars
+      var textWidth = (chartWidth - barWidth) / 2;
+      var barStart = textWidth;
+      var barGroup = chartGroup.append('g').attr('transform', "translate(".concat(barStart, ", 15)"));
+      barGroup.selectAll('.bar-item').data(data).enter().append('rect').attr('class', function (d) {
         return d.key;
-      }).flat()));
-      var chartData = data.reduce(function (acc, d) {
-        var _d$emissions, _d$usage;
-        acc.emissions[d.key] = d === null || d === void 0 ? void 0 : (_d$emissions = d.emissions) === null || _d$emissions === void 0 ? void 0 : _d$emissions.pct;
-        acc.usage[d.key] = d === null || d === void 0 ? void 0 : (_d$usage = d.usage) === null || _d$usage === void 0 ? void 0 : _d$usage.pct;
-        return acc;
-      }, {
-        emissions: {},
-        usage: {}
+      }).classed('bar-item', true).attr('height', barHeight).attr('width', function (d) {
+        return d[metric].pct_actual * barWidth;
+      }).attr('x', function (d) {
+        return d[metric].pctBefore * barWidth;
       });
-      chartData = Object.entries(chartData).reduce(function (acc, _ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-          k = _ref2[0],
-          v = _ref2[1];
-        acc.push(_objectSpread({
-          group: k
-        }, v));
-        return acc;
-      }, []);
-
-      // Add bottom X axis
-      var x = d3.scaleBand().domain(groups).range([0, width]).paddingInner([0.1]);
-      var xAxisA = svg.append('g').attr('transform', "translate(0, ".concat(Number(height) + X_AXIS_PADDING, ")")).call(d3.axisBottom(x).tickSize(0).tickSizeOuter(0).tickFormat(function (d) {
-        var _labels$d;
-        return "".concat((_labels$d = labels[d]) === null || _labels$d === void 0 ? void 0 : _labels$d.label);
-      }));
-      var xAxisB = svg.append('g').attr('transform', "translate(0, ".concat(Number(height) + X_AXIS_PADDING + FONT_SIZE, ")")).call(d3.axisBottom(x).tickSize(0).tickSizeOuter(0).tickFormat(function (d) {
-        var _labels$d2;
-        return "".concat((_labels$d2 = labels[d]) === null || _labels$d2 === void 0 ? void 0 : _labels$d2.labelUnits);
-      }));
-
-      // Make the x axis line invisible
-      xAxisA.select('.domain').attr('stroke', 'transparent');
-      xAxisB.select('.domain').attr('stroke', 'transparent');
-
-      // Add top X axis
-      var xAxisTop = svg.append('g').attr('transform', "translate(0, ".concat(-1 * X_AXIS_PADDING, ")")).call(d3.axisTop(x).tickSize(0).tickSizeOuter(0).tickFormat(function (d) {
-        var _labels$d3;
-        return "".concat(totals[d], " ").concat((_labels$d3 = labels[d]) === null || _labels$d3 === void 0 ? void 0 : _labels$d3.totalUnits);
-      }));
-
-      // Make the x axis line invisible
-      xAxisTop.select('.domain').attr('stroke', 'transparent');
-      var ticks = svg.selectAll('.tick text');
-      ticks.attr('class', 'fueluse-bar-axis-text text-chart');
-
-      // Add Y axis
-      var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-      // svg.append('g').call(d3.axisLeft(y));
-
-      //stack the data? --> stack per subgroup
-      var stackedData = d3.stack().keys(subgroups)(chartData);
-
-      // Show the bars
-      svg.append('g').selectAll('g')
-      // Enter in the stack data = loop key per key = group per group
-      .data(stackedData).enter().append('g').attr('class', function (d) {
-        return "fueluse-bar fueluse-bar-".concat(d.key);
-      }).selectAll('rect')
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(function (d) {
-        return d;
-      }).enter().append('rect').attr('x', function (d) {
-        return x(d.data.group);
-      }).attr('y', function (d) {
-        return y(d[1]);
-      }).attr('height', function (d) {
-        return y(d[0]) - y(d[1]);
-      }).attr('width', x.bandwidth());
-      var EMISSIONS_INDEX = 0;
-      var USAGE_INDEX = 1;
-
-      // Emissions percentages
-      svg.selectAll('.fueluse-bar').append('text').attr('class', 'text-tiny fueluse-bar-percentages').attr('font-size', FONT_SIZE).attr('x', function (d) {
-        var barWidth = x.bandwidth();
-        return x(d[EMISSIONS_INDEX].data.group) + barWidth / 2;
-      }).attr('y', function (d) {
-        var height = y(d[EMISSIONS_INDEX][0]) - y(d[EMISSIONS_INDEX][1]);
-        return y(d[EMISSIONS_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
+      var labelGroup = chartGroup.append('g').classed('bar-chart-label', true).attr('transform', "translate(".concat(barStart - 5, ", 25)"));
+      labelGroup.append('text').attr('x', 0).text(labels[metric].label).call(wrap, textWidth);
+      labelGroup.selectAll('tspan').classed('bar-chart-label-name', true);
+      labelGroup.select('text').append('tspan').attr('x', 0).attr('dy', '1.1em').text(labels[metric].labelUnits);
+      var totalGroup = chartGroup.append('g').attr('transform', "translate(".concat(barStart + barWidth + 5, ", 25)"));
+      var totalText = totalGroup.append('text').classed('bar-chart-total', true);
+      totalText.append('tspan').attr('x', 0).classed('bar-chart-total-value', true).text(totals[metric]);
+      totalText.append('tspan').attr('dx', '.25em').text(metric === 'usage' ? 'kBtu' : 'metric tons');
+      var barLabels = chartGroup.append('g').attr('transform', "translate(0, 10)").classed('bar-labels', true);
+      var barLabelText = barLabels.selectAll('.bar-label').data(data).enter().append('text').attr('class', function (d) {
+        return d.key;
+      }).classed('bar-label', true).attr('x', function (d) {
+        return barStart + (d[metric].pctBefore + d[metric].pct_actual / 2) * barWidth;
       }).text(function (d) {
-        var _d$EMISSIONS_INDEX, _d$EMISSIONS_INDEX$da;
-        return "".concat((_d$EMISSIONS_INDEX = d[EMISSIONS_INDEX]) === null || _d$EMISSIONS_INDEX === void 0 ? void 0 : (_d$EMISSIONS_INDEX$da = _d$EMISSIONS_INDEX.data) === null || _d$EMISSIONS_INDEX$da === void 0 ? void 0 : _d$EMISSIONS_INDEX$da[d === null || d === void 0 ? void 0 : d.key], "%");
+        if (metric === 'usage') return "".concat(d.label, " ").concat(d[metric].pct, "%");
+        return "".concat(d[metric].pct, "%");
       });
+      barLabelText.call(detectHorizontalCollision);
+      function detectHorizontalCollision() {
+        this.each(function () {
+          var node = this;
+          var box = node.getBBox();
 
-      // Usage percentages
-      svg.selectAll('.fueluse-bar').append('text').attr('class', 'text-tiny fueluse-bar-percentages').attr('font-size', FONT_SIZE).attr('x', function (d) {
-        var barWidth = x.bandwidth();
-        return x(d[USAGE_INDEX].data.group) + barWidth / 2;
-      }).attr('y', function (d) {
-        var height = y(d[USAGE_INDEX][0]) - y(d[USAGE_INDEX][1]);
-        return y(d[USAGE_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
-      }).text(function (d) {
-        var _d$USAGE_INDEX, _d$USAGE_INDEX$data;
-        return "".concat((_d$USAGE_INDEX = d[USAGE_INDEX]) === null || _d$USAGE_INDEX === void 0 ? void 0 : (_d$USAGE_INDEX$data = _d$USAGE_INDEX.data) === null || _d$USAGE_INDEX$data === void 0 ? void 0 : _d$USAGE_INDEX$data[d === null || d === void 0 ? void 0 : d.key], "%");
-      });
+          // Only have to detect horizontally, vertically will be on the same
+          var x0 = box.x;
+          var x1 = x0 + box.width;
+          barLabelText.each(function () {
+            if (this !== node) {
+              var otherBox = this.getBBox();
+              var otherX0 = otherBox.x;
+
+              // Only interested in labels that should be to the left of other
+              // labels
+              if (x0 < otherX0 && x1 > otherX0) {
+                var overlapSize = x1 - otherX0 + 2;
+                d3.select(node).attr('dx', -(overlapSize / 2));
+                d3.select(this).attr('dx', overlapSize / 2);
+              }
+            }
+          });
+        });
+      }
     },
     render: function render() {
       return this.template(this.chartData());

@@ -32,7 +32,7 @@ define(['underscore', 'd3'], function (_, d3) {
 
   //
   var thresholdIndexScale = function thresholdIndexScale(thresholds) {
-    return d3.scale.threshold().domain(thresholds).range(d3.range(0, thresholds.length + 1));
+    return d3.scaleThreshold().domain(thresholds).range(d3.range(0, thresholds.length + 1));
   };
   return {
     getThresholds: getThresholds,

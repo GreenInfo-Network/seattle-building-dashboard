@@ -4,7 +4,7 @@
 //
 define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/scorecard', 'collections/city_buildings', 'views/map/map', 'views/map/address_search_autocomplete', 'views/map/year_control', 'views/layout/activity_indicator', 'views/layout/building_counts', 'views/layout/compare_bar', 'views/scorecards/controller', 'views/layout/button', 'views/layout/mobile-alert', 'views/modals/modal-model', 'views/modals/modal', 'views/layout/footer', 'views/layout/tutorial', 'views/modals/splash'], function ($, deparam, _, Backbone, CityModel, ScorecardModel, CityBuildings, MapView, AddressSearchView, YearControlView, ActivityIndicator, BuildingCounts, CompareBar, ScorecardController, Button, MobileAlert, ModalModel, ModalController, FooterView, TutorialView, SplashView) {
   var RouterState = Backbone.Model.extend({
-    queryFields: ['filters', 'categories', 'layer', 'metrics', 'sort', 'order', 'lat', 'lng', 'zoom', 'building', 'report_active', 'city_report_active'],
+    queryFields: ['filters', 'categories', 'layer', 'metrics', 'sort', 'order', 'lat', 'lng', 'zoom', 'building', 'report_active', 'city_report_active', 'tab'],
     defaults: {
       metrics: [],
       categories: [],
@@ -25,6 +25,9 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
       }
       if (attributes.hasOwnProperty('building') && _.isNull(attributes.building)) {
         delete attributes.building;
+      }
+      if (attributes.hasOwnProperty('tab') && _.isNull(attributes.tab)) {
+        delete attributes.tab;
       }
       return attributes;
     },
@@ -152,7 +155,7 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
         value: 'Citywide Report'
       });
       // hack: the turorial needs state from the map, which isn't present until after the map loads
-      // TODO: define and instantiate these views in the mapView/building_layer? 
+      // TODO: define and instantiate these views in the mapView/building_layer?
       setTimeout(function () {
         new TutorialView({
           state: state,

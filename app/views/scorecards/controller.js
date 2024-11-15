@@ -4,7 +4,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scorecard', './links', 'text!templates/scorecards/scorecard.html'], function ($, _, Backbone, BuildingScorecard, CityScorecard, Links, ScorecardTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './city_scorecard', './links', 'text!templates/scorecards/scorecard.html'], function ($, _, Backbone, d3, BuildingScorecard, CityScorecard, Links, ScorecardTemplate) {
   var ScorecardController = Backbone.View.extend({
     el: $('#scorecard'),
     initialize: function initialize(options) {
@@ -37,7 +37,8 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
     },
     events: {
       'click #back-to-map-link': 'closeReport',
-      'click #comparison-view-link': 'showComparisonView'
+      'click #comparison-view-link': 'showComparisonView',
+      'click .scorecard-tab-click': 'setTab'
     },
     onBuildingsChange: function onBuildingsChange() {
       if (this.dirty) this.render();
@@ -55,6 +56,14 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
     onBuildingReportActive: function onBuildingReportActive() {
       this.activekey = 'report_active';
       this.viewclass = BuildingScorecard;
+      // Set initial tab on load
+      if (this.state.get('report_active') === true) {
+        // TODO set back to benchmark_overview
+        // this.state.set({ tab: 'benchmark_overview' });
+        this.state.set({
+          tab: 'emissions_targets'
+        });
+      }
       this.render();
     },
     onCityReportActive: function onCityReportActive() {
@@ -66,11 +75,20 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
       var _this$state$set;
       evt.preventDefault();
       this.state.trigger('clearMapPopup');
-      this.state.set((_this$state$set = {}, _defineProperty(_this$state$set, this.activekey, false), _defineProperty(_this$state$set, "building", null), _defineProperty(_this$state$set, "building_compare_active", true), _this$state$set));
+      this.state.set((_this$state$set = {}, _defineProperty(_this$state$set, this.activekey, false), _defineProperty(_this$state$set, "building", null), _defineProperty(_this$state$set, "building_compare_active", true), _defineProperty(_this$state$set, "tab", null), _this$state$set));
+    },
+    setTab: function setTab(evt) {
+      var _evt$target;
+      var nextTab = evt === null || evt === void 0 ? void 0 : (_evt$target = evt.target) === null || _evt$target === void 0 ? void 0 : _evt$target.id;
+      if (!nextTab) return;
+      this.state.set({
+        tab: nextTab
+      });
     },
     closeReport: function closeReport(evt) {
+      var _this$state$set2;
       evt.preventDefault();
-      this.state.set(_defineProperty({}, this.activekey, false));
+      this.state.set((_this$state$set2 = {}, _defineProperty(_this$state$set2, this.activekey, false), _defineProperty(_this$state$set2, "tab", null), _this$state$set2));
     },
     toggleView: function toggleView(evt) {
       evt.preventDefault();
@@ -83,7 +101,7 @@ define(['jquery', 'underscore', 'backbone', './building_scorecard', './city_scor
         return false;
       }
       scorecardState.set({
-        'view': value
+        view: value
       });
     },
     loadView: function loadView(view) {

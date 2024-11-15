@@ -29,7 +29,7 @@ define(['underscore', 'd3'], function (_, d3) {
     var range = this.colorStops;
     var buckets = this.buckets;
     var bucketStops = this.toBucketStops();
-    var gradientScale = d3.scale.linear().range(range).domain(bucketStops);
+    var gradientScale = d3.scaleLinear().range(range).domain(bucketStops);
     return _.map(_.range(buckets), gradientScale);
   };
   BuildingColorBucketCalculator.prototype.cartoCSS = function () {
@@ -92,10 +92,10 @@ define(['underscore', 'd3'], function (_, d3) {
     var fieldValues = this.getFieldValues();
     var scale;
     if (this.thresholds) {
-      scale = d3.scale.threshold().domain(this.thresholds).range(stops);
+      scale = d3.scaleThreshold().domain(this.thresholds).range(stops);
     } else {
-      // this quantile scale function brings in the entire sorted array of 3663 values 
-      scale = d3.scale.quantile().domain(fieldValues).range(stops);
+      // this quantile scale function brings in the entire sorted array of 3663 values
+      scale = d3.scaleQuantile().domain(fieldValues).range(stops);
     }
 
     /*

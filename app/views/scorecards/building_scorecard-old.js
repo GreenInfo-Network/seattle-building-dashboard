@@ -1,18 +1,12 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts/fueluse', './charts/beps', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html', './temp-extract'], function ($, _, Backbone, d3, wrap, FuelUseView, BepsView, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate, tempExtract) {
+define(['jquery', 'underscore', 'backbone', '../../../lib/wrap', './charts/fueluse', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, wrap, FuelUseView, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
       this.state = options.state;
@@ -67,7 +61,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         return +d;
       }).sort(function (a, b) {
         return a - b;
-      }).concat(['2023']);
+      });
       if (this.scoreCardData && this.scoreCardData.id === id) {
         this.show(buildings, this.scoreCardData.data, year, years);
       } else {
@@ -87,47 +81,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
           payload.rows.forEach(function (d) {
             data[d.year] = _objectSpread({}, d);
           });
-
-          // TODO all this needs an update once we pull real data
-          // ------------------------------------------------------------
-
-          var extract2023 = tempExtract();
-
-          // left old, right new
-          var equivalents = {
-            reported_gross_floor_area: 'PropertyGFATotal',
-            cbps_euit: 'CBPSEUItarget'
-          };
-          data = Object.fromEntries(Object.entries(data).map(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
-              k = _ref2[0],
-              v = _ref2[1];
-            if (equivalents[k]) {
-              return [equivalents[k], v];
-            } else {
-              return [k, v];
-            }
-          }));
-          var last = data['2022'];
-          for (var _i2 = 0, _Object$keys = Object.keys(last); _i2 < _Object$keys.length; _i2++) {
-            var key = _Object$keys[_i2];
-            if (_typeof(last[key]) !== extract2023[key]) {
-              if (typeof last[key] === 'number') {
-                extract2023[key] = Number(extract2023[key]);
-              }
-              // console.warn(
-              //   `(${key}) old type ${typeof last[
-              //     key
-              //   ]}, new type ${typeof extract2023[key]} `
-              // );
-            }
-          }
-
-          // Setting 2023 as 2022 for now
-          data['2022'] = extract2023;
-
-          // ------------------------------------------------------------
-
           _this.scoreCardData = {
             id: _this.state.get('building'),
             data: data
@@ -174,7 +127,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       } else {
         _bins = this.calculateEnergyStarBins(config.thresholds.energy_star);
       }
-      var data = d3.histogram().thresholds(_bins).value(function (d) {
+      var data = d3.layout.histogram().bins(_bins).value(function (d) {
         return d[compareField];
       })(buildingsOfType);
       data.forEach(function (d, i) {
@@ -211,7 +164,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       var building = building_data[selected_year];
       var view = this.state.get('scorecard').get('view');
       var name = building.property_name;
-      var sqft = +building.propertygfabuildings;
+      var sqft = +building.reported_gross_floor_area;
       var prop_type = building.property_type;
       var id = building.id;
 
@@ -301,23 +254,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       }
       el.find('#fueluse-chart').html(this.charts['eui'].chart_fueluse.render());
       this.charts['eui'].chart_fueluse.afterRender();
-
-      // ----------------------------------------------------------------------------------------------------
-
-      // render BEPs chart (beps.js)
-      if (!this.charts['eui'].chart_beps) {
-        this.charts['eui'].chart_beps = new BepsView({
-          formatters: this.formatters,
-          data: [building],
-          name: name,
-          year: selected_year,
-          parent: el[0]
-        });
-      }
-      el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
-      this.charts['eui'].chart_beps.afterRender();
-
-      // ----------------------------------------------------------------------------------------------------
 
       // render Clean Building Performance Standard (CBPS) chart (performance_standard.js), but only if flagged
       if (building.cbps_flag) {

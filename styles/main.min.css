@@ -3498,6 +3498,397 @@ div#simple-tooltip.cartodb-tooltip {
     padding-bottom: 3rem !important;
   }
 }
+.text-tiny {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.text-copy {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.text-subheader {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.text-header {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.text-copy-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.text-asterisk {
+  font-size: 0.775rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.text-button {
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.text-chart {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.text-table {
+  font-size: 0.775rem;
+  font-weight: 400;
+  color: #333;
+}
+
+.text-table-header {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.text-copy-large {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #333;
+}
+
+.scorecard-top-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 4rem;
+  background-color: #0046ad;
+  color: #ffffff;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.scorecard-top-bar-left {
+  max-width: 450px;
+  width: 35%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+}
+.scorecard-top-bar-right {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  gap: 1rem;
+}
+.scorecard-top-bar-logo {
+  color: #ffffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 0.5rem;
+}
+.scorecard-top-bar-tabs-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.5rem;
+  height: 100%;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: end;
+}
+.scorecard-top-bar-tab {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 12px 10px;
+  background-color: #ffffff;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  bottom: 0;
+  cursor: pointer;
+}
+.scorecard-top-bar-buttons-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 0.5rem;
+}
+.scorecard-top-bar-button {
+  color: #ffffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+.scorecard-top-bar-button-icon {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#scorecard-2 {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  overflow: auto;
+  z-index: 999999;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+#scorecard-2.active {
+  display: block;
+}
+#scorecard-2 .building-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  min-width: 920px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin: 0 auto;
+  gap: 1rem;
+}
+#scorecard-2 .building-sidebar {
+  max-width: 450px;
+  width: 35%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.5rem;
+}
+#scorecard-2 .building-sidebar-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.5rem;
+}
+#scorecard-2 .building-sidebar-header-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+#scorecard-2 .building-sidebar-header-icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+#scorecard-2 .building-sidebar-perf-report {
+  color: #969ba4;
+  text-transform: uppercase;
+}
+#scorecard-2 .building-sidebar-description {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.5rem;
+}
+#scorecard-2 .building-sidebar-button {
+  background-color: #007749;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px 12px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 4px;
+  color: #ffffff;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+#scorecard-2 .building-main {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+#scorecard-2 .building-main-section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+#scorecard-2 .building-main-chart-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 32px 40px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  border-radius: 12px;
+  background-color: #f5f5f5;
+  line-height: 160%;
+  gap: 0.5rem;
+}
+#scorecard-2 .building-main-overview-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+}
+#scorecard-2 .building-main-overview-bottom {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+#scorecard-2 .building-main-overview-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: end;
+}
+#scorecard-2 .building-main-overview-header-icon {
+  height: 4rem;
+}
+#scorecard-2 .building-main-overview-header-icon img {
+  height: 100%;
+  width: auto;
+}
+#scorecard-2 .building-main-overview-container {
+  background-color: #ffffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 32px 40px;
+  border-radius: 12px;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
+  gap: 0.5rem;
+}
+#scorecard-2 .building-main-overview-button {
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  border: 1px solid #969ba4;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px 12px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5rem;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: #0046ad;
+}
+#scorecard-2 .building-main-overview-metric {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  gap: 0.5rem;
+}
 #scorecard {
   display: none;
   position: absolute;
@@ -3506,7 +3897,7 @@ div#simple-tooltip.cartodb-tooltip {
   right: 0;
   bottom: 0;
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   overflow: auto;
   z-index: 999999;
 }
@@ -3520,14 +3911,6 @@ div#simple-tooltip.cartodb-tooltip {
   min-width: 920px;
   margin: 0 auto;
 }
-#scorecard #back-to-map-link {
-  background: #C04F31;
-  color: white;
-  display: inline-block;
-  font-weight: 500;
-  padding: 10px;
-  text-transform: uppercase;
-}
 #scorecard #print-scorecard {
   width: auto;
   height: 38px;
@@ -3536,7 +3919,7 @@ div#simple-tooltip.cartodb-tooltip {
   text-transform: uppercase;
   font-size: 0.75rem;
   background: #0047ba;
-  color: #FFF;
+  color: #fff;
 }
 @media print {
   #scorecard #print-scorecard {
@@ -3575,10 +3958,10 @@ div#simple-tooltip.cartodb-tooltip {
   font-weight: 400;
 }
 #scorecard .sc-heading.orange {
-  color: #DE8F41;
+  color: #de8f41;
 }
 #scorecard .sc-heading.white {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #scorecard .sc-heading.nodata {
   font-size: 2.5rem;
@@ -3594,16 +3977,16 @@ div#simple-tooltip.cartodb-tooltip {
 #scorecard .sc-txt {
   margin: 0;
   padding: 0;
-  color: #0047BA;
+  color: #0047ba;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.2;
 }
 #scorecard .sc-txt.white {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 #scorecard .sc-txt.orange {
-  color: #DE8F41;
+  color: #de8f41;
 }
 #scorecard .sc-txt.blue-new {
   color: #003DA5;
@@ -3971,10 +4354,10 @@ div#simple-tooltip.cartodb-tooltip {
   margin-left: 8px;
 }
 #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words span.text-increased {
-  color: #C04F31;
+  color: #c04f31;
 }
 #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words span.text-decreased {
-  color: #90AE60;
+  color: #90ae60;
 }
 @media print {
   #scorecard .scorecard--details div#building-details-cards-wrapper div.building-details-card div.building-details-card-trend .building-details-card-trend-words {
@@ -3983,7 +4366,7 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard div#state-requirement-wrapper {
   color: #003DA5;
-  background: #E5EBF6;
+  background: #e5ebf6;
   border-radius: 0px 0px 5px 5px;
   border-top: 1px solid #003DA5;
   padding: 16px;
@@ -4033,63 +4416,6 @@ div#simple-tooltip.cartodb-tooltip {
     font-size: 14px;
   }
 }
-#scorecard div#fuel-use-chart {
-  page-break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-     -moz-column-break-inside: avoid;
-          break-inside: avoid;
-}
-#scorecard div#fuel-use-chart div#fueluse-chart div#energy-consumption-chart-heading {
-  text-transform: none;
-}
-#scorecard div#fuel-use-chart div#fueluse-chart .fc-row.notes {
-  margin-top: -15px;
-}
-#scorecard div#fuel-use-chart .hr {
-  margin: 1.7em 0.15em;
-  height: 2px;
-  border-top: 1px solid #003DA5;
-  opacity: 50%;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future {
-  padding: 0 1.75em;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-learn-more a {
-  color: #003DA5;
-  text-decoration: underline;
-  line-height: 1.2;
-  display: inline-block;
-  margin-top: 4px;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future h3#fuel-use-future-heading {
-  text-transform: none;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  margin-top: 1em;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  height: 45px;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem span.future-icon {
-  width: 50px;
-  text-align: center;
-}
-#scorecard div#fuel-use-chart div#fuel-use-future div#fuel-use-future-list div.fuel-use-future-listitem span.future-icon img {
-  width: auto;
-}
 #scorecard #compare-shift-chart {
   margin-top: 5px;
 }
@@ -4138,10 +4464,10 @@ div#simple-tooltip.cartodb-tooltip {
   text-align: left;
 }
 #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.lower.eui, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.higher.ess, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.decreased {
-  color: #90AE60;
+  color: #90ae60;
 }
 #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.higher.eui, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.lower.ess, #scorecard #compare-shift-chart .compare-desc p#compare-label .change-txt.increased {
-  color: #C04F31;
+  color: #c04f31;
 }
 #scorecard #compare-shift-chart #change-chart .year {
   fill: #0047ba;
@@ -4190,7 +4516,7 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard #compare-shift-chart #change-chart #change-chart-vis text.building.selected-building {
   font-size: 12px;
-  color: #0047BA;
+  color: #0047ba;
 }
 #scorecard div#performance-standard-chart {
   border-top: 1px solid #003DA5;
@@ -4317,17 +4643,17 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .bar-outline {
   fill: #fff;
-  stroke: #B2B2B2;
+  stroke: #b2b2b2;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-label {
-  fill: #B2B2B2;
+  fill: #b2b2b2;
   font-size: 12px;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .hide-line > .tick-line {
   stroke-width: 0;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-line {
-  stroke: #B2B2B2;
+  stroke: #b2b2b2;
   stroke-width: 1px;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart .tick-line-over-bar > .tick-line {
@@ -4349,7 +4675,7 @@ div#simple-tooltip.cartodb-tooltip {
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-meets-target {
   position: absolute;
   font-size: 12px;
-  color: #90AE60;
+  color: #90ae60;
   background-image: url("../images/scorecard/arrow-icon-sm-green.svg");
   background-repeat: no-repeat;
   background-position: -2px -3px;
@@ -4360,7 +4686,7 @@ div#simple-tooltip.cartodb-tooltip {
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart div.chart-label-misses-target {
   position: absolute;
   font-size: 12px;
-  color: #C04F31;
+  color: #c04f31;
   background-image: url("../images/scorecard/arrow-icon-sm-red.svg");
   background-repeat: no-repeat;
   background-position: 12px 7px;
@@ -4369,7 +4695,7 @@ div#simple-tooltip.cartodb-tooltip {
   width: 152px;
 }
 #scorecard div#performance-standard-chart div#performance-standard-bar-chart-container div#performance-standard-bar-chart-x-axis-label {
-  color: #B2B2B2;
+  color: #b2b2b2;
   font-size: 12px;
   position: relative;
   top: -37px;
@@ -4409,7 +4735,7 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard .scorecard-compare-chart #sc-toggle-wrapper .sc-toggle {
   padding: 0.5rem;
-  background: #E5EBF6;
+  background: #e5ebf6;
   margin-top: -1rem;
   margin-right: -1rem;
   height: 85px;
@@ -4454,10 +4780,10 @@ div#simple-tooltip.cartodb-tooltip {
   height: 16px;
   margin-right: 5px;
   border-radius: 50%;
-  border: 1px solid #0047BA;
+  border: 1px solid #0047ba;
 }
 #scorecard .scorecard-compare-chart #sc-toggle-wrapper .sc-toggle label.cb-plain .cb .cb-inner {
-  background: #0047BA;
+  background: #0047ba;
   display: none;
   border-radius: 50%;
   margin: 2px;
@@ -4531,10 +4857,10 @@ div#simple-tooltip.cartodb-tooltip {
   color: white;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.decreased {
-  color: #90AE60;
+  color: #90ae60;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.higher.eui, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.lower.ess, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-desc .change-txt.increased {
-  color: #C04F31;
+  color: #c04f31;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart {
   position: relative;
@@ -4550,11 +4876,11 @@ div#simple-tooltip.cartodb-tooltip {
   width: 100%;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .bar rect {
-  fill: #F1F1F1;
+  fill: #f1f1f1;
   shape-rendering: crispEdges;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .bar rect.selected {
-  fill: #DE8F41;
+  fill: #de8f41;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .bar rect.avg-bar {
   opacity: 0.5;
@@ -4564,14 +4890,15 @@ div#simple-tooltip.cartodb-tooltip {
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .y.axis path {
   fill: none;
-  stroke: #CBCBCB;
+  stroke: #cbcbcb;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart text {
   font-family: "Ubuntu", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-size: 10px;
   text-transform: lowercase;
 }
-#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .y.axis text, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .label text {
+#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .y.axis text,
+#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .label text {
   fill: #5d5d5d;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .label text {
@@ -4606,7 +4933,8 @@ div#simple-tooltip.cartodb-tooltip {
   font-weight: 500;
   color: #DE8F41;
 }
-#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label, #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .units {
+#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .label,
+#scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .average-building-highlight .units {
   font-size: 10px;
   font-weight: 400;
   text-transform: uppercase;
@@ -4624,19 +4952,19 @@ div#simple-tooltip.cartodb-tooltip {
   line-height: 24px;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text text.quartile-1 {
-  fill: #0047BA;
+  fill: #0047ba;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text text.quartile-2 {
-  fill: #90AE60;
+  fill: #90ae60;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text text.quartile-3 {
-  fill: #F7C34D;
+  fill: #f7c34d;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text text.quartile-4 {
-  fill: #C04F31;
+  fill: #c04f31;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .callout-text.callout-selected-text .selected-label {
-  fill: #0047BA;
+  fill: #0047ba;
 }
 #scorecard .scorecard-compare-chart div.sc-compare-row .compare-chart .selected-city-highlight .value {
   font-size: 24px;
@@ -4662,7 +4990,7 @@ div#simple-tooltip.cartodb-tooltip {
   stroke: #000;
 }
 #scorecard .scorecard-compare-chart .not-available a {
-  color: #0047BA;
+  color: #0047ba;
 }
 #scorecard .scorecard-compare-chart.eui-selected .scorecard-compare-section.eui {
   display: block;
@@ -4694,11 +5022,11 @@ div#simple-tooltip.cartodb-tooltip {
   display: block;
 }
 #scorecard #links {
-  background: #F1F1F1;
+  background: #f1f1f1;
 }
 @media print {
   #scorecard #links {
-    background: #FFFFFF;
+    background: #ffffff;
   }
 }
 #scorecard #links table td {
@@ -4735,7 +5063,7 @@ div#simple-tooltip.cartodb-tooltip {
   font-size: 15px;
 }
 #scorecard #links table .link-content a {
-  color: #003DA5;
+  color: #003da5;
   text-decoration: underline;
 }
 #scorecard #links table .link-link {
@@ -4868,7 +5196,8 @@ div#simple-tooltip.cartodb-tooltip {
   #scorecard #comparison-view-link {
     display: none;
   }
-  #scorecard .scorecard--section, #scorecard .scorecard--details {
+  #scorecard .scorecard--section,
+  #scorecard .scorecard--details {
     page-break-inside: avoid;
     -webkit-column-break-inside: avoid;
        -moz-column-break-inside: avoid;
@@ -4915,7 +5244,7 @@ div#simple-tooltip.cartodb-tooltip {
     font-weight: bold;
   }
   #scorecard .scorecard--print-footer a {
-    color: #0047BA;
+    color: #0047ba;
   }
   #scorecard .scorecard--print-footer img {
     max-height: 100%;
@@ -4951,56 +5280,193 @@ div#simple-tooltip.cartodb-tooltip {
   }
 }
 #fueluse-chart {
-  margin-top: 1rem;
+  width: 100%;
 }
-@media print {
-  #fueluse-chart {
-    margin-top: 0.25rem;
-  }
+#fueluse-chart .fueluse {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
 }
-#fueluse-chart .fc-row.notes p {
-  margin-top: 1rem;
+#fueluse-chart .fueluse-chart-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
 }
-#fueluse-chart .fc-row.notes p:first-of-type {
-  margin-top: 0;
+#fueluse-chart .fueluse-legend {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 1rem;
 }
-#fueluse-chart .bar-chart-container {
+#fueluse-chart .fueluse-legend-swatch {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+#fueluse-chart .fueluse-legend-swatch-color {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 2px;
+}
+#fueluse-chart .fueluse-legend-swatch-color.gas {
+  background-color: #d07362;
+}
+#fueluse-chart .fueluse-legend-swatch-color.electric {
+  background-color: #8eb1c7;
+}
+#fueluse-chart .fueluse-legend-swatch-color.steam {
+  background-color: #f9c064;
+}
+#fueluse-chart .fueluse-chart {
   font-size: 0.8rem;
-  height: 150px;
+  height: 250px;
+  width: 50%;
 }
-#fueluse-chart .bar-chart-container svg {
+#fueluse-chart .fueluse-chart svg {
   height: 100%;
   width: 100%;
 }
-#fueluse-chart .bar-chart-container .bar-item.gas,
-#fueluse-chart .bar-chart-container .bar-label.gas {
-  fill: rgba(194, 78, 43, 0.75);
+#fueluse-chart .fueluse-chart .fueluse-bar-gas rect {
+  fill: #d07362;
 }
-#fueluse-chart .bar-chart-container .bar-item.electricity,
-#fueluse-chart .bar-chart-container .bar-label.electricity {
-  fill: rgba(0, 72, 186, 0.75);
+#fueluse-chart .fueluse-chart .fueluse-bar-electricity rect {
+  fill: #8eb1c7;
 }
-#fueluse-chart .bar-chart-container .bar-item.steam,
-#fueluse-chart .bar-chart-container .bar-label.steam {
-  fill: rgba(247, 195, 78, 0.75);
+#fueluse-chart .fueluse-chart .fueluse-bar-steam rect {
+  fill: #f9c064;
 }
-#fueluse-chart .bar-chart-container .bar-label {
+#fueluse-chart .fueluse-chart .fueluse-bar-percentages {
+  fill: white;
   text-anchor: middle;
 }
-#fueluse-chart .bar-chart-container .bar-chart-label {
-  fill: #5d5d5d;
-  text-anchor: end;
-}
-#fueluse-chart .bar-chart-container .bar-chart-label-name {
-  font-weight: 500;
-}
-#fueluse-chart .bar-chart-container .bar-chart-total {
-  fill: #5d5d5d;
-}
-#fueluse-chart .bar-chart-container .bar-chart-total-value {
-  font-weight: 500;
+#fueluse-chart .fueluse-chart .fueluse-bar-axis-text {
+  fill: #333;
 }
 
+#beps-chart {
+  width: 100%;
+}
+#beps-chart .beps {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+}
+#beps-chart .beps-chart-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+}
+#beps-chart .beps-legend {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 1rem;
+}
+#beps-chart .beps-legend-target-line {
+  width: 100%;
+  height: 0;
+  border-top: 2px dashed #969ba4;
+}
+#beps-chart .beps-legend-swatch {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+#beps-chart .beps-legend-swatch-color {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 2px;
+}
+#beps-chart .beps-legend-swatch-color.gas {
+  background-color: #d07362;
+}
+#beps-chart .beps-legend-swatch-color.electric {
+  background-color: #8eb1c7;
+}
+#beps-chart .beps-legend-swatch-color.steam {
+  background-color: #f9c064;
+}
+#beps-chart .beps-chart {
+  font-size: 0.8rem;
+  height: 250px;
+  width: 50%;
+}
+#beps-chart .beps-chart svg {
+  height: 100%;
+  width: 100%;
+}
+#beps-chart .beps-chart .beps-bar-gas rect {
+  fill: #d07362;
+}
+#beps-chart .beps-chart .beps-bar-electricity rect {
+  fill: #8eb1c7;
+}
+#beps-chart .beps-chart .beps-bar-steam rect {
+  fill: #f9c064;
+}
+#beps-chart .beps-chart .beps-bar-percentages {
+  fill: white;
+  text-anchor: middle;
+}
+#beps-chart .beps-chart .beps-bar-axis-text {
+  fill: #333;
+}
+#beps-chart .beps-chart .beps-bar-target-text {
+  text-anchor: end;
+}
+#beps-chart .beps-chart .beps-bar-target-line {
+  stroke: #969ba4;
+  stroke-width: 2;
+  stroke-dasharray: 4, 4;
+}
+#beps-chart .beps-chart .beps-bar-background-rect {
+  fill: white;
+}
 #scorecard .pushdown {
   margin-top: 0.5em;
 }

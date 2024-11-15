@@ -13,7 +13,7 @@ define(['underscore', 'd3'], function (_, d3) {
   BuildingBucketCalculator.prototype.getScale = function () {
     var extent = this.toExtent();
     var maxBuckets = this.buckets - 1;
-    var scale = d3.scale.linear().domain(extent).rangeRound([0, maxBuckets]);
+    var scale = d3.scaleLinear().domain(extent).rangeRound([0, maxBuckets]);
 
     // stuff maxBuckets into scale, for future reference
     scale._maxBuckets = maxBuckets;

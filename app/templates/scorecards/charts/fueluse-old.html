@@ -1,0 +1,97 @@
+<div class='inner'>
+    <div class='section-head'>
+      <h3 class='sc-heading'>Climate Pollution Impact of Energy Use</h3>
+        <p class='sc-txt small'>Over <span class='bold'>90%</span> of Seattle's building emissions come from burning fossil fuels like fracked gas and oil for furnaces, water heaters, and appliances - including gas used to generate steam. In Seattle, all-electric buildings have the lowest emissions.</p>
+    </div>
+  
+    <div id='fueluse-chart' class='row mt-3'>
+      <% if (fuels.length === 0) { %>
+        <p class='col-4 nodata'>
+          We don't have enough data to show fuel use for this building. Contact <a href="mailto:energybenchmarking@seattle.gov">energybenchmarking@seattle.gov</a> if this is incorrect.
+        </p>
+      <% } else { %>
+        <div id='energy-consumption-chart-heading' class='sc-txt small bold'>This building’s energy and emissions:</div>
+        <div class='col-12'>
+          <div class='row fc-labels fc-panel'>
+            <div class='energy-consumption-bar-chart-container bar-chart-container'></div>
+          </div>
+        </div>
+        <div class='col-12'>
+          <% if (fuels.length >= 1) { %>
+          <div class='fc-row notes text-center'>
+            <% if (totals.emissions_raw > 0) { %>
+            <p class="sc-txt light pg">
+              <strong><%= totals.emissions %> MT CO<sub>2</sub>E</strong> is the equivalent of <strong><%= cars %> passenger vehicles driven</strong> for one year.
+            </p>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  
+    <div class='hr'></div>
+  
+    <!-- bottom section: links and additional info -->
+    <% if (all_electric) { %>
+    <div id='fuel-use-future' class='row'>
+      <div class='col-8'>
+        <h3 id='fuel-use-future-heading' class='sc-heading'>Congratulations! Your building is all electric and carbon neutral:</h3>
+        <div id='fuel-use-future-list'>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/clipboard-icon.svg' /></span>
+            <span class='sc-txt'>PLAN – Is your building as efficient as it can be?</span>
+          </div>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/lightbulb-icon.svg' /></span>
+            <span class='sc-txt'>REDUCE – Check out City Light’s incentives</span>
+          </div>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/plug-icon.svg' /></span>
+            <span class='sc-txt'>RENEWABLES - Get even greener</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class='col-4'>
+        <div id='fuel-use-learn-more'>
+          <p class='sc-txt'>Learn more here:</p>
+          <a target='_blank' href='https://www.seattle.gov/city-light/business-solutions'>https://www.seattle.gov/city-light/business-solutions</a>
+        </div>
+      </div>
+    </div>
+  
+    <% } else { %>
+  
+    <div id='fuel-use-future' class='row'>
+      <div class='col-8'>
+        <h3 id='fuel-use-future-heading' class='sc-heading'>The future is electric! Get started on a path to carbon neutral:</h3>
+        <div id='fuel-use-future-list'>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/clipboard-icon.svg' /></span>
+            <span class='sc-txt'>PLAN – Track energy use and plan for electrification</span>
+          </div>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/lightbulb-icon.svg' /></span>
+            <span class='sc-txt'>REDUCE – Maximize efficiency to enable electrification</span>
+          </div>
+          <div class='fuel-use-future-listitem'>
+            <span class='future-icon'><img src='./images/scorecard/plug-icon.svg' /></span>
+            <span class='sc-txt'>ELECTRIFY - Replace fossil fuel systems with electric ones</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class='col-4'>
+        <div id='fuel-use-learn-more'>
+          <p class='sc-txt'>Learn more here:</p>
+          <a target='_blank' href='https://www.seattle.gov/building-performance-standards'>https://www.seattle.gov/building-performance-standards</a>
+        </div>
+      </div>
+    </div>
+  
+    <% } %>
+      
+    </div>
+  </div>
+  
