@@ -1,7 +1,7 @@
-#fueluse-chart {
+#beps-chart {
   width: 100%;
 
-  .fueluse {
+  .beps {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -56,7 +56,7 @@
         width: 100%;
       }
 
-      .fueluse-bar {
+      .beps-bar {
         &-gas {
           rect {
             fill: $gas-color;
@@ -82,6 +82,20 @@
 
         &-axis-text {
           fill: $paragraph;
+        }
+
+        &-target-text {
+          text-anchor: end;
+        }
+
+        &-target-line {
+          stroke: $gray;
+          stroke-width: 2;
+          stroke-dasharray: 3, 3;
+        }
+
+        &-background-rect {
+          fill: white;
         }
       }
     }
