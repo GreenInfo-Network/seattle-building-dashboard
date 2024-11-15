@@ -82,7 +82,7 @@ define([
         const site_eui = building.get('site_eui');
         const built = building.get('yearbuilt');
         const ess = building.get('energy_star_score');
-        const size = building.get('reported_gross_floor_area');
+        const size = building.get('propertygfabuildings');
 
         if (!types.hasOwnProperty(typ)) {
           types[typ] = this.defaultRow();
