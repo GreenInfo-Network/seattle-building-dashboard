@@ -21,16 +21,18 @@ $sc-font-lg: 1.5rem;
 $sc-font-lgr: 4rem;
 
 // Energy source colors
-$gas-color: #c24e2b;
-$electric-color: #0048ba;
-$steam-color: #f7c34e;
+// $gas-color: #c24e2b;
+// $electric-color: #0048ba;
+// $steam-color: #f7c34e;
 
 // WIP CSS------------------------------------------------------------------------
 // Text sizes
+// $text-size-extra-small: 0.75rem;
 // $text-size-small: 0.875rem;
 // $text-size-regular: 1rem;
 // $text-size-large: 1.25rem;
 // $text-size-extra-large: 1.5rem;
+$text-size-extra-small: 0.7rem;
 $text-size-small: 0.775rem;
 $text-size-regular: 0.9rem;
 $text-size-large: 1.15rem;
@@ -49,7 +51,19 @@ $paragraph: #333;
 $gray: #969ba4;
 $light-gray: #f1f1f1;
 
+$gas-color: #d07362;
+$electric-color: #8eb1c7;
+$steam-color: #f9c064;
+
 // TODO use open sans
+
+.text-tiny {
+  font-size: $text-size-extra-small;
+  // medium
+  font-weight: 500;
+  color: $paragraph;
+}
+
 .text-copy {
   font-size: $text-size-regular;
   // light
@@ -221,6 +235,7 @@ $light-gray: #f1f1f1;
       min-width: 920px;
       height: fit-content;
       margin: 0 auto;
+      gap: 1rem;
     }
 
     &-sidebar {
@@ -880,68 +895,6 @@ $light-gray: #f1f1f1;
             line-height: 1.1;
             margin-top: 4px;
             font-size: 14px;
-          }
-        }
-      }
-    }
-  }
-
-  // Fuel Use Chart
-  // "Climate Pollution Impact of Energy Use"
-  div#fuel-use-chart {
-    page-break-inside: avoid;
-    break-inside: avoid;
-
-    div#fueluse-chart {
-      div#energy-consumption-chart-heading {
-        text-transform: none;
-      }
-      .fc-row {
-        &.notes {
-          margin-top: -15px;
-        }
-      }
-    }
-
-    .hr {
-      margin: 1.7em 0.15em;
-      height: 2px;
-      border-top: 1px solid $blue_new;
-      opacity: 50%;
-    }
-
-    div#fuel-use-future {
-      padding: 0 1.75em;
-
-      div#fuel-use-learn-more {
-        a {
-          color: $blue_new;
-          text-decoration: underline;
-          line-height: 1.2;
-          display: inline-block;
-          margin-top: 4px;
-        }
-      }
-
-      h3#fuel-use-future-heading {
-        text-transform: none;
-      }
-
-      div#fuel-use-future-list {
-        display: flex;
-        flex-direction: column;
-        margin-top: 1em;
-
-        div.fuel-use-future-listitem {
-          display: flex;
-          align-items: center;
-          height: 45px;
-          span.future-icon {
-            width: 50px;
-            text-align: center;
-            img {
-              width: auto;
-            }
           }
         }
       }

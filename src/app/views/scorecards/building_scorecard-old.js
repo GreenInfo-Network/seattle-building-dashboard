@@ -384,9 +384,7 @@ define([
         });
       }
 
-      el.find('#fuel-use-chart').html(
-        this.charts['eui'].chart_fueluse.render()
-      );
+      el.find('#fueluse-chart').html(this.charts['eui'].chart_fueluse.render());
       this.charts['eui'].chart_fueluse.afterRender();
 
       // render Clean Building Performance Standard (CBPS) chart (performance_standard.js), but only if flagged
