@@ -49,7 +49,7 @@ define([
 
       if (!parent.node()) return;
 
-      const margin = { top: 25, right: 0, bottom: 50, left: 25 };
+      const margin = { top: 25, right: 0, bottom: 50, left: 50 };
       // TODO use the parent
       const outerWidth = 250; // parent.node().offsetWidth;
       const outerHeight = 250; // parent.node().offsetHeight;
@@ -113,10 +113,20 @@ define([
 
       const yAxis = svg
         .append('g')
+        .attr('class', 'text-chart')
         .attr('transform', `translate(${X_AXIS_PADDING * -1}, 0)`)
         .call(d3.axisLeft(y).ticks(6).tickSize(0));
 
       yAxis.select('.domain').attr('stroke', 'transparent');
+
+      svg
+        .append('text')
+        .attr('class', 'beps-bar-y-axis-label text-chart')
+        .attr('text-anchor', 'middle')
+        .attr('y', -1 * (X_AXIS_PADDING + X_AXIS_PADDING + FONT_SIZE))
+        .attr('x', height / -2)
+        .attr('transform', 'rotate(-90)')
+        .text('GHGI (kgCO2e/sf/yr)');
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(chartData);
@@ -151,12 +161,6 @@ define([
         .attr('width', x.bandwidth());
 
       // Add year targets
-      var yearX = d3
-        .scaleBand()
-        .domain(groups)
-        .range([0, width * 2])
-        .padding([0.1]);
-
       const targetYears = Object.entries(buildingData)
         .filter(([k, v]) => k.startsWith('BEPStarget_'))
         .reduce((acc, [k, v]) => {
@@ -170,8 +174,6 @@ define([
       for (const targetData of Object.entries(targetYears)) {
         const [year, target] = targetData;
 
-        console.log({ year, target });
-
         if (targets.has(target)) continue;
 
         targets.add(target);
@@ -179,8 +181,6 @@ define([
         const multiplier = target === 0 ? 0 : target / maxGhgi;
 
         const yPos = Number(height) - Number(height) * multiplier;
-
-        const PADDING = 12;
 
         const targetText = `${year}: target ${target.toFixed(2)}`;
 
@@ -194,7 +194,7 @@ define([
 
         svg
           .append('text')
-          .attr('class', 'beps-bar-target-text')
+          .attr('class', 'beps-bar-target-text  text-chart')
           .attr('font-size', FONT_SIZE)
           .attr('x', outerWidth - margin.left - margin.right)
           .attr('y', yPos - X_AXIS_PADDING)
