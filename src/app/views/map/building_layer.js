@@ -2,10 +2,11 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'd3',
   'collections/city_buildings',
   'models/building_color_bucket_calculator',
   'text!templates/map/building_info.html'
-], function($, _, Backbone, CityBuildings,
+], function($, _, Backbone, d3, CityBuildings,
         BuildingColorBucketCalculator, BuildingInfoTemplate){
 
 
