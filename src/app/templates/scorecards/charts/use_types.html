@@ -1,25 +1,45 @@
 <div class="use-types">
   <div class="use-types-text-container text-copy">Text will go here</div>
+
+  <div class="use-types-table">
+    <table>
+      <tr class="use-types-table-headers text-table-header">
+        <th>Square footage (SF)</th>
+        <th>OSE building ID</th>
+        <th>Year built</th>
+      </tr>
+      <tr class="use-types-table-values text-table">
+        <td><%= _totalSquareFootage %></td>
+        <td><%= _buildingId %></td>
+        <td><%= _yearBuilt %></td>
+      </tr>
+    </table>
+  </div>
+
   <div class="use-types-chart-container">
     <div class="use-types-chart" />
     <div class="use-types-legend">
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color first"></div>
         <div class="use-types-legend-swatch-text text-copy">
-          <%= largestpropertyusetype %>
+          <%= _legendFirstText %>
         </div>
       </div>
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color second"></div>
         <div class="use-types-legend-swatch-text text-copy">
-          <%= secondlargestpropertyusetype %>
+          <%= _legendSecondText %>
         </div>
       </div>
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color third"></div>
         <div class="use-types-legend-swatch-text text-copy">
-          <%= thirdlargestpropertyusetype %>
+          <%= _legendThirdText %>
         </div>
+      </div>
+      <div class="use-types-legend-note text-asterisk">
+        * Note: Square footage by property use type is based on self reported
+        data.
       </div>
     </div>
   </div>

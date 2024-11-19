@@ -21,35 +21,66 @@ define([
     chartData: function () {
       const data = this.data;
 
-      return data[0];
-    },
-
-    renderChart: function (buildingData) {
-      const FONT_SIZE = 12;
-
       const {
-        largestpropertyusetype,
         largestpropertyusetypegfa,
-        secondlargestpropertyusetype,
         secondlargestpropertyusetypegfa,
+        thirdlargestpropertyusetypegfa,
+        largestpropertyusetype,
+        secondlargestpropertyusetype,
         thirdlargestpropertyusetype,
-        thirdlargestpropertyusetypegfa
-      } = buildingData;
+        id,
+        yearbuilt_string,
+        yearbuilt
+      } = data[0];
 
-      const totalPropertyGfa =
-        largestpropertyusetypegfa +
-        secondlargestpropertyusetypegfa +
-        thirdlargestpropertyusetypegfa;
+      const totalGfa =
+        Number(largestpropertyusetypegfa) +
+        Number(secondlargestpropertyusetypegfa) +
+        Number(thirdlargestpropertyusetypegfa);
 
       const chartData = {
-        first: (largestpropertyusetypegfa / totalPropertyGfa) * 100,
-        second: (secondlargestpropertyusetypegfa / totalPropertyGfa) * 100,
-        third: (thirdlargestpropertyusetypegfa / totalPropertyGfa) * 100
+        first: (largestpropertyusetypegfa / totalGfa) * 100,
+        second: (secondlargestpropertyusetypegfa / totalGfa) * 100,
+        third: (thirdlargestpropertyusetypegfa / totalGfa) * 100
       };
+
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      }
+
+      const _totalSquareFootage = numberWithCommas(totalGfa);
+
+      const _legendFirstText = `${Math.round(
+        chartData.first
+      )}% ${largestpropertyusetype}`;
+      const _legendSecondText = `${Math.round(
+        chartData.second
+      )}% ${secondlargestpropertyusetype}`;
+      const _legendThirdText = `${Math.round(
+        chartData.third
+      )}% ${thirdlargestpropertyusetype}`;
+
+      const _buildingId = id;
+
+      const _yearBuilt = yearbuilt_string ?? `${yearbuilt}`;
+
+      return {
+        chartData,
+        _totalSquareFootage,
+        _legendFirstText,
+        _legendSecondText,
+        _legendThirdText,
+        _buildingId,
+        _yearBuilt
+      };
+    },
+
+    renderChart: function (chartData) {
+      const FONT_SIZE = 12;
 
       const parent = d3.select(this.viewParent).select('.use-types-chart');
 
-      if (!parent.node()) return;
+      if (!parent.node() || !chartData) return;
 
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
@@ -116,7 +147,7 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData);
+      this.renderChart(chartData?.chartData);
     }
   });
 

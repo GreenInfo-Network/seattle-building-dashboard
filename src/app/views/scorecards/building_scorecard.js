@@ -415,7 +415,7 @@ define([
 
       // ----------------------------------------------------------------------------------------------------
 
-      // render Building use type chart (beps.js)
+      // render Building use type chart (use_types.js)
       if (!this.charts['eui'].chart_use_types) {
         this.charts['eui'].chart_use_types = new UseTypesView({
           formatters: this.formatters,
