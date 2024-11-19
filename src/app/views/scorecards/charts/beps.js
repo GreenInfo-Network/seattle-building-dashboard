@@ -162,7 +162,7 @@ define([
 
       // Add year targets
       const targetYears = Object.entries(buildingData)
-        .filter(([k, v]) => k.startsWith('BEPStarget_'))
+        .filter(([k, v]) => k.startsWith('bepstarget_'))
         .reduce((acc, [k, v]) => {
           const year = k.split('_')[1];
           acc[year] = Number(v);
