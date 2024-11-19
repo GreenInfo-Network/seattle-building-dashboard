@@ -6,6 +6,7 @@ define([
   '../../../lib/wrap',
   './charts/fueluse',
   './charts/beps',
+  './charts/use_types',
   './charts/performance_standard',
   './charts/shift',
   './charts/comments',
@@ -20,6 +21,7 @@ define([
   wrap,
   FuelUseView,
   BepsView,
+  UseTypesView,
   PerformanceStandardView,
   ShiftView,
   CommentView,
@@ -410,6 +412,24 @@ define([
 
       el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
       this.charts['eui'].chart_beps.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // render Building use type chart (beps.js)
+      if (!this.charts['eui'].chart_use_types) {
+        this.charts['eui'].chart_use_types = new UseTypesView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          parent: el[0]
+        });
+      }
+
+      el.find('#use-types-chart').html(
+        this.charts['eui'].chart_use_types.render()
+      );
+      this.charts['eui'].chart_use_types.afterRender();
 
       // ----------------------------------------------------------------------------------------------------
 

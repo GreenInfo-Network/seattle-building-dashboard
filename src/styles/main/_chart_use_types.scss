@@ -1,0 +1,85 @@
+#use-types-chart {
+  $first: #6baed6;
+  $second: #c6dbef;
+  $third: #eff3ff;
+
+  width: 100%;
+
+  .use-types {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &-chart-container {
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    &-legend {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+
+      &-swatch {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        &-color {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 1rem;
+          height: 1rem;
+          border-radius: 2px;
+          border: 1px solid $paragraph;
+
+          &.first {
+            background-color: $first;
+          }
+
+          &.second {
+            background-color: $second;
+          }
+
+          &.third {
+            background-color: $third;
+          }
+        }
+
+        &-text {
+        }
+      }
+    }
+
+    &-chart {
+      font-size: 0.8rem;
+      height: 250px;
+      width: 50%;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      &-section {
+        stroke: $paragraph;
+        stroke-width: 1px;
+      }
+
+      &-first {
+        fill: $first;
+      }
+
+      &-second {
+        fill: $second;
+      }
+
+      &-third {
+        fill: $third;
+      }
+    }
+  }
+}
