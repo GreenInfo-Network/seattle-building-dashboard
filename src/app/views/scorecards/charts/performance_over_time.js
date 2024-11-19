@@ -21,15 +21,13 @@ define([
     chartData: function () {
       const data = this.data;
 
-      const chartData = data[0];
-
-      console.log(chartData);
-
-      const example = {
-        n: '636',
-        name: 'Helen',
-        year: '1880'
-      };
+      const chartData = data.map(v => {
+        return {
+          n: v?.value,
+          name: v?.id,
+          year: v?.year
+        };
+      });
 
       return {
         chartData
@@ -38,6 +36,7 @@ define([
 
     renderChart: function (chartData) {
       const FONT_SIZE = 12;
+      const AXIS_PADDING = 6;
 
       const parent = d3
         .select(this.viewParent)
@@ -48,10 +47,8 @@ define([
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
 
-      // -----------------------------------------------------------------
-
       // set the dimensions and margins of the graph
-      var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+      var margin = { top: 10, right: 30, bottom: 40, left: 60 },
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
 
@@ -63,88 +60,135 @@ define([
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-      //Read the data
-      d3.csv(
-        'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv',
-        function (data) {
-          console.log(data);
+      // Add a background
+      svg
+        .append('rect')
+        .attr('class', 'performance-over-time-background-rect')
+        .attr('width', outerWidth - margin.left)
+        .attr('height', height);
 
-          // group the data: I want to draw one line per group
-          var sumstat = d3
-            .nest() // nest function allows to group the calculation per level of a factor
-            .key(function (d) {
-              return d.name;
-            })
-            .entries(data);
+      // group the data: I want to draw one line per group
+      var sumstat = d3
+        .nest() // nest function allows to group the calculation per level of a factor
+        .key(function (d) {
+          return d.name;
+        })
+        .entries(chartData);
 
-          // Add X axis --> it is a date format
-          var x = d3
-            .scaleLinear()
-            .domain(
-              d3.extent(data, function (d) {
-                return d.year;
-              })
-            )
-            .range([0, width]);
-          svg
-            .append('g')
-            .attr('transform', 'translate(0,' + height + ')')
-            .call(d3.axisBottom(x).ticks(5));
+      // Add X axis --> it is a date format
+      var x = d3
+        .scaleLinear()
+        .domain(
+          d3.extent(chartData, function (d) {
+            return d.year;
+          })
+        )
+        .range([0, width]);
 
-          // Add Y axis
-          var y = d3
-            .scaleLinear()
-            .domain([
-              0,
-              d3.max(data, function (d) {
-                return +d.n;
-              })
-            ])
-            .range([height, 0]);
-          svg.append('g').call(d3.axisLeft(y));
+      const xAxisTicks = [...new Set(chartData.map(d => d.year))];
 
-          // color palette
-          var res = sumstat.map(function (d) {
-            return d.key;
-          }); // list of group names
-          var color = d3
-            .scaleOrdinal()
-            .domain(res)
-            .range([
-              '#e41a1c',
-              '#377eb8',
-              '#4daf4a',
-              '#984ea3',
-              '#ff7f00',
-              '#ffff33',
-              '#a65628',
-              '#f781bf',
-              '#999999'
-            ]);
+      const xAxis = svg
+        .append('g')
+        .attr(`transform`, `translate(0,${height + AXIS_PADDING})`)
+        .attr('class', 'text-chart')
+        .call(
+          d3
+            .axisBottom(x)
+            .tickSize(0)
+            .tickValues(xAxisTicks)
+            .tickFormat(v => `${v}`)
+        );
 
-          // Draw the line
-          svg
-            .selectAll('.line')
-            .data(sumstat)
-            .enter()
-            .append('path')
-            .attr('fill', 'none')
-            .attr('stroke', function (d) {
-              return color(d.key);
-            })
-            .attr('stroke-width', 1.5)
-            .attr('d', function (d) {
-              return d3
-                .line()
-                .x(function (d) {
-                  return x(d.year);
-                })
-                .y(function (d) {
-                  return y(+d.n);
-                })(d.values);
-            });
-        }
+      svg
+        .append('text')
+        .attr('class', 'performance-over-time-axis-label text-chart')
+        .attr('text-anchor', 'middle')
+        .attr('y', height + (AXIS_PADDING * 4 + FONT_SIZE))
+        .attr('x', width / 2)
+        .text('Reporting year');
+
+      // Make the x axis line invisible
+      xAxis.select('.domain').attr('stroke', 'transparent');
+
+      function roundnum(num) {
+        return Math.ceil(num / 50) * 50;
+      }
+
+      const max = roundnum(
+        d3.max(chartData, function (d) {
+          return +d.n;
+        })
       );
+      // Add Y axis
+      var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+
+      const yAxis = svg
+        .append('g')
+        .attr(`transform`, `translate(${AXIS_PADDING * -1}, 0)`)
+        .attr('class', 'text-chart')
+        .call(
+          d3
+            .axisLeft(y)
+            .ticks(max / 50)
+            .tickSize(0)
+        );
+
+      // Make the y axis line invisible
+      yAxis.select('.domain').attr('stroke', 'transparent');
+
+      svg
+        .append('text')
+        .attr('class', 'performance-over-time-axis-label text-chart')
+        .attr('text-anchor', 'middle')
+        .attr('y', -1 * (AXIS_PADDING * 4 + FONT_SIZE))
+        .attr('x', height / -2)
+        .attr('transform', 'rotate(-90)')
+        .text('Weather Normalized Site EUI (kBtu/SF)');
+
+      // Draw the background lines
+      const yAxisExtent = [0, max];
+
+      for (let i = yAxisExtent[0] + 50; i < yAxisExtent[1]; i += 50) {
+        svg
+          .append('line')
+          .attr('class', 'performance-over-time-background-line')
+          .attr('x1', 0)
+          .attr('y1', y(i))
+          .attr('x2', outerWidth)
+          .attr('y2', y(i));
+      }
+
+      // Draw the line
+      svg
+        .selectAll('.line')
+        .data(sumstat)
+        .enter()
+        .append('path')
+        .attr('fill', 'none')
+        .attr('class', d => `performance-over-time-${d.key}-line`)
+        .attr('d', function (d) {
+          return d3
+            .line()
+            .x(function (d) {
+              return x(d.year);
+            })
+            .y(function (d) {
+              return y(+d.n);
+            })(d.values);
+        });
+
+      // Draw the dots
+      for (const graphLine of sumstat) {
+        const { key, values } = graphLine;
+
+        for (const v of values) {
+          svg
+            .append('circle')
+            .attr('class', `performance-over-time-${key}-dot`)
+            .attr('cx', x(v.year))
+            .attr('cy', y(+v.n));
+        }
+      }
     },
 
     render: function () {

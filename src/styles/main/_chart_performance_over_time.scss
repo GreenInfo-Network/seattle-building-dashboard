@@ -6,6 +6,17 @@
     flex-direction: column;
     width: 100%;
 
+    &-background-rect {
+      fill: white;
+      rx: $small-border-radius;
+      ry: $small-border-radius;
+    }
+
+    &-background-line {
+      stroke: $light-gray;
+      stroke-width: 1.5;
+    }
+
     &-chart-container {
       display: flex;
       width: 100%;
@@ -20,6 +31,58 @@
       svg {
         height: 100%;
         width: 100%;
+      }
+    }
+
+    &-axis-label {
+    }
+
+    &-building-line {
+      stroke: $dark-blue;
+      stroke-width: 1.5;
+    }
+
+    &-average-line {
+      stroke: $gray;
+      stroke-width: 1.5;
+    }
+
+    &-building-dot {
+      fill: $dark-blue;
+      r: 0.25rem;
+    }
+
+    &-average-dot {
+      fill: $gray;
+      r: 0.25rem;
+    }
+
+    &-legend {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      &-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      &-circle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+
+        &.average {
+          background-color: $gray;
+        }
+
+        &.building {
+          background-color: $dark-blue;
+        }
+      }
+
+      &-text {
       }
     }
   }
