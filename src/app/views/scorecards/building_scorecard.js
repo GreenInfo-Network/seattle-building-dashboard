@@ -7,6 +7,7 @@ define([
   './charts/fueluse',
   './charts/beps',
   './charts/use_types',
+  './charts/performance_over_time',
   './charts/performance_standard',
   './charts/shift',
   './charts/comments',
@@ -22,6 +23,7 @@ define([
   FuelUseView,
   BepsView,
   UseTypesView,
+  PerformanceOverTimeView,
   PerformanceStandardView,
   ShiftView,
   CommentView,
@@ -430,6 +432,25 @@ define([
         this.charts['eui'].chart_use_types.render()
       );
       this.charts['eui'].chart_use_types.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // render performance over time chart (performance_over_time.js)
+      if (!this.charts['eui'].chart_performance_over_time) {
+        this.charts['eui'].chart_performance_over_time =
+          new PerformanceOverTimeView({
+            formatters: this.formatters,
+            data: [building],
+            name: name,
+            year: selected_year,
+            parent: el[0]
+          });
+      }
+
+      el.find('#performance-over-time-chart').html(
+        this.charts['eui'].chart_performance_over_time.render()
+      );
+      this.charts['eui'].chart_performance_over_time.afterRender();
 
       // ----------------------------------------------------------------------------------------------------
 

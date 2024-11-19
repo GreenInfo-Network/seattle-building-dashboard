@@ -1,0 +1,26 @@
+#performance-over-time-chart {
+  width: 100%;
+
+  .performance-over-time {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &-chart-container {
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    &-chart {
+      font-size: 0.8rem;
+      height: 250px;
+      width: 100%;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
