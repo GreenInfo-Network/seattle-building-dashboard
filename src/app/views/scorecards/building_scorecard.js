@@ -57,7 +57,14 @@ define([
 
     events: {
       'click .sc-toggle--input': 'toggleView',
-      'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart'
+      'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart',
+      'click .building-main-overview-button': 'onClickOut'
+    },
+
+    onClickOut: function (evt) {
+      const nextTab = evt?.target?.id;
+      if (!nextTab) return;
+      this.state.set({ tab: nextTab });
     },
 
     onChangeTab: function () {
