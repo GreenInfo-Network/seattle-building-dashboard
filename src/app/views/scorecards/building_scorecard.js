@@ -8,6 +8,8 @@ define([
   './charts/beps',
   './charts/use_types',
   './charts/performance_over_time',
+  './charts/first_ghgi_target',
+  //
   './charts/performance_standard',
   './charts/shift',
   './charts/comments',
@@ -24,6 +26,8 @@ define([
   BepsView,
   UseTypesView,
   PerformanceOverTimeView,
+  FirstGhgiTargetView,
+  //
   PerformanceStandardView,
   ShiftView,
   CommentView,
@@ -479,6 +483,30 @@ define([
         this.charts['eui'].chart_performance_over_time.render()
       );
       this.charts['eui'].chart_performance_over_time.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+      let building_years = Object.keys(building_data).sort(function (a, b) {
+        return parseInt(a) - parseInt(b);
+      });
+
+      const latestYear = building_years[building_years.length - 1];
+
+      // render first ghgi target chart (first_ghgi_target.js)
+      if (!this.charts['eui'].chart_first_ghgi_target) {
+        this.charts['eui'].chart_first_ghgi_target = new FirstGhgiTargetView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          latestYear: latestYear,
+          parent: el[0]
+        });
+      }
+
+      el.find('#first-ghgi-target-chart').html(
+        this.charts['eui'].chart_first_ghgi_target.render()
+      );
+      this.charts['eui'].chart_first_ghgi_target.afterRender();
 
       // ----------------------------------------------------------------------------------------------------
 
