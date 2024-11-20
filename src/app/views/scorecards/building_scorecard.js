@@ -47,6 +47,11 @@ define([
 
       this.listenTo(this.state, 'change:tab', this.onChangeTab);
 
+      // Re-render when re-sizing
+      $(window).on('resize', () => {
+        this.render();
+      });
+
       this.charts = {};
 
       return this;
