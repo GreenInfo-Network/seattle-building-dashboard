@@ -9,6 +9,7 @@ define([
   './charts/use_types',
   './charts/performance_over_time',
   './charts/first_ghgi_target',
+  './charts/first_compliance_interval',
   //
   './charts/performance_standard',
   './charts/shift',
@@ -27,6 +28,7 @@ define([
   UseTypesView,
   PerformanceOverTimeView,
   FirstGhgiTargetView,
+  FirstComplianceIntervalView,
   //
   PerformanceStandardView,
   ShiftView,
@@ -485,14 +487,15 @@ define([
       this.charts['eui'].chart_performance_over_time.afterRender();
 
       // ----------------------------------------------------------------------------------------------------
-      let building_years = Object.keys(building_data).sort(function (a, b) {
-        return parseInt(a) - parseInt(b);
-      });
-
-      const latestYear = building_years[building_years.length - 1];
 
       // render first ghgi target chart (first_ghgi_target.js)
       if (!this.charts['eui'].chart_first_ghgi_target) {
+        let building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+
+        const latestYear = building_years[building_years.length - 1];
+
         this.charts['eui'].chart_first_ghgi_target = new FirstGhgiTargetView({
           formatters: this.formatters,
           data: [building],
@@ -508,6 +511,33 @@ define([
       );
       this.charts['eui'].chart_first_ghgi_target.afterRender();
 
+      // ----------------------------------------------------------------------------------------------------
+
+      // TODO check for flag
+
+      // render first compliance interval chart (first_compliance_interval.js)
+      if (!this.charts['eui'].chart_first_compliance_interval) {
+        let building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+
+        const latestYear = building_years[building_years.length - 1];
+
+        this.charts['eui'].chart_first_compliance_interval =
+          new FirstComplianceIntervalView({
+            formatters: this.formatters,
+            data: [building],
+            name: name,
+            year: selected_year,
+            latestYear: latestYear,
+            parent: el[0]
+          });
+      }
+
+      el.find('#first-compliance-interval-chart').html(
+        this.charts['eui'].chart_first_compliance_interval.render()
+      );
+      this.charts['eui'].chart_first_compliance_interval.afterRender();
       // ----------------------------------------------------------------------------------------------------
 
       // covered in perf over time

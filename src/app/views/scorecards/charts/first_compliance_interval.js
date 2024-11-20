@@ -4,11 +4,11 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
-  'text!templates/scorecards/charts/first_ghgi_target.html'
-], function ($, _, Backbone, d3, wrap, FirstGhgiTargetTemplate) {
-  var FirstGhgiTargetView = Backbone.View.extend({
+  'text!templates/scorecards/charts/first_compliance_interval.html'
+], function ($, _, Backbone, d3, wrap, FirstComplianceIntervalTemplate) {
+  var FirstComplianceIntervalView = Backbone.View.extend({
     initialize: function (options) {
-      this.template = _.template(FirstGhgiTargetTemplate);
+      this.template = _.template(FirstComplianceIntervalTemplate);
       this.formatters = options.formatters;
       this.data = options.data;
       this.building_name = options.name || '';
@@ -22,18 +22,34 @@ define([
     chartData: function () {
       const data = this.data;
 
+      // site_eui;
+      // site_eui_wn;
+      // source_eui;
+      // source_eui_wn;
+      // building_type_eui;
+      // building_type_eui_wn;
+      // cbps_date;
+      // cbps_flag;
+      // cbpseuitarget;
+
       const {
-        total_ghg_emissions_intensity,
-        bepstarget_2031,
-        bepstarget_2036,
-        bepstarget_2041,
-        bepstarget_2046,
-        beps_firstcomplianceyear
+        site_eui_wn, // current
+        cbpseuitarget, //target
+        cbps_date, // compliance year
+        cbps_flag, //compliance flag TODO if flag and no target, dont show
+        source_eui_wn // need to check what this is exactly...
       } = data[0];
 
-      const nextTargetValue = data[0][`bepstarget_${beps_firstcomplianceyear}`];
+      function roundnum(num) {
+        return Math.ceil(num / 50) * 50;
+      }
 
-      const currentValue = total_ghg_emissions_intensity;
+      // TODO confirm this is the correct thing to be using
+      const maxVal = roundnum(source_eui_wn);
+
+      const nextTargetValue = cbpseuitarget;
+
+      const currentValue = site_eui_wn;
 
       let greenBar = 0;
       let greenStripedBar = 0;
@@ -48,23 +64,23 @@ define([
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
 
-        whiteBackground = 5 - (redBar + greenBar);
+        whiteBackground = maxVal - (redBar + greenBar);
 
-        redBarLabel = `(GHGI current) ${currentValue}`;
-        greenBarLabel = `(GHGI target) ${nextTargetValue}`;
+        redBarLabel = `(EUI current) ${currentValue}`;
+        greenBarLabel = `(EUI target) ${nextTargetValue}`;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
 
-        whiteBackground = 5 - (greenStripedBar + greenBar);
+        whiteBackground = maxVal - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${nextTargetValue}`;
-        greenBarLabel = `(GHGI current) ${currentValue}`;
+        greenStripedBarLabel = `(EUI target) ${nextTargetValue}`;
+        greenBarLabel = `(EUI current) ${currentValue}`;
       }
 
       const chartData = [
         {
-          group: 'first_ghgi_target',
+          group: 'first_compliance_interval',
           greenBar,
           greenStripedBar,
           redBar,
@@ -76,17 +92,18 @@ define([
       ];
 
       return {
-        chartData
+        chartData,
+        maxVal
       };
     },
 
-    renderChart: function (chartData) {
+    renderChart: function (chartData, maxVal) {
       const FONT_SIZE = 12;
       const PADDING = 6;
 
       const parent = d3
         .select(this.viewParent)
-        .select('.first-ghgi-target-chart');
+        .select('.first-compliance-interval-chart');
 
       if (!parent.node() || !chartData) return;
 
@@ -106,7 +123,7 @@ define([
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-      const groups = ['first_ghgi_target'];
+      const groups = ['first_compliance_interval'];
       // The order here matters! greenBar should always be first
       const subgroups = [
         'greenBar',
@@ -119,10 +136,10 @@ define([
       var y = d3.scaleBand().domain(groups).range([0, height]).padding([0.2]);
 
       // Add X axis
-      var x = d3.scaleLinear().domain([0, 5]).range([0, width]);
+      var x = d3.scaleLinear().domain([0, maxVal]).range([0, width]);
       const xAxis = svg
         .append('g')
-        .attr('class', 'first-ghgi-target-x-axis text-chart')
+        .attr('class', 'first-compliance-interval-x-axis text-chart')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x).ticks(10).tickSize(0));
 
@@ -136,9 +153,9 @@ define([
           'transform',
           `translate(${width / 2},${height + FONT_SIZE + FONT_SIZE + PADDING})`
         )
-        .attr('class', 'first-ghgi-target-x-axis-label text-chart')
+        .attr('class', 'first-compliance-interval-x-axis-label text-chart')
         .attr('text-anchor', 'middle')
-        .text('GHGI (kg CO2e/SF/year)');
+        .text('EUI (kBtu/SF/year)');
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(chartData);
@@ -152,7 +169,7 @@ define([
         .attr('height', 4)
         .append('path')
         .attr('d', 'M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2')
-        .attr('class', 'first-ghgi-target-pattern');
+        .attr('class', 'first-compliance-interval-pattern');
 
       // Show the bars
       svg
@@ -163,7 +180,7 @@ define([
         .enter()
         .append('g')
         .attr('class', d => {
-          return `first-ghgi-target-${d.key}`;
+          return `first-compliance-interval-${d.key}`;
         })
         .selectAll('rect')
         // enter a second time = loop subgroup per subgroup to add all rectangles
@@ -200,11 +217,11 @@ define([
       for (const entry of Object.entries(labelData)) {
         const [k, v] = entry;
 
-        const barName = `.first-ghgi-target-${k.replace('Label', '')}`;
+        const barName = `.first-compliance-interval-${k.replace('Label', '')}`;
 
         d3.select(barName)
           .append('text')
-          .attr('class', 'first-ghgi-target-x-axis-label text-chart')
+          .attr('class', 'first-compliance-interval-x-axis-label text-chart')
           .attr('text-anchor', labelTextAnchor[k])
           .attr('x', d => {
             return x(d[0][1]);
@@ -235,9 +252,9 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData);
+      this.renderChart(chartData?.chartData, chartData?.maxVal);
     }
   });
 
-  return FirstGhgiTargetView;
+  return FirstComplianceIntervalView;
 });

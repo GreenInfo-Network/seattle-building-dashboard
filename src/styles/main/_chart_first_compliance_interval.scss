@@ -1,0 +1,55 @@
+#first-compliance-interval-chart {
+  width: 100%;
+
+  .first-compliance-interval {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &-chart-container {
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    &-chart {
+      font-size: 0.8rem;
+      height: 100;
+      width: 100%;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    &-x-axis {
+      margin: 0.5rem;
+
+      &-label {
+        fill: $paragraph;
+      }
+    }
+
+    &-pattern {
+      stroke-width: 2;
+      stroke: green;
+    }
+
+    &-greenBar {
+      fill: $green;
+    }
+
+    &-redBar {
+      fill: $dataviz-negative;
+    }
+
+    &-greenStripedBar {
+      fill: url(#diagonalHatch);
+    }
+
+    &-whiteBackground {
+      fill: $white;
+    }
+  }
+}
