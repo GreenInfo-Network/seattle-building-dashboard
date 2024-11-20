@@ -15,8 +15,7 @@ define([
   './charts/shift',
   './charts/comments',
   'models/building_color_bucket_calculator',
-  'text!templates/scorecards/building.html',
-  './temp-extract'
+  'text!templates/scorecards/building.html'
 ], function (
   $,
   _,
@@ -34,8 +33,7 @@ define([
   ShiftView,
   CommentView,
   BuildingColorBucketCalculator,
-  BuildingTemplate,
-  tempExtract
+  BuildingTemplate
 ) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function (options) {

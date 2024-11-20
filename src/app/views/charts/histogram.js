@@ -5,7 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
   d3
 ) {
   var HistogramView = Backbone.View.extend({
-    className: 'histogram'
+    className: 'histogram',
 
     initialize: function (options) {
       this.aspectRatio = options.aspectRatio || 7 / 1;
@@ -22,10 +22,11 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
       this.chart = d3
         .select(this.el)
         .append('svg')
-        .style({ width: '100%', height: '100%' })
+        .attr('width', '100%')
+        .attr('height', '100%')
         .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
         .attr('preserveAspectRatio', 'none')
-        .style('background', 'transparent');
+        .attr('background', 'transparent');
 
       this.g = this.chart.append('g');
     },
@@ -106,13 +107,13 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
         .range([0, this.height]);
 
       const xScale = d3
-        .scaleOrdinal()
+        .scaleBand()
         .domain(d3.range(0, this.slices))
-        .rangeBands([0, this.width], 0.2, 0);
+        .range([0, this.width]);
 
       // threshold types use rounded bands for convienence
       if (isThreshold) {
-        xScale.rangeRoundBands([0, this.width], 0.1, 0);
+        xScale.rangeRound([0, this.width]);
       }
 
       const bardata = xScale.domain().map((d, i) => {
@@ -120,12 +121,12 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
           ...gradients[i],
           idx: i,
           data: d,
-          xpos: xScale(d) + xScale.rangeBand() / 2
+          xpos: xScale(d) + xScale.bandwidth() / 2
         };
       });
 
-      const filterValueForXpos = d3.scale
-        .linear()
+      const filterValueForXpos = d3
+        .scaleLinear()
         .range(this.filterRange)
         .domain([0, this.width]);
 
@@ -137,10 +138,10 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
         return d.color;
       });
 
-      bars.enter().append('rect');
-
       bars
-        .style('fill', (d, i) => {
+        .enter()
+        .append('rect')
+        .attr('fill', d => {
           // not on a continous scale
           // so just need the color from data
           if (isThreshold) return d.color;
@@ -151,14 +152,14 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
           //
           return colorScale(filterValueForXpos(d.xpos));
         })
-        .attr({
-          width: () => {
-            return xScale.rangeBand();
-          },
-          'stroke-width': 0,
-          height: d => yScale(d.count),
-          x: (d, i) => xScale(d.data),
-          y: d => height - yScale(d.count)
+        .attr('width', xScale.bandwidth())
+        .attr('stroke-width', 0)
+        .attr('height', d => yScale(d.count))
+        .attr('x', d => {
+          return xScale(d.data);
+        })
+        .attr('y', d => {
+          return height - yScale(d.count);
         });
 
       bars.exit().remove();
