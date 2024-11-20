@@ -947,6 +947,7 @@ define([
       };
     },
 
+    // TODO this is all still V3. Do we need it at all?
     // Render Energy Use Compared To Average and Energy Star Score Compared To Average
     renderCompareChart: function (
       config,
