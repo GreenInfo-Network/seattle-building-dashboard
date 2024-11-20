@@ -1,5 +1,6 @@
 // Typography
-$base-font-family: 'Ubuntu', 'Helvetica Neue', 'Helvetica', 'Roboto', 'Arial', sans-serif;
+$base-font-family: 'Open Sans', 'Ubuntu', 'Helvetica Neue', 'Helvetica',
+  'Roboto', 'Arial', sans-serif;
 $heading-font-family: $base-font-family;
 
 // Font Sizes
@@ -11,29 +12,27 @@ $heading-line-height: 1.2;
 
 // Other Sizes
 $base-border-radius: 1em;
-$base-spacing: $base-line-height * .8em;
+$base-spacing: $base-line-height * 0.8em;
 $small-spacing: calc($base-spacing / 2);
 $base-z-index: 0;
 
 // Colors
 $dark-gray: #333;
 $brownish-gray: #5d5d5d;
-$medium-gray: darken(#d0d0d0,10%);
+$medium-gray: darken(#d0d0d0, 10%);
 $light-gray: #ddd;
 $spinner-gray: #666;
 $orange: #0047ba;
 $blue: #0047ba;
-$blue-new: #003DA5;
+$blue-new: #003da5;
 $normal-text: $orange;
 
-$real-orange: #DE8F41;
+$real-orange: #de8f41;
 
 $metric-left-width: 30%;
 $metric-header-height: 3.75em;
 $metric-footer-height: 4em; // Building comparsion column height
 $footer-height: 2em; // Footer height
-
-
 
 // Font Colors
 $base-background-color: #f2f2f2;
@@ -49,7 +48,8 @@ $base-border: $base-border-size solid $base-border-color;
 
 // Forms
 $form-box-shadow: inset 0 1px 3px rgba(#000, 0.06);
-$form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($action-color, $lightness: -5%, $alpha: -0.3);
+$form-box-shadow-focus: $form-box-shadow,
+  0 0 5px adjust-color($action-color, $lightness: -5%, $alpha: -0.3);
 
 $header-height: 0em;
 
