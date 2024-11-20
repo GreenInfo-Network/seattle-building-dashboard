@@ -109,7 +109,8 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
       const xScale = d3
         .scaleBand()
         .domain(d3.range(0, this.slices))
-        .range([0, this.width]);
+        .range([0, this.width])
+        .padding(0.2);
 
       // threshold types use rounded bands for convienence
       if (isThreshold) {
