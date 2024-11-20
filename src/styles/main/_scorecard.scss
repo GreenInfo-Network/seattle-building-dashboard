@@ -91,7 +91,8 @@ $dataviz-negative: #94778b;
   font-size: $text-size-regular;
   // semibold
   font-weight: 600;
-  color: $paragraph;
+  color: $dark-blue;
+  text-decoration: underline;
 }
 
 .text-asterisk {
