@@ -47,6 +47,7 @@ define([
       // TODO confirm this is the correct thing to be using
       const maxVal = roundnum(source_eui_wn);
 
+      // TODO limit to two decimals
       const nextTargetValue = cbpseuitarget;
 
       const currentValue = site_eui_wn;
