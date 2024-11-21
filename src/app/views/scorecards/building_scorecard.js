@@ -369,6 +369,13 @@ define([
         id
       );
 
+      var {
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046
+      } = building;
+
       el.html(
         this.template({
           active: 'active',
@@ -394,7 +401,11 @@ define([
           total_ghg,
           ghg_direction,
           ghg_direction_statement,
-          tab: this.state.get('tab')
+          tab: this.state.get('tab'),
+          bepstarget_2031,
+          bepstarget_2036,
+          bepstarget_2041,
+          bepstarget_2046
         })
       );
 

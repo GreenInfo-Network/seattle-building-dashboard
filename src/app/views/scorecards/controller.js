@@ -94,8 +94,8 @@ define([
       if (this.state.get('report_active') === true) {
         // TODO set back to benchmark_overview
         // this.state.set({ tab: 'benchmark_overview' });
-        // this.state.set({ tab: 'emissions_targets' });
-        this.state.set({ tab: 'energy_targets' });
+        this.state.set({ tab: 'emissions_targets' });
+        // this.state.set({ tab: 'energy_targets' });
       }
       this.render();
     },

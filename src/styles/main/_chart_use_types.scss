@@ -44,10 +44,13 @@
         td {
           text-align: center;
           border-right: 1px solid $light-gray;
+          border-bottom: 1px solid $light-gray;
+          padding: 0.5rem;
         }
 
         td:last-of-type {
           border-right: none;
+          border-bottom: none;
         }
       }
     }
