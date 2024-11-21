@@ -76,7 +76,8 @@ define([
       ];
 
       return {
-        chartData
+        chartData,
+        beps_firstcomplianceyear
       };
     },
 

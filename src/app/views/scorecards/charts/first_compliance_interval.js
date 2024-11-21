@@ -94,7 +94,8 @@ define([
 
       return {
         chartData,
-        maxVal
+        maxVal,
+        cbps_date
       };
     },
 

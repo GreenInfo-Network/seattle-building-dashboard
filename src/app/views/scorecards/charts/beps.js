@@ -49,10 +49,10 @@ define([
 
       if (!parent.node()) return;
 
-      const margin = { top: 25, right: 0, bottom: 50, left: 50 };
-      // TODO use the parent
-      const outerWidth = 250; // parent.node().offsetWidth;
-      const outerHeight = 250; // parent.node().offsetHeight;
+      const margin = { top: 0, right: 0, bottom: 50, left: 50 };
+
+      const outerWidth = parent.node().offsetWidth;
+      const outerHeight = parent.node().offsetHeight;
 
       const height = outerHeight - margin.top - margin.bottom;
       const width = (outerWidth - margin.left - margin.right) / 2;
@@ -68,9 +68,7 @@ define([
         .append('g')
         .attr(
           'transform',
-          `translate(${margin.left}, ${
-            margin.top + X_AXIS_PADDING + FONT_SIZE
-          })`
+          `translate(${margin.left}, ${margin.top + FONT_SIZE})`
         );
 
       let groups = ['ghgi'];
