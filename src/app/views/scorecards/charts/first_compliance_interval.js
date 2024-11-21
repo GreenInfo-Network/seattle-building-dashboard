@@ -50,7 +50,7 @@ define([
       // TODO limit to two decimals
       const nextTargetValue = cbpseuitarget;
 
-      const currentValue = site_eui_wn;
+      const currentValue = Number(site_eui_wn).toFixed(1);
 
       let greenBar = 0;
       let greenStripedBar = 0;

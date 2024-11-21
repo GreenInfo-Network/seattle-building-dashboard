@@ -20,28 +20,41 @@ define([
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
+      const buildingData = data[0];
 
-      return data;
+      const { gas_ghg_percent, electricity_ghg_percent, steam_ghg_percent } =
+        buildingData;
+
+      return {
+        chartData: buildingData,
+        _showGas: !isNaN(gas_ghg_percent) && Number(gas_ghg_percent) > 0,
+        _showElectricity:
+          !isNaN(electricity_ghg_percent) &&
+          Number(electricity_ghg_percent) > 0,
+        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0
+      };
     },
 
-    renderChart: function (building) {
-      const buildingData = building[0];
-
+    renderChart: function (buildingData) {
       const maxGhgi = 5;
       const totalGhgi = buildingData?.total_ghg_emissions_intensity;
 
       const divisor = 100 / maxGhgi;
       const multiplier = totalGhgi / maxGhgi;
 
+      let { gas_ghg_percent, electricity_ghg_percent, steam_ghg_percent } =
+        buildingData;
+
+      gas_ghg_percent = Number(gas_ghg_percent ?? 0);
+      electricity_ghg_percent = Number(electricity_ghg_percent ?? 0);
+      steam_ghg_percent = Number(steam_ghg_percent ?? 0);
+
       const chartData = [
         {
           group: 'ghgi',
-          gas: ((buildingData?.gas_ghg_percent * 100) / divisor) * multiplier,
-          steam:
-            ((buildingData?.steam_ghg_percent * 100) / divisor) * multiplier,
-          electricity:
-            ((buildingData?.electricity_ghg_percent * 100) / divisor) *
-            multiplier
+          gas: ((gas_ghg_percent * 100) / divisor) * multiplier,
+          steam: ((steam_ghg_percent * 100) / divisor) * multiplier,
+          electricity: ((electricity_ghg_percent * 100) / divisor) * multiplier
         }
       ];
 
@@ -194,7 +207,7 @@ define([
           .append('text')
           .attr('class', 'beps-bar-target-text  text-chart')
           .attr('font-size', FONT_SIZE)
-          .attr('x', outerWidth - margin.left - margin.right)
+          .attr('x', outerWidth - margin.left - margin.right - X_AXIS_PADDING)
           .attr('y', yPos - X_AXIS_PADDING)
           .text(targetText);
       }
@@ -206,7 +219,7 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData);
+      this.renderChart(chartData.chartData);
     }
   });
 

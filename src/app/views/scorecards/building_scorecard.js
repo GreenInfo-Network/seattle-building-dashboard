@@ -394,11 +394,11 @@ define([
           costs: this.costs(building, selected_year),
           compareEui: this.compare(building, 'eui', config, chartdata),
           compareEss: this.compare(building, 'ess', config, essChartData),
-          site_eui_wn: site_eui_wn.toLocaleString(),
+          site_eui_wn: Number(site_eui_wn).toFixed(1),
           eui_difference,
           eui_direction,
           eui_direction_statement,
-          total_ghg,
+          total_ghg: Number(total_ghg).toFixed(2),
           ghg_direction,
           ghg_direction_statement,
           tab: this.state.get('tab'),
@@ -411,6 +411,8 @@ define([
 
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
+
+      // ----------------------------------------------------------------------------------------------------
 
       // render fuel use chart (fueluse.js)
       if (!this.charts['eui'].chart_fueluse) {

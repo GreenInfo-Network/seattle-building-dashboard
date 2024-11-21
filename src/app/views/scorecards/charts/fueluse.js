@@ -167,8 +167,38 @@ define([
       });
     },
 
+    showPercents: function (num) {
+      if (isNaN(num)) return null;
+      const number = Number(num);
+      return number > 0;
+    },
+
     chartData: function () {
       const data = this.data;
+
+      const buildingData = data[0];
+
+      // TODO if time, come back and simplify this whole file
+      // Used a lot of existing code that isn't necessary anymore
+      const {
+        gas_ghg_percent,
+        electricity_ghg_percent,
+        steam_ghg_percent,
+        gas_pct,
+        electricity_pct,
+        steam_pct
+      } = buildingData;
+
+      const gas_ghg_percent = 0;
+      const gas_pct = 0;
+
+      let _showGas =
+        this.showPercents(gas_ghg_percent) || this.showPercents(gas_pct);
+      let _showElectricity =
+        this.showPercents(electricity_ghg_percent) ||
+        this.showPercents(electricity_pct);
+      let _showSteam =
+        this.showPercents(steam_ghg_percent) || this.showPercents(steam_pct);
 
       let total_ghg_emissions;
       let total_ghg_emissions_intensity;
@@ -216,7 +246,11 @@ define([
         year: this.year,
         cars: this.formatters.fixedOne(
           total_ghg_emissions / this.TYPICAL_CAR_EMMISSION
-        )
+        ),
+        //
+        _showGas,
+        _showElectricity,
+        _showSteam
       };
     },
 
@@ -304,7 +338,7 @@ define([
       const height = chartHeight - margin.top - margin.bottom;
 
       let groups = ['emissions', 'usage'];
-      let subgroups = [...new Set(data.map(d => d.key).flat())];
+      let subgroups = ['gas', 'steam', 'electricity'];
 
       let chartData = data.reduce(
         (acc, d) => {

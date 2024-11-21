@@ -17,25 +17,31 @@
   <div class="use-types-chart-container">
     <div class="use-types-chart" />
     <div class="use-types-legend">
-      <div class="text-subheader">TOP 3 USE TYPES</div>
+      <div class="text-subheader">TOP <%= _useTypeNum %> USE TYPES</div>
+
+      <% if (_legendFirstText) { %>
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color first"></div>
         <div class="use-types-legend-swatch-text text-copy">
           <%= _legendFirstText %>
         </div>
       </div>
+      <% } %> <% if (_legendSecondText) { %>
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color second"></div>
         <div class="use-types-legend-swatch-text text-copy">
           <%= _legendSecondText %>
         </div>
       </div>
+      <% } %> <% if (_legendThirdText) { %>
       <div class="use-types-legend-swatch">
         <div class="use-types-legend-swatch-color third"></div>
         <div class="use-types-legend-swatch-text text-copy">
           <%= _legendThirdText %>
         </div>
       </div>
+      <% } %>
+
       <div class="use-types-legend-note text-asterisk">
         * Note: Square footage by property use type is based on self reported
         data.

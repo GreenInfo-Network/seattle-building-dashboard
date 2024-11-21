@@ -35,6 +35,7 @@ define([
         'change:city_report_active',
         this.onCityReportActive
       );
+      this.listenTo(this.state, 'change:tab', this.setTabClasses);
 
       const scorecard = this.state.get('scorecard');
       this.listenTo(scorecard, 'change:view', this.onViewChange);
@@ -132,10 +133,11 @@ define([
       if (!nextTab) return;
       // set state
       this.state.set({ tab: nextTab });
-      this.setTabClasses();
     },
 
-    setTabClasses: function (activeTab) {
+    setTabClasses: function () {
+      const activeTab = this.state.get('tab');
+
       // set classes on tabs
       const tabs = [
         'benchmark_overview',
@@ -297,7 +299,7 @@ define([
 
       this.dirty = false;
 
-      this.setTabClasses(this.state.get('tab'));
+      this.setTabClasses();
 
       return this;
     }

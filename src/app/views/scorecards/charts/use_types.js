@@ -34,14 +34,20 @@ define([
       } = data[0];
 
       const totalGfa =
-        Number(largestpropertyusetypegfa) +
-        Number(secondlargestpropertyusetypegfa) +
-        Number(thirdlargestpropertyusetypegfa);
+        Number(largestpropertyusetypegfa ?? 0) +
+        Number(secondlargestpropertyusetypegfa ?? 0) +
+        Number(thirdlargestpropertyusetypegfa ?? 0);
 
       const chartData = {
-        first: (largestpropertyusetypegfa / totalGfa) * 100,
-        second: (secondlargestpropertyusetypegfa / totalGfa) * 100,
-        third: (thirdlargestpropertyusetypegfa / totalGfa) * 100
+        first: largestpropertyusetypegfa
+          ? (largestpropertyusetypegfa / totalGfa) * 100
+          : 0,
+        second: secondlargestpropertyusetypegfa
+          ? (secondlargestpropertyusetypegfa / totalGfa) * 100
+          : 0,
+        third: thirdlargestpropertyusetypegfa
+          ? (thirdlargestpropertyusetypegfa / totalGfa) * 100
+          : 0
       };
 
       function numberWithCommas(x) {
@@ -50,19 +56,27 @@ define([
 
       const _totalSquareFootage = numberWithCommas(totalGfa);
 
-      const _legendFirstText = `${Math.round(
-        chartData.first
-      )}% ${largestpropertyusetype}`;
-      const _legendSecondText = `${Math.round(
-        chartData.second
-      )}% ${secondlargestpropertyusetype}`;
-      const _legendThirdText = `${Math.round(
-        chartData.third
-      )}% ${thirdlargestpropertyusetype}`;
+      const _legendFirstText = isNaN(largestpropertyusetypegfa)
+        ? null
+        : `${Math.round(chartData.first)}% ${largestpropertyusetype}`;
+
+      const _legendSecondText = isNaN(secondlargestpropertyusetypegfa)
+        ? null
+        : `${Math.round(chartData.second)}% ${secondlargestpropertyusetype}`;
+
+      const _legendThirdText = isNaN(thirdlargestpropertyusetypegfa)
+        ? null
+        : `${Math.round(chartData.third)}% ${thirdlargestpropertyusetype}`;
 
       const _buildingId = id;
 
       const _yearBuilt = yearbuilt_string ?? `${yearbuilt}`;
+
+      const _useTypeNum = [
+        _legendFirstText,
+        _legendSecondText,
+        _legendThirdText
+      ].filter(v => v !== null).length;
 
       return {
         chartData,
@@ -70,6 +84,7 @@ define([
         _legendFirstText,
         _legendSecondText,
         _legendThirdText,
+        _useTypeNum,
         _buildingId,
         _yearBuilt
       };
@@ -108,7 +123,12 @@ define([
       var pie = d3.pie().value(function (d) {
         return d.value;
       });
-      var data_ready = pie(d3.entries(chartData));
+
+      const filteredChartData = Object.fromEntries(
+        Object.entries(chartData).filter(([k, v]) => v > 0)
+      );
+
+      var data_ready = pie(d3.entries(filteredChartData));
       // Now I know that group A goes from 0 degrees to x degrees and so on.
 
       // shape helper to build arcs:

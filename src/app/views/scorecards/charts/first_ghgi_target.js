@@ -33,7 +33,9 @@ define([
 
       const nextTargetValue = data[0][`bepstarget_${beps_firstcomplianceyear}`];
 
-      const currentValue = total_ghg_emissions_intensity;
+      const currentValue = Number(
+        Number(total_ghg_emissions_intensity).toFixed(2)
+      );
 
       let greenBar = 0;
       let greenStripedBar = 0;

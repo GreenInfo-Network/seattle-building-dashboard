@@ -2,18 +2,22 @@
   <div class="fueluse-chart-container">
     <div class="fueluse-chart" />
     <div class="fueluse-legend">
+      <% if (_showElectricity) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color electric"></div>
         <div class="fueluse-legend-swatch-text text-copy">Electric</div>
       </div>
+      <% } %> <% if (_showSteam) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color steam"></div>
         <div class="fueluse-legend-swatch-text text-copy">Steam</div>
       </div>
+      <% } %> <% if (_showGas) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color gas"></div>
         <div class="fueluse-legend-swatch-text text-copy">Gas</div>
       </div>
+      <% } %>
     </div>
   </div>
   <div class="fueluse-text-container text-copy">
