@@ -56,17 +56,19 @@ define([
 
       const _totalSquareFootage = numberWithCommas(totalGfa);
 
-      const _legendFirstText = isNaN(largestpropertyusetypegfa)
-        ? null
-        : `${Math.round(chartData.first)}% ${largestpropertyusetype}`;
+      const getLegendText = gfa => {
+        if (isNaN(gfa)) return null;
+        let roundedGfa = Math.round(gfa);
+        if (gfa === 0) return null;
+        let next = `${roundedGfa}% ${largestpropertyusetype}`;
+        return next;
+      };
 
-      const _legendSecondText = isNaN(secondlargestpropertyusetypegfa)
-        ? null
-        : `${Math.round(chartData.second)}% ${secondlargestpropertyusetype}`;
+      const _legendFirstText = getLegendText(chartData.first);
 
-      const _legendThirdText = isNaN(thirdlargestpropertyusetypegfa)
-        ? null
-        : `${Math.round(chartData.third)}% ${thirdlargestpropertyusetype}`;
+      const _legendSecondText = getLegendText(chartData.second);
+
+      const _legendThirdText = getLegendText(chartData.third);
 
       const _buildingId = id;
 

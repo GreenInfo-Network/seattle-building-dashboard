@@ -70,9 +70,13 @@ define([
       let _showSteam =
         this.showPercents(steam_ghg_percent) || this.showPercents(steam_pct);
 
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      }
+
       const totals = {
-        emissions: total_ghg_emissions,
-        usage: total_kbtu
+        emissions: numberWithCommas(total_ghg_emissions),
+        usage: numberWithCommas(total_kbtu)
       };
 
       return {
