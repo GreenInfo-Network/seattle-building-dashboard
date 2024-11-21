@@ -44,12 +44,16 @@ $small-border-radius: 4px;
 
 // Colors
 $dark-blue: #0046ad;
+$light-blue: #e1f5fe;
+$light-blue-hover: #c8e3ef;
 $off-blue: #f5f5f5;
 $green: #007749;
+$green-hover: #005635;
 $white: #ffffff;
 $paragraph: #333;
 $gray: #969ba4;
 $light-gray: #f1f1f1;
+$light-gray-hover: #e4e4e4;
 
 $gas-color: #d07362;
 $electric-color: #8eb1c7;
@@ -182,11 +186,19 @@ $dataviz-negative: #94778b;
       align-items: center;
       justify-content: center;
       padding: 12px 10px;
-      background-color: $white;
+      background-color: $light-blue;
       border-top-left-radius: $small-border-radius;
       border-top-right-radius: $small-border-radius;
       bottom: 0;
       cursor: pointer;
+
+      &.active {
+        background-color: $white;
+      }
+
+      &:hover {
+        background-color: $light-blue-hover;
+      }
     }
 
     &-buttons-container {
@@ -293,6 +305,11 @@ $dataviz-negative: #94778b;
         border-radius: $small-border-radius;
         color: $white;
         width: fit-content;
+        cursor: pointer;
+
+        &:hover {
+          background-color: $green-hover;
+        }
       }
     }
 
@@ -378,6 +395,10 @@ $dataviz-negative: #94778b;
           gap: 0.5rem;
           width: fit-content;
           color: $dark-blue;
+
+          &:hover {
+            background-color: $light-gray-hover;
+          }
         }
 
         &-metric {

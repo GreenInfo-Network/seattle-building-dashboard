@@ -103,8 +103,8 @@ define([
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
         // TODO set back to benchmark_overview
-        // this.state.set({ tab: 'benchmark_overview' });
-        this.state.set({ tab: 'emissions_targets' });
+        this.state.set({ tab: 'benchmark_overview' });
+        // this.state.set({ tab: 'emissions_targets' });
         // this.state.set({ tab: 'energy_targets' });
       }
       this.render();
@@ -130,7 +130,27 @@ define([
     setTab: function (evt) {
       const nextTab = evt?.target?.id;
       if (!nextTab) return;
+      // set state
       this.state.set({ tab: nextTab });
+      this.setTabClasses();
+    },
+
+    setTabClasses: function (activeTab) {
+      // set classes on tabs
+      const tabs = [
+        'benchmark_overview',
+        'emissions_targets',
+        'energy_targets'
+      ];
+      const inActiveTabs = tabs.filter(t => t !== activeTab);
+
+      const activeEl = $(`div#${activeTab}`);
+      activeEl.addClass('active');
+
+      for (const id of inActiveTabs) {
+        const inactiveEl = $(`div#${id}`);
+        inactiveEl.removeClass('active');
+      }
     },
 
     closeReport: function (evt) {
@@ -239,7 +259,8 @@ define([
           comments,
           name,
           energy_star_score,
-          year
+          year,
+          tab: this.state.get('tab')
         })
       );
 
@@ -275,6 +296,8 @@ define([
       }
 
       this.dirty = false;
+
+      this.setTabClasses(this.state.get('tab'));
 
       return this;
     }

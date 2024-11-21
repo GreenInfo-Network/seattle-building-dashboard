@@ -561,54 +561,6 @@ define([
       this.charts['eui'].chart_first_compliance_interval.afterRender();
       // ----------------------------------------------------------------------------------------------------
 
-      // covered in perf over time
-      // // render Energy Use Trends (shift.js) chart
-      // if (!this.charts['eui'].chart_shift) {
-      //   // avail_years comes from seattle.json and shows all available years
-      //   // we want all years for this building
-      //   let building_years = Object.keys(building_data).sort(function (a, b) {
-      //     return parseInt(a) - parseInt(b);
-      //   });
-
-      //   var shiftConfig = config.change_chart.building;
-      //   var previousYear = building_years[0];
-
-      //   // by definition, we should always have a previous year, or else a single year of data
-      //   // so how can no_year be a condition?
-      //   var hasPreviousYear = previousYear !== selected_year;
-
-      //   const change_data = hasPreviousYear
-      //     ? this.extractChangeData(
-      //         building_data,
-      //         buildings,
-      //         building,
-      //         shiftConfig
-      //       )
-      //     : null;
-
-      //   // trap case where there is a range of only one year, send to the view for rendering an error
-      //   const single_year = building_years.length === 1;
-
-      //   this.charts['eui'].chart_shift = new ShiftView({
-      //     formatters: this.formatters,
-      //     data: change_data,
-      //     no_year: !hasPreviousYear,
-      //     single_year: single_year,
-      //     previous_year: previousYear,
-      //     selected_year,
-      //     view: 'eui'
-      //   });
-      // }
-
-      // // now render
-      // if (this.charts['eui'].chart_shift) {
-      //   this.charts['eui'].chart_shift.render(t => {
-      //     el.find('#compare-shift-chart').html(t);
-      //   }, viewSelector);
-      // }
-
-      // ----------------------------------------------------------------------------------------------------
-
       // render Clean Building Performance Standard (CBPS) chart (performance_standard.js), but only if flagged
       if (building.cbps_flag) {
         if (!this.charts['eui'].chart_performance_standard) {
