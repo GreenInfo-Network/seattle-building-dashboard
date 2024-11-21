@@ -66,7 +66,17 @@ define([
     events: {
       'click #back-to-map-link': 'closeReport',
       'click #comparison-view-link': 'showComparisonView',
-      'click .scorecard-tab-click': 'setTab'
+      'click .scorecard-tab-click': 'setTab',
+      'click #share-link': 'copyUrl'
+    },
+
+    copyUrl: function () {
+      const url = window.location.href;
+      try {
+        navigator.clipboard.writeText(url);
+      } catch (err) {
+        console.warn(err);
+      }
     },
 
     onBuildingsChange: function () {
