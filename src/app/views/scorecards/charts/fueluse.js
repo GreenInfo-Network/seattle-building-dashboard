@@ -17,154 +17,6 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
-
-      this.fuels = [
-        {
-          label: 'Electric',
-          key: 'electricity'
-        },
-        {
-          label: 'Steam',
-          key: 'steam'
-        },
-        {
-          label: 'Gas',
-          key: 'gas'
-        }
-      ];
-    },
-
-    getMean: function (key, data) {
-      if (data.pluck) {
-        return d3.mean(data.pluck(key));
-      } else {
-        return d3.mean(data.map(d => d[key]));
-      }
-    },
-
-    getSum: function (key, data) {
-      if (data.pluck) {
-        return d3.sum(data.pluck(key));
-      } else {
-        return d3.sum(data.map(d => d[key]));
-      }
-    },
-
-    validNumber: function (n) {
-      return _.isNumber(n) && _.isFinite(n);
-    },
-
-    validFuel: function (pct, amt) {
-      return (
-        this.validNumber(pct) && pct > 0 && this.validNumber(amt) && amt > 0
-      );
-    },
-
-    getBuildingFuels: function (fuels, data) {
-      fuels.forEach(d => {
-        const emmission_pct = this.getMean(d.key + '_ghg_percent', data);
-        const emmission_amt = this.getMean(d.key + '_ghg', data);
-        const usage_pct = this.getMean(d.key + '_pct', data);
-        const usage_amt = this.getMean(d.key, data);
-
-        d.emissions = {};
-        d.emissions.isValid = this.validFuel(emmission_pct, emmission_amt);
-        d.emissions.pct = d.emissions.pct_raw = emmission_pct * 100;
-        d.emissions.pct_actual = emmission_pct;
-        d.emissions.amt = emmission_amt;
-        d.emissions.cars = this.formatters.fixedOne(
-          emmission_amt / this.TYPICAL_CAR_EMMISSION
-        );
-
-        d.usage = {};
-        d.usage.isValid = this.validFuel(usage_pct, usage_amt);
-        d.usage.pct = d.usage.pct_raw = usage_pct * 100;
-        d.usage.pct_actual = usage_pct;
-        d.usage.amt = usage_amt;
-      });
-
-      return fuels.filter(d => d.usage.isValid || d.emissions.isValid);
-    },
-
-    getCityWideFuels: function (fuels, data) {
-      let total_emissions = data.total_emissions;
-      let total_usage = data.total_consump;
-
-      fuels.forEach(d => {
-        const emission_key = `pct_${d.key}_ghg`;
-        const usage_key = `pct_${d.key}`;
-
-        const emmission_pct = data[emission_key];
-        const usage_pct = data[usage_key];
-
-        d.emissions = {};
-        d.emissions.isValid = this.validFuel(emmission_pct, total_emissions);
-        d.emissions.pct = d.emissions.pct_raw = emmission_pct * 100;
-        d.emissions.pct_actual = emmission_pct;
-
-        d.usage = {};
-        d.usage.isValid = this.validFuel(usage_pct, total_usage);
-        d.usage.pct = d.usage.pct_raw = usage_pct * 100;
-        d.usage.pct_actual = usage_pct;
-      });
-
-      return fuels.filter(d => {
-        return d.usage.isValid && d.emissions.isValid;
-      });
-    },
-
-    fixPercents: function (fuels, prop) {
-      const values = fuels
-        .map((d, i) => {
-          const decimal = +(d[prop].pct_raw % 1);
-          const val = Math.floor(d[prop].pct_raw);
-          return {
-            idx: i,
-            val,
-            iszero: val === 0,
-            decimal: val === 0 ? 1 : decimal
-          };
-        })
-        .sort((a, b) => {
-          return b.decimal - a.decimal;
-        });
-
-      const sum = d3.sum(values, d => d.val);
-
-      let diff = 100 - sum;
-
-      values.forEach(d => {
-        if (diff === 0) return;
-
-        diff -= 1;
-        d.val += 1;
-
-        d.iszero = false;
-      });
-
-      // we need to bump up zero values
-      const zeros = values.filter(d => d.iszero);
-      let zeros_length = zeros.length;
-
-      if (zeros_length > 0) {
-        while (zeros_length > 0) {
-          zeros_length--;
-          values.forEach(d => {
-            if (!d.iszero && d.val > 1) {
-              d.val -= 1;
-            }
-
-            if (d.iszero) {
-              d.val += 1;
-            }
-          });
-        }
-      }
-
-      values.forEach(d => {
-        fuels[d.idx][prop].pct = d.val;
-        fuels[d.idx][prop].pct_raw = d.val;
-      });
     },
 
     showPercents: function (num) {
@@ -178,19 +30,37 @@ define([
 
       const buildingData = data[0];
 
-      // TODO if time, come back and simplify this whole file
-      // Used a lot of existing code that isn't necessary anymore
       const {
         gas_ghg_percent,
         electricity_ghg_percent,
         steam_ghg_percent,
         gas_pct,
         electricity_pct,
-        steam_pct
+        steam_pct,
+        total_ghg_emissions,
+        total_kbtu
       } = buildingData;
 
-      const gas_ghg_percent = 0;
-      const gas_pct = 0;
+      const normalizeNum = num => {
+        if (isNaN(num)) return 0;
+        let next = Number(num ?? 0) * 100;
+        return Math.round(next);
+      };
+
+      const chartData = [
+        {
+          electricity: normalizeNum(electricity_pct),
+          gas: normalizeNum(gas_pct),
+          group: 'usage',
+          steam: normalizeNum(steam_pct)
+        },
+        {
+          electricity: normalizeNum(electricity_ghg_percent),
+          gas: normalizeNum(gas_ghg_percent),
+          group: 'emissions',
+          steam: normalizeNum(steam_ghg_percent)
+        }
+      ];
 
       let _showGas =
         this.showPercents(gas_ghg_percent) || this.showPercents(gas_pct);
@@ -200,91 +70,34 @@ define([
       let _showSteam =
         this.showPercents(steam_ghg_percent) || this.showPercents(steam_pct);
 
-      let total_ghg_emissions;
-      let total_ghg_emissions_intensity;
-      let total_usage;
-
-      let fuels;
-      if (this.isCity) {
-        fuels = this.getCityWideFuels([...this.fuels], data);
-        total_ghg_emissions = data.total_emissions;
-        total_ghg_emissions_intensity = data.total_emissions_intensity;
-        total_usage = data.total_consump;
-      } else {
-        fuels = this.getBuildingFuels([...this.fuels], data);
-        total_ghg_emissions = this.getSum('total_ghg_emissions', data);
-        total_ghg_emissions_intensity = this.getSum(
-          'total_ghg_emissions_intensity',
-          data
-        );
-        total_usage = this.getSum('total_kbtu', data);
-      }
-
-      // what the heck is this?
-      this.fixPercents(fuels, 'emissions');
-      this.fixPercents(fuels, 'usage');
-
-      var all_electric = fuels
-        .filter(d => d.key == 'electricity')
-        .reduce((z, e) => e.usage.pct > 99, false);
-
-      var totals = {
-        usage_raw: total_usage,
-        usage: d3.format(',d')(Math.round(total_usage)),
-        emissions_raw: total_ghg_emissions,
-        emissions: d3.format(',d')(Math.round(total_ghg_emissions))
+      const totals = {
+        emissions: total_ghg_emissions,
+        usage: total_kbtu
       };
 
       return {
-        fuels,
         totals,
-        total_ghg_emissions,
-        all_electric: all_electric,
-        total_ghg_emissions_intensity,
-        isCity: this.isCity,
-        building_name: this.building_name,
-        year: this.year,
-        cars: this.formatters.fixedOne(
-          total_ghg_emissions / this.TYPICAL_CAR_EMMISSION
-        ),
-        //
+        chartData,
         _showGas,
         _showElectricity,
         _showSteam
       };
     },
 
-    renderEnergyConsumptionChart: function (data, totals) {
+    renderChart: function (chartData, totals) {
+      const FONT_SIZE = 12;
+      const X_AXIS_PADDING = 6;
+      const PERCENTAGE_BOTTOM_PADDING = 3;
+
       const parent = d3.select(this.viewParent).select('.fueluse-chart');
 
       if (!parent.node()) return;
 
-      const margin = { top: 25, right: 0, bottom: 25, left: 0 };
+      const margin = { top: 50, right: 0, bottom: 50, left: 0 };
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
       const width = outerWidth - margin.left - margin.right;
-
-      const svg = parent
-        .append('svg')
-        .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`);
-
-      const chartData = data.map((row, i) => {
-        return {
-          ...row,
-          emissions: {
-            ...row.emissions,
-            pctBefore: d3.sum(
-              data.map((d, k) => (k >= i ? 0 : d.emissions.pct_actual))
-            )
-          },
-          usage: {
-            ...row.usage,
-            pctBefore: d3.sum(
-              data.map((d, k) => (k >= i ? 0 : d.usage.pct_actual))
-            )
-          }
-        };
-      });
+      const height = outerHeight - margin.top - margin.bottom;
 
       const labels = {
         emissions: {
@@ -299,60 +112,16 @@ define([
         }
       };
 
-      const chartGroup = svg.append('g');
+      const parentSvg = parent
+        .append('svg')
+        .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`);
 
-      const chartHeight = outerHeight - margin.top - margin.bottom;
-
-      this.renderBarChart(
-        chartGroup,
-        chartData,
-        labels,
-        totals,
-        width,
-        chartHeight,
-        margin
-      );
-    },
-
-    renderBarChart: function (
-      parent,
-      data,
-      labels,
-      totals,
-      chartWidth,
-      chartHeight,
-      margin
-    ) {
-      const FONT_SIZE = 12;
-      const X_AXIS_PADDING = 6;
-      const PERCENTAGE_BOTTOM_PADDING = 3;
-
-      const svg = parent
+      const svg = parentSvg
         .append('g')
-        .attr(
-          'transform',
-          `translate(0, ${margin.top + X_AXIS_PADDING + FONT_SIZE})`
-        );
-
-      const width = chartWidth;
-      const height = chartHeight - margin.top - margin.bottom;
+        .attr('transform', `translate(0, ${margin.top})`);
 
       let groups = ['emissions', 'usage'];
       let subgroups = ['gas', 'steam', 'electricity'];
-
-      let chartData = data.reduce(
-        (acc, d) => {
-          acc.emissions[d.key] = d?.emissions?.pct;
-          acc.usage[d.key] = d?.usage?.pct;
-          return acc;
-        },
-        { emissions: {}, usage: {} }
-      );
-
-      chartData = Object.entries(chartData).reduce((acc, [k, v]) => {
-        acc.push({ group: k, ...v });
-        return acc;
-      }, []);
 
       // Add bottom X axis
       var x = d3
@@ -496,7 +265,7 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderEnergyConsumptionChart(chartData.fuels, chartData.totals);
+      this.renderChart(chartData.chartData, chartData.totals);
     }
   });
 

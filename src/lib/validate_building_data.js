@@ -1,4 +1,4 @@
-define(['d3'], function (d3) {
+define([], function () {
   function validateBuildingData(props) {
     return true;
   }
