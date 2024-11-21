@@ -56,19 +56,28 @@ define([
 
       const _totalSquareFootage = numberWithCommas(totalGfa);
 
-      const getLegendText = gfa => {
+      const getLegendText = (gfa, useType) => {
         if (isNaN(gfa)) return null;
         let roundedGfa = Math.round(gfa);
         if (gfa === 0) return null;
-        let next = `${roundedGfa}% ${largestpropertyusetype}`;
+        let next = `${roundedGfa}% ${useType}`;
         return next;
       };
 
-      const _legendFirstText = getLegendText(chartData.first);
+      const _legendFirstText = getLegendText(
+        chartData.first,
+        largestpropertyusetype
+      );
 
-      const _legendSecondText = getLegendText(chartData.second);
+      const _legendSecondText = getLegendText(
+        chartData.second,
+        secondlargestpropertyusetype
+      );
 
-      const _legendThirdText = getLegendText(chartData.third);
+      const _legendThirdText = getLegendText(
+        chartData.third,
+        thirdlargestpropertyusetype
+      );
 
       const _buildingId = id;
 
