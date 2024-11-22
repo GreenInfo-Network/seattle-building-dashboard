@@ -224,7 +224,19 @@ define([
         d3.select(barName)
           .append('text')
           .attr('class', 'first-compliance-interval-x-axis-label text-chart')
-          .attr('text-anchor', labelTextAnchor[k])
+          .attr('text-anchor', d => {
+            const textPos = x(d[0][1]);
+            const max = width - 100;
+            const min = 100;
+            let anchor = labelTextAnchor[k];
+            if (textPos > max) {
+              anchor = 'end';
+            }
+            if (textPos < min) {
+              anchor = 'start';
+            }
+            return anchor;
+          })
           .attr('x', d => {
             return x(d[0][1]);
           })

@@ -91,6 +91,12 @@ $dataviz-negative: #94778b;
   color: $paragraph;
 }
 
+.text-copy-semibold {
+  font-size: $text-size-regular;
+  // semibold
+  font-weight: 600;
+}
+
 .text-copy-link {
   font-size: $text-size-regular;
   // semibold

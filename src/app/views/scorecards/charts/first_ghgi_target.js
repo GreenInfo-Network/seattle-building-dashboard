@@ -31,6 +31,9 @@ define([
         beps_firstcomplianceyear
       } = data[0];
 
+      const totalGhgi = total_ghg_emissions_intensity;
+      const maxGhgi = Math.max(5, totalGhgi);
+
       // TODO Why does beps_firstcomplianceyear not match a target year for some buildings?
       // Sure this logic is incorrect
       // Example: http://0.0.0.0:8080/#seattle/2023?categories[0][field]=neighborhood&categories[0][values][]=DOWNTOWN&categories[0][values][]=EAST&categories[0][values][]=LAKE+UNION&categories[0][values][]=GREATER+DUWAMISH&categories[0][values][]=MAGNOLIA+%2F+QUEEN+ANNE&categories[0][values][]=NORTHWEST&categories[0][values][]=DELRIDGE+NEIGHBORHOODS&categories[0][values][]=CENTRAL&categories[0][values][]=NORTHEAST&categories[0][values][]=BALLARD&categories[0][values][]=SOUTHWEST&categories[0][values][]=SOUTHEAST&categories[0][values][]=NORTH&categories[0][values][]=&categories[0][other]=false&categories[1][field]=councildistrict&categories[1][values][]=1&categories[1][values][]=2&categories[1][values][]=3&categories[1][values][]=4&categories[1][values][]=5&categories[1][values][]=6&categories[1][values][]=7&categories[1][other]=false&layer=total_ghg_emissions&sort=total_ghg_emissions&order=desc&lat=47.61947&lng=-122.35637&zoom=14&building=745&report_active=true&tab=benchmark_overview
@@ -59,7 +62,7 @@ define([
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
 
-        whiteBackground = 5 - (redBar + greenBar);
+        whiteBackground = maxGhgi - (redBar + greenBar);
 
         redBarLabel = `(GHGI current) ${currentValue}`;
         greenBarLabel = `(GHGI target) ${nextTargetValue}`;
@@ -67,7 +70,7 @@ define([
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
 
-        whiteBackground = 5 - (greenStripedBar + greenBar);
+        whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
         greenStripedBarLabel = `(GHGI target) ${nextTargetValue}`;
         greenBarLabel = `(GHGI current) ${currentValue}`;
@@ -88,11 +91,12 @@ define([
 
       return {
         chartData,
-        beps_firstcomplianceyear
+        beps_firstcomplianceyear,
+        maxGhgi
       };
     },
 
-    renderChart: function (chartData) {
+    renderChart: function (chartData, maxGhgi) {
       const FONT_SIZE = 12;
       const PADDING = 6;
 
@@ -106,7 +110,7 @@ define([
       const outerHeight = parent.node().offsetHeight;
 
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 30, bottom: 30, left: 50 },
+      var margin = { top: 30, right: 30, bottom: 30, left: 30 },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
 
@@ -131,7 +135,7 @@ define([
       var y = d3.scaleBand().domain(groups).range([0, height]).padding([0.2]);
 
       // Add X axis
-      var x = d3.scaleLinear().domain([0, 5]).range([0, width]);
+      var x = d3.scaleLinear().domain([0, maxGhgi]).range([0, width]);
       const xAxis = svg
         .append('g')
         .attr('class', 'first-ghgi-target-x-axis text-chart')
@@ -217,11 +221,37 @@ define([
         d3.select(barName)
           .append('text')
           .attr('class', 'first-ghgi-target-x-axis-label text-chart')
-          .attr('text-anchor', labelTextAnchor[k])
+          .attr('text-anchor', d => {
+            // TODO still haven't totally sorted out overlaps
+            const textPos = x(d[0][1]);
+            const max = width - 100;
+            const min = 100;
+            let anchor = labelTextAnchor[k];
+            if (textPos > max) {
+              anchor = 'end';
+            }
+            if (textPos < min) {
+              anchor = 'start';
+            }
+            return anchor;
+          })
           .attr('x', d => {
             return x(d[0][1]);
           })
           .attr('y', d => {
+            // let bars = Object.keys(labelData).map(v => v.replace('Label', ''));
+
+            // const distances = bars.map(tag => {
+            //   const data = stackedData.find(item => item.key === tag);
+            //   return x(data[0][1]);
+            // });
+
+            // const distance = Math.abs(distances[0] - distances[1]);
+
+            // if (distance < 100 && d.key === bars[0]) {
+            //   return -2 * (PADDING * 2 + FONT_SIZE);
+            // }
+
             return -2 * PADDING;
           })
           .text(v);
@@ -247,7 +277,7 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData);
+      this.renderChart(chartData?.chartData, chartData?.maxGhgi);
     }
   });
 

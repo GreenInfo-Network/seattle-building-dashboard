@@ -2,15 +2,24 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  // TODO do we need this old file for the city scorecard?
   './charts/fueluse',
   './charts/shift',
   './charts/building_type_table',
   'models/building_color_bucket_calculator',
   'text!templates/scorecards/city.html'
-], function($, _, Backbone, FuelUseView, ShiftView, BuildingTypeTableView, BuildingColorBucketCalculator, ScorecardTemplate){
+], function (
+  $,
+  _,
+  Backbone,
+  FuelUseView,
+  ShiftView,
+  BuildingTypeTableView,
+  BuildingColorBucketCalculator,
+  ScorecardTemplate
+) {
   var CityScorecard = Backbone.View.extend({
-
-    initialize: function(options){
+    initialize: function (options) {
       this.state = options.state;
       this.formatters = options.formatters;
 
@@ -25,11 +34,11 @@ define([
       'click .sc-toggle--input': 'toggleView'
     },
 
-    close: function() {
+    close: function () {
       // do some house cleaning before being removed
     },
 
-    toggleView: function(evt) {
+    toggleView: function (evt) {
       evt.preventDefault();
 
       var scorecardState = this.state.get('scorecard');
@@ -42,14 +51,14 @@ define([
         return false;
       }
 
-      scorecardState.set({ 'view': value });
+      scorecardState.set({ view: value });
     },
 
-    onViewChange: function() {
+    onViewChange: function () {
       this.render();
     },
 
-    render: function() {
+    render: function () {
       if (!this.state.get('city_report_active')) return;
 
       if (this.scoreCardData) return this.postRender();
@@ -60,35 +69,40 @@ define([
       var table = scorecardConfig.citywide.table;
 
       // Get building data for all years
-      d3.json(`https://cityenergy-seattle.carto.com/api/v2/sql?q=SELECT * FROM ${table} WHERE year is not null`, payload => {
-        if (!this.state.get('city_report_active')) return;
+      d3.json(
+        `https://cityenergy-seattle.carto.com/api/v2/sql?q=SELECT * FROM ${table} WHERE year is not null`,
+        payload => {
+          if (!this.state.get('city_report_active')) return;
 
-        if (!payload) {
-          console.error('There was an error loading citywide data for the scorecard');
-          return;
+          if (!payload) {
+            console.error(
+              'There was an error loading citywide data for the scorecard'
+            );
+            return;
+          }
+
+          var data = {};
+          payload.rows.forEach(d => {
+            data[d.year] = { ...d };
+          });
+
+          this.scoreCardData = data;
+
+          this.postRender();
         }
-
-        var data = {};
-        payload.rows.forEach(d => {
-          data[d.year] = { ...d };
-        });
-
-        this.scoreCardData = data;
-
-        this.postRender();
-      });
+      );
     },
 
-    postRender: function() {
+    postRender: function () {
       this.show('eui');
       this.show('ess');
     },
 
-    validNumber: function(x) {
+    validNumber: function (x) {
       return _.isNumber(x) && _.isFinite(x);
     },
 
-    buildingStats: function(data) {
+    buildingStats: function (data) {
       return {
         reporting: this.formatters.fixedZero(data.reporting),
         required: this.formatters.fixedZero(data.required),
@@ -96,7 +110,7 @@ define([
       };
     },
 
-    compliance: function(data) {
+    compliance: function (data) {
       return {
         consumption: this.formatters.fixedZero(data.total_consump),
         ghg: this.formatters.fixedZero(data.total_emissions),
@@ -104,16 +118,18 @@ define([
       };
     },
 
-    show: function(view) {
+    show: function (view) {
       if (!this.scoreCardData) {
         return console.error('No city scorecard data found');
       }
 
       var buildings = this.state.get('allbuildings');
       var city = this.state.get('city');
-      var years = _.keys(city.get('years')).map(d => +d).sort((a, b) => {
-        return a - b;
-      });
+      var years = _.keys(city.get('years'))
+        .map(d => +d)
+        .sort((a, b) => {
+          return a - b;
+        });
       var year = this.state.get('year');
       var scorecardConfig = city.get('scorecard');
       var viewSelector = `#${view}-scorecard-view`;
@@ -125,13 +141,15 @@ define([
         return console.error('No year found in citywide data!');
       }
 
-      el.html(this.template({
-        stats: this.buildingStats(data[year]),
-        compliance: this.compliance(data[year]),
-        year: year,
-        view: view,
-        value: data[year][compareField]
-      }));
+      el.html(
+        this.template({
+          stats: this.buildingStats(data[year]),
+          compliance: this.compliance(data[year]),
+          year: year,
+          view: view,
+          value: data[year][compareField]
+        })
+      );
 
       if (!this.chart_fueluse) {
         this.chart_fueluse = new FuelUseView({
@@ -146,13 +164,14 @@ define([
         el.find('#fuel-use-chart').html(this.chart_fueluse.render());
       }
 
-
       if (!this.chart_shift) {
         var shiftConfig = scorecardConfig.change_chart.city;
         var previousYear = year - 1;
         var hasPreviousYear = years.indexOf(previousYear) > -1;
 
-        const shift_data = hasPreviousYear ? this.extractChangeData(data, shiftConfig) : null;
+        const shift_data = hasPreviousYear
+          ? this.extractChangeData(data, shiftConfig)
+          : null;
 
         this.chart_shift = new ShiftView({
           view,
@@ -186,7 +205,7 @@ define([
       return this;
     },
 
-    extractChangeData: function(data, config) {
+    extractChangeData: function (data, config) {
       const o = [];
 
       Object.keys(data).forEach(year => {
@@ -205,7 +224,7 @@ define([
           if (!this.validNumber(value)) {
             value = null;
           } else {
-            value = +(value.toFixed(1));
+            value = +value.toFixed(1);
           }
 
           const clr = '#999';

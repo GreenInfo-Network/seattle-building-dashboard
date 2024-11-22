@@ -36,8 +36,8 @@ define([
     },
 
     renderChart: function (buildingData) {
-      const maxGhgi = 5;
       const totalGhgi = buildingData?.total_ghg_emissions_intensity;
+      const maxGhgi = Math.max(5, totalGhgi);
 
       const divisor = 100 / maxGhgi;
       const multiplier = totalGhgi / maxGhgi;
@@ -120,7 +120,7 @@ define([
       ticks.attr('class', 'beps-bar-axis-text text-chart');
 
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, 5]).range([height, 0]);
+      var y = d3.scaleLinear().domain([0, maxGhgi]).range([height, 0]);
 
       const yAxis = svg
         .append('g')
