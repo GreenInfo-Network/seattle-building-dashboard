@@ -20,23 +20,17 @@ $sc-font-std: 1rem;
 $sc-font-lg: 1.5rem;
 $sc-font-lgr: 4rem;
 
-// Energy source colors
-// $gas-color: #c24e2b;
-// $electric-color: #0048ba;
-// $steam-color: #f7c34e;
-
 // WIP CSS------------------------------------------------------------------------
+// TODO fix this sizing as a base for rem
+html {
+  font-size: 14px;
+}
 // Text sizes
-// $text-size-extra-small: 0.75rem;
-// $text-size-small: 0.875rem;
-// $text-size-regular: 1rem;
-// $text-size-large: 1.25rem;
-// $text-size-extra-large: 1.5rem;
-$text-size-extra-small: 0.7rem;
-$text-size-small: 0.775rem;
-$text-size-regular: 0.9rem;
-$text-size-large: 1.15rem;
-$text-size-extra-large: 1.4rem;
+$text-size-extra-small: 0.75rem;
+$text-size-small: 0.875rem;
+$text-size-regular: 1rem;
+$text-size-large: 1.25rem;
+$text-size-extra-large: 1.5rem;
 
 // Border radius
 $standard-border-radius: 12px;
@@ -252,8 +246,10 @@ $dataviz-negative: #94778b;
       display: flex;
       position: relative;
       width: 100%;
-      max-width: 960px;
+      max-width: 1080px;
       min-width: 920px;
+      padding-left: 1rem;
+      padding-right: 1rem;
       height: fit-content;
       margin: 0 auto;
       gap: 1rem;
@@ -261,7 +257,8 @@ $dataviz-negative: #94778b;
 
     &-sidebar {
       max-width: 450px;
-      width: 35%;
+      width: 30%;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -469,6 +466,7 @@ $dataviz-negative: #94778b;
           align-items: start;
 
           &-bullet {
+            text-align: left;
           }
         }
       }
@@ -520,7 +518,7 @@ $dataviz-negative: #94778b;
   .scorecard-wrapper {
     position: relative;
     width: 100%;
-    max-width: 960px;
+    max-width: 1080px;
     min-width: 920px;
     margin: 0 auto;
   }
