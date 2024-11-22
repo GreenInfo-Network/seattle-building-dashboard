@@ -196,7 +196,7 @@ define([
           bepstarget_2036,
           bepstarget_2041,
           bepstarget_2046,
-          cbpsFlag: building.cbps_flag && building.cbps_euit
+          cbpsFlag: building.cbps_flag && building.cbpseuitarget
         })
       );
 

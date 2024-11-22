@@ -43,7 +43,7 @@ define([
         return years.find(y => y >= firstComplianceYear);
       };
 
-      const nextTargetValue = data[0][`bepstarget_${getNextTarget()}`];
+      const nextTargetValue = Number(data[0][`bepstarget_${getNextTarget()}`]);
 
       const currentValue = Number(
         Number(total_ghg_emissions_intensity).toFixed(2)
@@ -72,8 +72,10 @@ define([
 
         whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${nextTargetValue}`;
-        greenBarLabel = `(GHGI current) ${currentValue}`;
+        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue).toFixed(
+          2
+        )}`;
+        greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
       }
 
       const chartData = [
@@ -110,7 +112,7 @@ define([
       const outerHeight = parent.node().offsetHeight;
 
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 30, bottom: 30, left: 30 },
+      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
 
@@ -223,35 +225,22 @@ define([
           .attr('class', 'first-ghgi-target-x-axis-label text-chart')
           .attr('text-anchor', d => {
             // TODO still haven't totally sorted out overlaps
-            const textPos = x(d[0][1]);
-            const max = width - 100;
-            const min = 100;
+            // const textPos = x(d[0][1]);
+            // const max = width - 100;
+            // const min = 100;
             let anchor = labelTextAnchor[k];
-            if (textPos > max) {
-              anchor = 'end';
-            }
-            if (textPos < min) {
-              anchor = 'start';
-            }
+            // if (textPos > max) {
+            //   anchor = 'end';
+            // }
+            // if (textPos < min) {
+            //   anchor = 'start';
+            // }
             return anchor;
           })
           .attr('x', d => {
             return x(d[0][1]);
           })
           .attr('y', d => {
-            // let bars = Object.keys(labelData).map(v => v.replace('Label', ''));
-
-            // const distances = bars.map(tag => {
-            //   const data = stackedData.find(item => item.key === tag);
-            //   return x(data[0][1]);
-            // });
-
-            // const distance = Math.abs(distances[0] - distances[1]);
-
-            // if (distance < 100 && d.key === bars[0]) {
-            //   return -2 * (PADDING * 2 + FONT_SIZE);
-            // }
-
             return -2 * PADDING;
           })
           .text(v);

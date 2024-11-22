@@ -22,16 +22,6 @@ define([
     chartData: function () {
       const data = this.data;
 
-      // site_eui;
-      // site_eui_wn;
-      // source_eui;
-      // source_eui_wn;
-      // building_type_eui;
-      // building_type_eui_wn;
-      // cbps_date;
-      // cbps_flag;
-      // cbpseuitarget;
-
       const {
         site_eui_wn, // current
         cbpseuitarget, //target
@@ -48,9 +38,9 @@ define([
       const maxVal = roundnum(source_eui_wn);
 
       // TODO limit to two decimals
-      const nextTargetValue = cbpseuitarget;
+      const nextTargetValue = Number(Number(cbpseuitarget).toFixed(1));
 
-      const currentValue = Number(site_eui_wn).toFixed(1);
+      const currentValue = Number(Number(site_eui_wn).toFixed(1));
 
       let greenBar = 0;
       let greenStripedBar = 0;
@@ -113,7 +103,7 @@ define([
       const outerHeight = parent.node().offsetHeight;
 
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 30, bottom: 30, left: 50 },
+      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
 
@@ -225,16 +215,16 @@ define([
           .append('text')
           .attr('class', 'first-compliance-interval-x-axis-label text-chart')
           .attr('text-anchor', d => {
-            const textPos = x(d[0][1]);
-            const max = width - 100;
-            const min = 100;
+            // const textPos = x(d[0][1]);
+            // const max = width - 100;
+            // const min = 100;
             let anchor = labelTextAnchor[k];
-            if (textPos > max) {
-              anchor = 'end';
-            }
-            if (textPos < min) {
-              anchor = 'start';
-            }
+            // if (textPos > max) {
+            //   anchor = 'end';
+            // }
+            // if (textPos < min) {
+            //   anchor = 'start';
+            // }
             return anchor;
           })
           .attr('x', d => {
