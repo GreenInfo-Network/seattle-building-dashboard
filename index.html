@@ -1,19 +1,47 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
 
-    <link rel="shortcut icon" href="images/favicons/favicon.ico" type="image/x-icon" />
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="images/favicons/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    <link
+      rel="shortcut icon"
+      href="images/favicons/favicon.ico"
+      type="image/x-icon"
+    />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta
+      name="msapplication-TileImage"
+      content="images/favicons/ms-icon-144x144.png"
+    />
+    <meta name="theme-color" content="#ffffff" />
 
-    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Ubuntu:400,500,300' />
-    <link rel="stylesheet" type="text/css" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.min.css" />
-    <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,300"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Public+Sans:ital,wght@0,900;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="styles/main.min.css" />
   </head>
   <body>
     <div id="mobile-failover"></div>
@@ -21,12 +49,12 @@
     <div id="modals"></div>
     <header id="title"></header>
     <div id="toolbar" class="toolbar">
-        <div id='search'></div>
-        <div id="map-category-controls"></div>
-        <div id="building-proptype-selector"></div>
-        <div class="tbar-right">
-          <div id='year-select-container'></div>
-        </div>
+      <div id="search"></div>
+      <div id="map-category-controls"></div>
+      <div id="building-proptype-selector"></div>
+      <div class="tbar-right">
+        <div id="year-select-container"></div>
+      </div>
     </div>
 
     <div class="main-container">
@@ -34,12 +62,15 @@
         <div id="map-controls-bk"></div>
         <div id="map-controls-header">
           <div>
-            <h4>Metric Filters <button class="reset-all-filters">Reset map</button></h4>
+            <h4>
+              Metric Filters
+              <button class="reset-all-filters">Reset map</button>
+            </h4>
             <p>Select a metric to see filtered results on the map</p>
           </div>
         </div>
-        <div id='map-controls-content'>
-            <div id='map-controls-content--inner'></div>
+        <div id="map-controls-content">
+          <div id="map-controls-content--inner"></div>
         </div>
       </div>
       <div id="map-wrapper">
@@ -56,12 +87,30 @@
 
     <script src="lib/polyfills.js"></script>
     <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.19/require.js" data-main="app/main"></script>
+    <script
+      src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.19/require.js"
+      data-main="app/main"
+    ></script>
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(
+        window,
+        document,
+        'script',
+        '//www.google-analytics.com/analytics.js',
+        'ga'
+      );
 
       ga('create', 'UA-72562682-1', 'auto');
       ga('send', 'pageview');

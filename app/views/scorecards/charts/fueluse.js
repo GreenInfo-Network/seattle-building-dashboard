@@ -1,21 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/fueluse.html'], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
     TYPICAL_CAR_EMMISSION: 4.7,
@@ -27,204 +11,73 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
-      this.fuels = [{
-        label: 'Electric',
-        key: 'electricity'
-      }, {
-        label: 'Steam',
-        key: 'steam'
-      }, {
-        label: 'Gas',
-        key: 'gas'
-      }];
     },
-    getMean: function getMean(key, data) {
-      if (data.pluck) {
-        return d3.mean(data.pluck(key));
-      } else {
-        return d3.mean(data.map(function (d) {
-          return d[key];
-        }));
-      }
-    },
-    getSum: function getSum(key, data) {
-      if (data.pluck) {
-        return d3.sum(data.pluck(key));
-      } else {
-        return d3.sum(data.map(function (d) {
-          return d[key];
-        }));
-      }
-    },
-    validNumber: function validNumber(n) {
-      return _.isNumber(n) && _.isFinite(n);
-    },
-    validFuel: function validFuel(pct, amt) {
-      return this.validNumber(pct) && pct > 0 && this.validNumber(amt) && amt > 0;
-    },
-    getBuildingFuels: function getBuildingFuels(fuels, data) {
-      var _this = this;
-      fuels.forEach(function (d) {
-        var emmission_pct = _this.getMean(d.key + '_ghg_percent', data);
-        var emmission_amt = _this.getMean(d.key + '_ghg', data);
-        var usage_pct = _this.getMean(d.key + '_pct', data);
-        var usage_amt = _this.getMean(d.key, data);
-        d.emissions = {};
-        d.emissions.isValid = _this.validFuel(emmission_pct, emmission_amt);
-        d.emissions.pct = d.emissions.pct_raw = emmission_pct * 100;
-        d.emissions.pct_actual = emmission_pct;
-        d.emissions.amt = emmission_amt;
-        d.emissions.cars = _this.formatters.fixedOne(emmission_amt / _this.TYPICAL_CAR_EMMISSION);
-        d.usage = {};
-        d.usage.isValid = _this.validFuel(usage_pct, usage_amt);
-        d.usage.pct = d.usage.pct_raw = usage_pct * 100;
-        d.usage.pct_actual = usage_pct;
-        d.usage.amt = usage_amt;
-      });
-      return fuels.filter(function (d) {
-        return d.usage.isValid || d.emissions.isValid;
-      });
-    },
-    getCityWideFuels: function getCityWideFuels(fuels, data) {
-      var _this2 = this;
-      var total_emissions = data.total_emissions;
-      var total_usage = data.total_consump;
-      fuels.forEach(function (d) {
-        var emission_key = "pct_".concat(d.key, "_ghg");
-        var usage_key = "pct_".concat(d.key);
-        var emmission_pct = data[emission_key];
-        var usage_pct = data[usage_key];
-        d.emissions = {};
-        d.emissions.isValid = _this2.validFuel(emmission_pct, total_emissions);
-        d.emissions.pct = d.emissions.pct_raw = emmission_pct * 100;
-        d.emissions.pct_actual = emmission_pct;
-        d.usage = {};
-        d.usage.isValid = _this2.validFuel(usage_pct, total_usage);
-        d.usage.pct = d.usage.pct_raw = usage_pct * 100;
-        d.usage.pct_actual = usage_pct;
-      });
-      return fuels.filter(function (d) {
-        return d.usage.isValid && d.emissions.isValid;
-      });
-    },
-    fixPercents: function fixPercents(fuels, prop) {
-      var values = fuels.map(function (d, i) {
-        var decimal = +(d[prop].pct_raw % 1);
-        var val = Math.floor(d[prop].pct_raw);
-        return {
-          idx: i,
-          val: val,
-          iszero: val === 0,
-          decimal: val === 0 ? 1 : decimal
-        };
-      }).sort(function (a, b) {
-        return b.decimal - a.decimal;
-      });
-      var sum = d3.sum(values, function (d) {
-        return d.val;
-      });
-      var diff = 100 - sum;
-      values.forEach(function (d) {
-        if (diff === 0) return;
-        diff -= 1;
-        d.val += 1;
-        d.iszero = false;
-      });
-
-      // we need to bump up zero values
-      var zeros = values.filter(function (d) {
-        return d.iszero;
-      });
-      var zeros_length = zeros.length;
-      if (zeros_length > 0) {
-        while (zeros_length > 0) {
-          zeros_length--;
-          values.forEach(function (d) {
-            if (!d.iszero && d.val > 1) {
-              d.val -= 1;
-            }
-            if (d.iszero) {
-              d.val += 1;
-            }
-          });
-        }
-      }
-      values.forEach(function (d) {
-        fuels[d.idx][prop].pct = d.val;
-        fuels[d.idx][prop].pct_raw = d.val;
-      });
+    showPercents: function showPercents(num) {
+      if (isNaN(num)) return null;
+      var number = Number(num);
+      return number > 0;
     },
     chartData: function chartData() {
       var data = this.data;
-      var total_ghg_emissions;
-      var total_ghg_emissions_intensity;
-      var total_usage;
-      var fuels;
-      if (this.isCity) {
-        fuels = this.getCityWideFuels(_toConsumableArray(this.fuels), data);
-        total_ghg_emissions = data.total_emissions;
-        total_ghg_emissions_intensity = data.total_emissions_intensity;
-        total_usage = data.total_consump;
-      } else {
-        fuels = this.getBuildingFuels(_toConsumableArray(this.fuels), data);
-        total_ghg_emissions = this.getSum('total_ghg_emissions', data);
-        total_ghg_emissions_intensity = this.getSum('total_ghg_emissions_intensity', data);
-        total_usage = this.getSum('total_kbtu', data);
+      var buildingData = data[0];
+      var gas_ghg_percent = buildingData.gas_ghg_percent,
+        electricity_ghg_percent = buildingData.electricity_ghg_percent,
+        steam_ghg_percent = buildingData.steam_ghg_percent,
+        gas_pct = buildingData.gas_pct,
+        electricity_pct = buildingData.electricity_pct,
+        steam_pct = buildingData.steam_pct,
+        total_ghg_emissions = buildingData.total_ghg_emissions,
+        total_kbtu = buildingData.total_kbtu;
+      var normalizeNum = function normalizeNum(num) {
+        if (isNaN(num)) return 0;
+        var next = Number(num !== null && num !== void 0 ? num : 0) * 100;
+        return Math.round(next);
+      };
+      var chartData = [{
+        electricity: normalizeNum(electricity_pct),
+        gas: normalizeNum(gas_pct),
+        group: 'usage',
+        steam: normalizeNum(steam_pct)
+      }, {
+        electricity: normalizeNum(electricity_ghg_percent),
+        gas: normalizeNum(gas_ghg_percent),
+        group: 'emissions',
+        steam: normalizeNum(steam_ghg_percent)
+      }];
+      var _showGas = this.showPercents(gas_ghg_percent) || this.showPercents(gas_pct);
+      var _showElectricity = this.showPercents(electricity_ghg_percent) || this.showPercents(electricity_pct);
+      var _showSteam = this.showPercents(steam_ghg_percent) || this.showPercents(steam_pct);
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
-
-      // what the heck is this?
-      this.fixPercents(fuels, 'emissions');
-      this.fixPercents(fuels, 'usage');
-      var all_electric = fuels.filter(function (d) {
-        return d.key == 'electricity';
-      }).reduce(function (z, e) {
-        return e.usage.pct > 99;
-      }, false);
       var totals = {
-        usage_raw: total_usage,
-        usage: d3.format(',d')(Math.round(total_usage)),
-        emissions_raw: total_ghg_emissions,
-        emissions: d3.format(',d')(Math.round(total_ghg_emissions))
+        emissions: numberWithCommas(total_ghg_emissions),
+        usage: numberWithCommas(total_kbtu)
       };
       return {
-        fuels: fuels,
         totals: totals,
-        total_ghg_emissions: total_ghg_emissions,
-        all_electric: all_electric,
-        total_ghg_emissions_intensity: total_ghg_emissions_intensity,
-        isCity: this.isCity,
-        building_name: this.building_name,
-        year: this.year,
-        cars: this.formatters.fixedOne(total_ghg_emissions / this.TYPICAL_CAR_EMMISSION)
+        chartData: chartData,
+        _showGas: _showGas,
+        _showElectricity: _showElectricity,
+        _showSteam: _showSteam
       };
     },
-    renderEnergyConsumptionChart: function renderEnergyConsumptionChart(data, totals) {
+    renderChart: function renderChart(chartData, totals) {
+      var FONT_SIZE = 12;
+      var X_AXIS_PADDING = 6;
+      var PERCENTAGE_BOTTOM_PADDING = 3;
       var parent = d3.select(this.viewParent).select('.fueluse-chart');
       if (!parent.node()) return;
       var margin = {
-        top: 25,
+        top: 50,
         right: 0,
-        bottom: 25,
+        bottom: 50,
         left: 0
       };
       var outerWidth = parent.node().offsetWidth;
       var outerHeight = parent.node().offsetHeight;
       var width = outerWidth - margin.left - margin.right;
-      var svg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
-      var chartData = data.map(function (row, i) {
-        return _objectSpread(_objectSpread({}, row), {}, {
-          emissions: _objectSpread(_objectSpread({}, row.emissions), {}, {
-            pctBefore: d3.sum(data.map(function (d, k) {
-              return k >= i ? 0 : d.emissions.pct_actual;
-            }))
-          }),
-          usage: _objectSpread(_objectSpread({}, row.usage), {}, {
-            pctBefore: d3.sum(data.map(function (d, k) {
-              return k >= i ? 0 : d.usage.pct_actual;
-            }))
-          })
-        });
-      });
+      var height = outerHeight - margin.top - margin.bottom;
       var labels = {
         emissions: {
           label: 'Metric Tons',
@@ -237,39 +90,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           totalUnits: 'kBtu'
         }
       };
-      var chartGroup = svg.append('g');
-      var chartHeight = outerHeight - margin.top - margin.bottom;
-      this.renderBarChart(chartGroup, chartData, labels, totals, width, chartHeight, margin);
-    },
-    renderBarChart: function renderBarChart(parent, data, labels, totals, chartWidth, chartHeight, margin) {
-      var FONT_SIZE = 12;
-      var X_AXIS_PADDING = 6;
-      var PERCENTAGE_BOTTOM_PADDING = 3;
-      var svg = parent.append('g').attr('transform', "translate(0, ".concat(margin.top + X_AXIS_PADDING + FONT_SIZE, ")"));
-      var width = chartWidth;
-      var height = chartHeight - margin.top - margin.bottom;
+      var parentSvg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
+      var svg = parentSvg.append('g').attr('transform', "translate(0, ".concat(margin.top, ")"));
       var groups = ['emissions', 'usage'];
-      var subgroups = _toConsumableArray(new Set(data.map(function (d) {
-        return d.key;
-      }).flat()));
-      var chartData = data.reduce(function (acc, d) {
-        var _d$emissions, _d$usage;
-        acc.emissions[d.key] = d === null || d === void 0 ? void 0 : (_d$emissions = d.emissions) === null || _d$emissions === void 0 ? void 0 : _d$emissions.pct;
-        acc.usage[d.key] = d === null || d === void 0 ? void 0 : (_d$usage = d.usage) === null || _d$usage === void 0 ? void 0 : _d$usage.pct;
-        return acc;
-      }, {
-        emissions: {},
-        usage: {}
-      });
-      chartData = Object.entries(chartData).reduce(function (acc, _ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-          k = _ref2[0],
-          v = _ref2[1];
-        acc.push(_objectSpread({
-          group: k
-        }, v));
-        return acc;
-      }, []);
+      var subgroups = ['gas', 'steam', 'electricity'];
 
       // Add bottom X axis
       var x = d3.scaleBand().domain(groups).range([0, width]).paddingInner([0.1]);
@@ -352,7 +176,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderEnergyConsumptionChart(chartData.fuels, chartData.totals);
+      this.renderChart(chartData.chartData, chartData.totals);
     }
   });
   return FuelUseView;

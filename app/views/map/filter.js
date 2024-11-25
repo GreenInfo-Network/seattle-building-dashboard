@@ -287,7 +287,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'ionrangeslider', 'models/buil
         var svg = this.histogram.$el.find('svg')[0];
         var svgScaleFactor = svg ? svg.getCTM().a : 1;
         var qlabels = {
-          width: this.histogram.xScale.rangeBand() * svgScaleFactor,
+          width: this.histogram.xScale.bandwidth() * svgScaleFactor,
           labels: this.threshold_labels,
           positions: this.histogram.xScale.range().map(function (d) {
             return d * svgScaleFactor;
@@ -412,7 +412,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'ionrangeslider', 'models/buil
       };
     },
     events: {
-      'click': 'showLayer',
+      click: 'showLayer',
       'click .more-info': 'toggleMoreInfo',
       'click .compare-closer': 'closeCompare'
     },

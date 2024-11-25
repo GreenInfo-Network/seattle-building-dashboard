@@ -24,39 +24,54 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
-      return data;
+      var buildingData = data[0];
+      var gas_ghg_percent = buildingData.gas_ghg_percent,
+        electricity_ghg_percent = buildingData.electricity_ghg_percent,
+        steam_ghg_percent = buildingData.steam_ghg_percent;
+      return {
+        chartData: buildingData,
+        _showGas: !isNaN(gas_ghg_percent) && Number(gas_ghg_percent) > 0,
+        _showElectricity: !isNaN(electricity_ghg_percent) && Number(electricity_ghg_percent) > 0,
+        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0
+      };
     },
-    renderChart: function renderChart(building) {
-      var _this = this;
-      var buildingData = building[0];
+    renderChart: function renderChart(buildingData) {
+      var _gas_ghg_percent,
+        _electricity_ghg_perc,
+        _steam_ghg_percent,
+        _this = this;
       var maxGhgi = 5;
       var totalGhgi = buildingData === null || buildingData === void 0 ? void 0 : buildingData.total_ghg_emissions_intensity;
       var divisor = 100 / maxGhgi;
       var multiplier = totalGhgi / maxGhgi;
+      var gas_ghg_percent = buildingData.gas_ghg_percent,
+        electricity_ghg_percent = buildingData.electricity_ghg_percent,
+        steam_ghg_percent = buildingData.steam_ghg_percent;
+      gas_ghg_percent = Number((_gas_ghg_percent = gas_ghg_percent) !== null && _gas_ghg_percent !== void 0 ? _gas_ghg_percent : 0);
+      electricity_ghg_percent = Number((_electricity_ghg_perc = electricity_ghg_percent) !== null && _electricity_ghg_perc !== void 0 ? _electricity_ghg_perc : 0);
+      steam_ghg_percent = Number((_steam_ghg_percent = steam_ghg_percent) !== null && _steam_ghg_percent !== void 0 ? _steam_ghg_percent : 0);
       var chartData = [{
         group: 'ghgi',
-        gas: (buildingData === null || buildingData === void 0 ? void 0 : buildingData.gas_ghg_percent) * 100 / divisor * multiplier,
-        steam: (buildingData === null || buildingData === void 0 ? void 0 : buildingData.steam_ghg_percent) * 100 / divisor * multiplier,
-        electricity: (buildingData === null || buildingData === void 0 ? void 0 : buildingData.electricity_ghg_percent) * 100 / divisor * multiplier
+        gas: gas_ghg_percent * 100 / divisor * multiplier,
+        steam: steam_ghg_percent * 100 / divisor * multiplier,
+        electricity: electricity_ghg_percent * 100 / divisor * multiplier
       }];
       var parent = d3.select(this.viewParent).select('.beps-chart');
       if (!parent.node()) return;
       var margin = {
-        top: 25,
+        top: 0,
         right: 0,
         bottom: 50,
         left: 50
       };
-      // TODO use the parent
-      var outerWidth = 250; // parent.node().offsetWidth;
-      var outerHeight = 250; // parent.node().offsetHeight;
-
+      var outerWidth = parent.node().offsetWidth;
+      var outerHeight = parent.node().offsetHeight;
       var height = outerHeight - margin.top - margin.bottom;
       var width = (outerWidth - margin.left - margin.right) / 2;
       var parentSvg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
       var FONT_SIZE = 12;
       var X_AXIS_PADDING = 6;
-      var svg = parentSvg.append('g').attr('transform', "translate(".concat(margin.left, ", ").concat(margin.top + X_AXIS_PADDING + FONT_SIZE, ")"));
+      var svg = parentSvg.append('g').attr('transform', "translate(".concat(margin.left, ", ").concat(margin.top + FONT_SIZE, ")"));
       var groups = ['ghgi'];
       var subgroups = _toConsumableArray(new Set(chartData.map(function (d) {
         return Object.keys(d);
@@ -110,7 +125,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         var _ref2 = _slicedToArray(_ref, 2),
           k = _ref2[0],
           v = _ref2[1];
-        return k.startsWith('BEPStarget_');
+        return k.startsWith('bepstarget_');
       }).reduce(function (acc, _ref3) {
         var _ref4 = _slicedToArray(_ref3, 2),
           k = _ref4[0],
@@ -131,7 +146,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         var yPos = Number(height) - Number(height) * _multiplier;
         var targetText = "".concat(year, ": target ").concat(target.toFixed(2));
         svg.append('line').attr('class', 'beps-bar-target-line').attr('x1', 0).attr('y1', yPos).attr('x2', outerWidth).attr('y2', yPos);
-        svg.append('text').attr('class', 'beps-bar-target-text  text-chart').attr('font-size', FONT_SIZE).attr('x', outerWidth - margin.left - margin.right).attr('y', yPos - X_AXIS_PADDING).text(targetText);
+        svg.append('text').attr('class', 'beps-bar-target-text  text-chart').attr('font-size', FONT_SIZE).attr('x', outerWidth - margin.left - margin.right - X_AXIS_PADDING).attr('y', yPos - X_AXIS_PADDING).text(targetText);
       }
     },
     render: function render() {
@@ -139,7 +154,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderChart(chartData);
+      this.renderChart(chartData.chartData);
     }
   });
   return BepsView;

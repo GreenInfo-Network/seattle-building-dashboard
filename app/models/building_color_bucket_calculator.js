@@ -104,7 +104,7 @@ define(['underscore', 'd3'], function (_, d3) {
     console.log(h(fieldValues.filter(d => d !== null)));
      var c = ["#1f5dbe", "#c4b957", "#e9a646", "#c04f31"]
     var r =  [24.8,29.1,36.0];
-    var s = d3.scale.threshold().domain(r).range(c);
+    var s = d3.scaleThreshold().domain(r).range(c);
      */
 
     this.memoized.colorGradients[this.fieldName] = scale;

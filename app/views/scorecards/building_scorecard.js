@@ -1,32 +1,45 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts/fueluse', './charts/beps', './charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html', './temp-extract'], function ($, _, Backbone, d3, wrap, FuelUseView, BepsView, PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate, tempExtract) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts/fueluse', './charts/beps', './charts/use_types', './charts/performance_over_time', './charts/first_ghgi_target', './charts/first_compliance_interval',
+//
+'./charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, d3, wrap, FuelUseView, BepsView, UseTypesView, PerformanceOverTimeView, FirstGhgiTargetView, FirstComplianceIntervalView,
+//
+PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
+      var _this = this;
       this.state = options.state;
       this.formatters = options.formatters;
       this.metricFilters = options.metricFilters;
       this.parentEl = options.parentEl;
       this.template = _.template(BuildingTemplate);
       this.listenTo(this.state, 'change:tab', this.onChangeTab);
+
+      // Re-render when re-sizing
+      $(window).on('resize', function () {
+        _this.render();
+      });
       this.charts = {};
       return this;
     },
     events: {
       'click .sc-toggle--input': 'toggleView',
-      'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart'
+      'click .cbps-learn-more-below': 'scrollToPerformanceStandardChart',
+      'click .building-main-overview-button': 'onClickOut'
+    },
+    onClickOut: function onClickOut(evt) {
+      var _evt$target;
+      var nextTab = evt === null || evt === void 0 ? void 0 : (_evt$target = evt.target) === null || _evt$target === void 0 ? void 0 : _evt$target.id;
+      if (!nextTab) return;
+      this.state.set({
+        tab: nextTab
+      });
     },
     onChangeTab: function onChangeTab() {
       this.render();
@@ -56,7 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       this.render();
     },
     render: function render() {
-      var _this = this;
+      var _this2 = this;
       if (!this.state.get('report_active')) return;
       var id = this.state.get('building');
       var year = this.state.get('year');
@@ -78,7 +91,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
 
         // Get building data for all years
         d3.json("https://cityenergy-seattle.carto.com/api/v2/sql?q=SELECT+ST_X(the_geom)+AS+lng%2C+ST_Y(the_geom)+AS+lat%2C*+FROM+".concat(table, "+WHERE+id=").concat(id, " AND(").concat(yearWhereClause, ")"), function (payload) {
-          if (!_this.state.get('report_active')) return;
+          if (!_this2.state.get('report_active')) return;
           if (!payload) {
             console.error('There was an error loading building data for the scorecard');
             return;
@@ -87,52 +100,11 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
           payload.rows.forEach(function (d) {
             data[d.year] = _objectSpread({}, d);
           });
-
-          // TODO all this needs an update once we pull real data
-          // ------------------------------------------------------------
-
-          var extract2023 = tempExtract();
-
-          // left old, right new
-          var equivalents = {
-            reported_gross_floor_area: 'PropertyGFATotal',
-            cbps_euit: 'CBPSEUItarget'
-          };
-          data = Object.fromEntries(Object.entries(data).map(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
-              k = _ref2[0],
-              v = _ref2[1];
-            if (equivalents[k]) {
-              return [equivalents[k], v];
-            } else {
-              return [k, v];
-            }
-          }));
-          var last = data['2022'];
-          for (var _i2 = 0, _Object$keys = Object.keys(last); _i2 < _Object$keys.length; _i2++) {
-            var key = _Object$keys[_i2];
-            if (_typeof(last[key]) !== extract2023[key]) {
-              if (typeof last[key] === 'number') {
-                extract2023[key] = Number(extract2023[key]);
-              }
-              // console.warn(
-              //   `(${key}) old type ${typeof last[
-              //     key
-              //   ]}, new type ${typeof extract2023[key]} `
-              // );
-            }
-          }
-
-          // Setting 2023 as 2022 for now
-          data['2022'] = extract2023;
-
-          // ------------------------------------------------------------
-
-          _this.scoreCardData = {
-            id: _this.state.get('building'),
+          _this2.scoreCardData = {
+            id: _this2.state.get('building'),
             data: data
           };
-          _this.show(buildings, data, year, years);
+          _this2.show(buildings, data, year, years);
         });
       }
     },
@@ -207,7 +179,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       return !!building[certifiedField];
     },
     processBuilding: function processBuilding(buildings, building_data, selected_year, avail_years) {
-      var _this2 = this;
+      var _this3 = this;
       var building = building_data[selected_year];
       var view = this.state.get('scorecard').get('view');
       var name = building.property_name;
@@ -259,6 +231,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       }
       var chartdata = this.prepareCompareChartData(config, buildings, building, selected_year, 'eui', prop_type, id);
       var essChartData = this.prepareCompareChartData(config, buildings, building, selected_year, 'ess', prop_type, id);
+      var bepstarget_2031 = building.bepstarget_2031,
+        bepstarget_2036 = building.bepstarget_2036,
+        bepstarget_2041 = building.bepstarget_2041,
+        bepstarget_2046 = building.bepstarget_2046;
       el.html(this.template({
         active: 'active',
         name: name,
@@ -276,18 +252,24 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         costs: this.costs(building, selected_year),
         compareEui: this.compare(building, 'eui', config, chartdata),
         compareEss: this.compare(building, 'ess', config, essChartData),
-        site_eui_wn: site_eui_wn.toLocaleString(),
+        site_eui_wn: Number(site_eui_wn).toFixed(1),
         eui_difference: eui_difference,
         eui_direction: eui_direction,
         eui_direction_statement: eui_direction_statement,
-        total_ghg: total_ghg,
+        total_ghg: Number(total_ghg).toFixed(2),
         ghg_direction: ghg_direction,
         ghg_direction_statement: ghg_direction_statement,
-        tab: this.state.get('tab')
+        tab: this.state.get('tab'),
+        bepstarget_2031: bepstarget_2031,
+        bepstarget_2036: bepstarget_2036,
+        bepstarget_2041: bepstarget_2041,
+        bepstarget_2046: bepstarget_2046
       }));
 
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
+
+      // ----------------------------------------------------------------------------------------------------
 
       // render fuel use chart (fueluse.js)
       if (!this.charts['eui'].chart_fueluse) {
@@ -319,6 +301,95 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
 
       // ----------------------------------------------------------------------------------------------------
 
+      // render Building use type chart (use_types.js)
+      if (!this.charts['eui'].chart_use_types) {
+        this.charts['eui'].chart_use_types = new UseTypesView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          parent: el[0]
+        });
+      }
+      el.find('#use-types-chart').html(this.charts['eui'].chart_use_types.render());
+      this.charts['eui'].chart_use_types.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // render performance over time chart (performance_over_time.js)
+      if (!this.charts['eui'].chart_performance_over_time) {
+        // avail_years comes from seattle.json and shows all available years
+        // we want all years for this building
+        var building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+        var shiftConfig = config.change_chart.building;
+        var previousYear = building_years[0];
+
+        // by definition, we should always have a previous year, or else a single year of data
+        // so how can no_year be a condition?
+        var hasPreviousYear = previousYear !== selected_year;
+        var change_data = hasPreviousYear ? this.extractChangeData(building_data, buildings, building, shiftConfig) : null;
+
+        // trap case where there is a range of only one year, send to the view for rendering an error
+        var single_year = building_years.length === 1;
+        this.charts['eui'].chart_performance_over_time = new PerformanceOverTimeView({
+          formatters: this.formatters,
+          data: change_data,
+          no_year: !hasPreviousYear,
+          single_year: single_year,
+          previous_year: previousYear,
+          selected_year: selected_year,
+          view: 'eui',
+          parent: el[0]
+        });
+      }
+      el.find('#performance-over-time-chart').html(this.charts['eui'].chart_performance_over_time.render());
+      this.charts['eui'].chart_performance_over_time.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // render first ghgi target chart (first_ghgi_target.js)
+      if (!this.charts['eui'].chart_first_ghgi_target) {
+        var _building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+        var latestYear = _building_years[_building_years.length - 1];
+        this.charts['eui'].chart_first_ghgi_target = new FirstGhgiTargetView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          latestYear: latestYear,
+          parent: el[0]
+        });
+      }
+      el.find('#first-ghgi-target-chart').html(this.charts['eui'].chart_first_ghgi_target.render());
+      this.charts['eui'].chart_first_ghgi_target.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // TODO check for flag
+
+      // render first compliance interval chart (first_compliance_interval.js)
+      if (!this.charts['eui'].chart_first_compliance_interval) {
+        var _building_years2 = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+        var _latestYear = _building_years2[_building_years2.length - 1];
+        this.charts['eui'].chart_first_compliance_interval = new FirstComplianceIntervalView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          latestYear: _latestYear,
+          parent: el[0]
+        });
+      }
+      el.find('#first-compliance-interval-chart').html(this.charts['eui'].chart_first_compliance_interval.render());
+      this.charts['eui'].chart_first_compliance_interval.afterRender();
+      // ----------------------------------------------------------------------------------------------------
+
       // render Clean Building Performance Standard (CBPS) chart (performance_standard.js), but only if flagged
       if (building.cbps_flag) {
         if (!this.charts['eui'].chart_performance_standard) {
@@ -342,41 +413,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         $('div#state-requirement-wrapper').addClass('wrapper-hidden');
       }
 
-      // render Energy Use Trends (shift.js) chart
-      if (!this.charts['eui'].chart_shift) {
-        // avail_years comes from seattle.json and shows all available years
-        // we want all years for this building
-        var building_years = Object.keys(building_data).sort(function (a, b) {
-          return parseInt(a) - parseInt(b);
-        });
-        var shiftConfig = config.change_chart.building;
-        var previousYear = building_years[0];
-
-        // by definition, we should always have a previous year, or else a single year of data
-        // so how can no_year be a condition?
-        var hasPreviousYear = previousYear !== selected_year;
-        var change_data = hasPreviousYear ? this.extractChangeData(building_data, buildings, building, shiftConfig) : null;
-
-        // trap case where there is a range of only one year, send to the view for rendering an error
-        var single_year = building_years.length === 1;
-        this.charts['eui'].chart_shift = new ShiftView({
-          formatters: this.formatters,
-          data: change_data,
-          no_year: !hasPreviousYear,
-          single_year: single_year,
-          previous_year: previousYear,
-          selected_year: selected_year,
-          view: 'eui'
-        });
-      }
-
-      // now render
-      if (this.charts['eui'].chart_shift) {
-        this.charts['eui'].chart_shift.render(function (t) {
-          el.find('#compare-shift-chart').html(t);
-        }, viewSelector);
-      }
-
       // Render Energy Use Compared To Average and Energy Star Score Compared To Average ("compare" chart)
       // Note: this one doesn't have a separate template, render is defined here (this.renderCompareChart)
       this.renderCompareChart(config, chartdata, 'eui', prop_type, name, viewSelector);
@@ -389,7 +425,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
           building: building
         });
         this.commentview.render(function (markup) {
-          _this2.parentEl.find('#building-comments').html(markup);
+          _this3.parentEl.find('#building-comments').html(markup);
         });
       }
     },
@@ -615,6 +651,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         mean: avg
       };
     },
+    // TODO this is all still V3. Do we need it at all?
     // Render Energy Use Compared To Average and Energy Star Score Compared To Average
     renderCompareChart: function renderCompareChart(config, chartdata, view, prop_type, name, viewSelector) {
       var container = d3.select(viewSelector);
@@ -787,7 +824,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       averageBuildingHighlight.attr('transform', "translate(".concat(xTranslate, ", ").concat(yTranslate, ")"));
     },
     extractChangeData: function extractChangeData(yearly, buildings, building, config) {
-      var _this3 = this;
+      var _this4 = this;
       var o = [];
       var colorScales = {};
       config.metrics.forEach(function (metric) {
@@ -806,21 +843,25 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       Object.keys(yearly).forEach(function (year) {
         var bldings = yearly[year];
         config.metrics.forEach(function (metric) {
+          var id = '';
           var label = '';
           if (metric.label.charAt(0) === '{') {
             var labelKey = metric.label.replace(/\{|\}/gi, '');
             label = bldings[labelKey];
+            id = 'building';
           } else {
+            id = 'average';
             label = metric.label;
           }
           var value = bldings[metric.field];
-          if (!_this3.validNumber(value)) {
+          if (!_this4.validNumber(value)) {
             value = null;
           } else {
             value = +value.toFixed(1);
           }
           var clr = colorScales.hasOwnProperty(metric.field) && metric.colorize ? colorScales[metric.field](value) : null;
           o.push({
+            id: id,
             label: label,
             field: metric.field,
             value: value,

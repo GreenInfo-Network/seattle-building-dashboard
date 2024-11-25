@@ -1,5 +1,8 @@
 <div class="beps">
-  <div class="beps-text-container text-copy">Text will go here</div>
+  <div class="beps-text-container text-copy">
+    Compare your building’s 2023 emissions to its estimated GHGI targets for all
+    compliance intervals.
+  </div>
   <div class="beps-chart-container">
     <div class="beps-chart" />
     <div class="beps-legend">
@@ -12,18 +15,22 @@
         </div>
       </div>
 
+      <% if (_showElectricity) { %>
       <div class="beps-legend-swatch">
         <div class="beps-legend-swatch-color electric"></div>
         <div class="beps-legend-swatch-text text-copy">Electric</div>
       </div>
+      <% } %> <% if (_showSteam) { %>
       <div class="beps-legend-swatch">
         <div class="beps-legend-swatch-color steam"></div>
         <div class="beps-legend-swatch-text text-copy">Steam</div>
       </div>
+      <% } %> <% if (_showGas) { %>
       <div class="beps-legend-swatch">
         <div class="beps-legend-swatch-color gas"></div>
         <div class="beps-legend-swatch-text text-copy">Gas</div>
       </div>
+      <% } %>
     </div>
   </div>
 </div>

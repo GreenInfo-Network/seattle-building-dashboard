@@ -1,6 +1,9 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
@@ -13,6 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
       this.listenTo(this.state, 'change:allbuildings', this.onBuildingsChange);
       this.listenTo(this.state, 'change:report_active', this.onBuildingReportActive);
       this.listenTo(this.state, 'change:city_report_active', this.onCityReportActive);
+      this.listenTo(this.state, 'change:tab', this.setTabClasses);
       var scorecard = this.state.get('scorecard');
       this.listenTo(scorecard, 'change:view', this.onViewChange);
       this.template = _.template(ScorecardTemplate);
@@ -38,7 +42,16 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
     events: {
       'click #back-to-map-link': 'closeReport',
       'click #comparison-view-link': 'showComparisonView',
-      'click .scorecard-tab-click': 'setTab'
+      'click .scorecard-tab-click': 'setTab',
+      'click #share-link': 'copyUrl'
+    },
+    copyUrl: function copyUrl() {
+      var url = window.location.href;
+      try {
+        navigator.clipboard.writeText(url);
+      } catch (err) {
+        console.warn(err);
+      }
     },
     onBuildingsChange: function onBuildingsChange() {
       if (this.dirty) this.render();
@@ -59,11 +72,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
         // TODO set back to benchmark_overview
-        // this.state.set({ tab: 'benchmark_overview' });
         this.state.set({
-          tab: 'emissions_targets'
+          tab: 'benchmark_overview'
         });
+        // this.state.set({ tab: 'emissions_targets' });
+        // this.state.set({ tab: 'energy_targets' });
       }
+
       this.render();
     },
     onCityReportActive: function onCityReportActive() {
@@ -81,9 +96,34 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
       var _evt$target;
       var nextTab = evt === null || evt === void 0 ? void 0 : (_evt$target = evt.target) === null || _evt$target === void 0 ? void 0 : _evt$target.id;
       if (!nextTab) return;
+      // set state
       this.state.set({
         tab: nextTab
       });
+    },
+    setTabClasses: function setTabClasses() {
+      var activeTab = this.state.get('tab');
+
+      // set classes on tabs
+      var tabs = ['benchmark_overview', 'emissions_targets', 'energy_targets'];
+      var inActiveTabs = tabs.filter(function (t) {
+        return t !== activeTab;
+      });
+      var activeEl = $("div#".concat(activeTab));
+      activeEl.addClass('active');
+      var _iterator = _createForOfIteratorHelper(inActiveTabs),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var id = _step.value;
+          var inactiveEl = $("div#".concat(id));
+          inactiveEl.removeClass('active');
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
     },
     closeReport: function closeReport(evt) {
       var _this$state$set2;
@@ -175,7 +215,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
         comments: comments,
         name: name,
         energy_star_score: energy_star_score,
-        year: year
+        year: year,
+        tab: this.state.get('tab')
       }));
       this.renderLinks(building, building_type, isBuildingRenderer);
       this.updateViewClass();
@@ -203,6 +244,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
         this.hideScorecard();
       }
       this.dirty = false;
+      this.setTabClasses();
       return this;
     }
   });
