@@ -192,7 +192,7 @@
             "formatter": "none",
             "description": "The year property was constructed, as reported by owner",
             "disable_prettify": true
-        }        
+        }     
     ],
     "years": {
         "2015": {

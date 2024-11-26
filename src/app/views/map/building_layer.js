@@ -47,7 +47,7 @@ define([
     this.mode = mode;
     this.fieldName = fieldName;
 
-    // hack: these field names get a null style IF site_eui_wn is null
+    // hack: these field names get a null style IF iscompliantflag = false (i.e. site_eui_wn is null)
     this.fieldNamesToNull = [
       'total_ghg_emissions',
       'total_ghg_emissions_intensity',
@@ -66,14 +66,14 @@ define([
 
     // a CartoCSS hack we have to employ in order to symbolize some fields as null, when EUI is null
     // to do this we inject a new rule, in the form of 
-    // "#benchmarking_production [total_ghg_emissions>=0][site_eui_wn=null]{polygon-fill:#CCC; line-color: #636363}"
+    // "#benchmarking_production [total_ghg_emissions>=0][iscompliantflag!='true']{polygon-fill:#CCC; line-color: #636363}"
     // if the incoming field is not in that list of fields, then we don't do that (startingCSS is an empty array)
     let startingCSS = [];
     if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
       const fillType = mode === 'dots' ? 'marker-fill' : 'polygon-fill';
       // another map style hack: Energy Star does not get an outline for null, but the others do
       const lineColor = this.fieldName === 'energy_star_score' ? '' : ' line-color: #636363';
-      startingCSS = [`[${this.fieldName}>=0][site_eui_wn=null]{${fillType}:#CCC;${lineColor}}`];
+      startingCSS = [`[${this.fieldName}>=0][iscompliantflag=false]{${fillType}:#CCC;${lineColor}}`];
     }
 
     startingCSS = [...baseCartoCSS[mode]].concat(startingCSS)
@@ -249,6 +249,8 @@ define([
       return 'b.' + lyr.field_name;
     });
     this.mapLayerFields.push('b.id');
+    // hack: Make CartoCSS work with isCompliantFlag
+    this.mapLayerFields.push('b.iscompliantflag');
 
     this.mapLayerFields = _.uniq(this.mapLayerFields);
     this.mapLayerFields = this.mapLayerFields.join(',');

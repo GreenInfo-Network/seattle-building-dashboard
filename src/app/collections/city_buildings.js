@@ -163,13 +163,13 @@ define([
       return result;
     },
     parse: function(data){
-      // Housecleaning: If site_eui_wn is null, then the following should also be set:
-      // TODO: This should really be done upstream in R before the data goes to CARTO
+      // Housecleaning: If iscompliantflag is false (meaning site_eui_wn is null), then the following should also be set:
+      // TODO: This should really be done upstream in R before the data goes to CARTO, but...
       // * total_ghg_emissions => null
       // * total_ghg_emissions_intesity => null
       // * energy_star_score => null
       data.rows.forEach(function(row) {
-        if (row.site_eui_wn === null) {
+        if (row.iscompliantflag != true) {
           // do the updates
           row.total_ghg_emissions = null;
           row.total_ghg_emissions_intensity = null;
