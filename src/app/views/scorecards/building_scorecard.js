@@ -204,7 +204,9 @@ define([
         bepstarget_2041,
         bepstarget_2046,
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,
-        showFueluseChart: true
+        // show chart flags
+        showFueluseChart: true,
+        showBepsChart: true
       };
 
       el.html(this.template(this.templateArgs));
@@ -247,6 +249,10 @@ define([
 
       el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
       this.charts['eui'].chart_beps.afterRender();
+
+      // If the data isn't there or has an error, don't show the space for this chart
+      const showBepsChart = this.charts['eui'].chart_beps.showChart;
+      el.html(this.template({ ...this.templateArgs, showBepsChart }));
 
       // ----------------------------------------------------------------------------------------------------
 

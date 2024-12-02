@@ -4,8 +4,9 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/beps.html'
-], function ($, _, Backbone, d3, wrap, BepsTemplate) {
+], function ($, _, Backbone, d3, wrap, validateBuildingData, BepsTemplate) {
   var BepsView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(BepsTemplate);
@@ -15,6 +16,7 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
@@ -22,8 +24,19 @@ define([
       const data = this.data;
       const buildingData = data[0];
 
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        gas_ghg_percent: 'number',
+        electricity_ghg_percent: 'number',
+        steam_ghg_percent: 'number'
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
       const { gas_ghg_percent, electricity_ghg_percent, steam_ghg_percent } =
-        buildingData;
+        typedData;
 
       return {
         chartData: buildingData,
@@ -214,11 +227,14 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
+      if (!chartData) return;
       this.renderChart(chartData.chartData);
     }
   });
