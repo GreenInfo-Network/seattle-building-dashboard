@@ -41,6 +41,7 @@ define([
       this.formatters = options.formatters;
       this.metricFilters = options.metricFilters;
       this.parentEl = options.parentEl;
+      this.templateArgs = {};
       this.template = _.template(BuildingTemplate);
 
       this.listenTo(this.state, 'change:tab', this.onChangeTab);
@@ -180,25 +181,33 @@ define([
         bepstarget_2046
       } = building;
 
-      el.html(
-        this.template({
-          active: 'active',
-          name,
-          addr1: building.reported_address,
-          addr2: this.addressLine2(building),
-          year: selected_year,
-          year_built: building.yearbuilt,
-          ess_logo: this.energyStarCertified('eui', building, config),
-          site_eui_wn: Number(site_eui_wn).toFixed(1),
-          total_ghg: Number(total_ghg).toFixed(2),
-          tab: this.state.get('tab'),
-          bepstarget_2031,
-          bepstarget_2036,
-          bepstarget_2041,
-          bepstarget_2046,
-          cbpsFlag: building.cbps_flag && building.cbpseuitarget
-        })
-      );
+      // fueluse
+      // beps
+      // use_types
+      // performance_over_time
+      // first_ghgi_target
+      // first_compliance_interval
+
+      this.templateArgs = {
+        active: 'active',
+        name,
+        addr1: building.reported_address,
+        addr2: this.addressLine2(building),
+        year: selected_year,
+        year_built: building.yearbuilt,
+        ess_logo: this.energyStarCertified('eui', building, config),
+        site_eui_wn: Number(site_eui_wn).toFixed(1),
+        total_ghg: Number(total_ghg).toFixed(2),
+        tab: this.state.get('tab'),
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046,
+        cbpsFlag: building.cbps_flag && building.cbpseuitarget,
+        showFueluseChart: true
+      };
+
+      el.html(this.template(this.templateArgs));
 
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
@@ -218,6 +227,10 @@ define([
 
       el.find('#fueluse-chart').html(this.charts['eui'].chart_fueluse.render());
       this.charts['eui'].chart_fueluse.afterRender();
+
+      // If the data isn't there or has an error, don't show the space for this chart
+      const showFueluseChart = this.charts['eui'].chart_fueluse.showChart;
+      el.html(this.template({ ...this.templateArgs, showFueluseChart }));
 
       // ----------------------------------------------------------------------------------------------------
 
