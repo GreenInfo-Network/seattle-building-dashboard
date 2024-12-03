@@ -64,17 +64,30 @@
         </div>
         <% } %> <% if (tab === 'energy_targets') { %>
         <div class="building-sidebar-description">
+          <% if (cbpsFlag) { %>
           <div>
             Commercial buildings in Washington greater than 50,000 square feet
             (Tier 1 buildings) must achieve performance targets under
             Washington’s Clean Buildings Performance Standard (CBPS) law.
           </div>
+
+          <% } else { %>
+          <div>
+            Multifamily buildings greater than 20,000 square feet and commercial
+            buildings 20,001–50,000 square feet (Tier 2 buildings) do not
+            currently need to meet CBPS targets, but must comply with other
+            program requirements.
+          </div>
+
+          <% } %>
+
           <div>
             The Washington Department of Commerce administers the CBPS and sets
             performance targets based on Energy Use Intensity (kBtu/SF/yr).
             Buildings may be subject to both Seattle’s BEPS law and Washington’s
             CBPS law.
           </div>
+
           <a
             class="building-sidebar-button text-subheader"
             href="https://www.commerce.wa.gov/cbps/"
