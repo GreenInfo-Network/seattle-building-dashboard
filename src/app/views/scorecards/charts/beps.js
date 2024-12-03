@@ -27,7 +27,8 @@ define([
       const { typedData, valid } = validateBuildingData(buildingData, {
         gas_ghg_percent: 'number',
         electricity_ghg_percent: 'number',
-        steam_ghg_percent: 'number'
+        steam_ghg_percent: 'number',
+        year: 'number'
       });
 
       if (!valid) {
@@ -35,8 +36,12 @@ define([
         return false;
       }
 
-      const { gas_ghg_percent, electricity_ghg_percent, steam_ghg_percent } =
-        typedData;
+      const {
+        gas_ghg_percent,
+        electricity_ghg_percent,
+        steam_ghg_percent,
+        year
+      } = typedData;
 
       return {
         chartData: buildingData,
@@ -44,7 +49,8 @@ define([
         _showElectricity:
           !isNaN(electricity_ghg_percent) &&
           Number(electricity_ghg_percent) > 0,
-        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0
+        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0,
+        _year: year
       };
     },
 

@@ -22,7 +22,7 @@
       </div>
 
       <div class="building-sidebar-description-container text-copy">
-        <% if (tab === 'benchmark_overview') { %>
+        <% if (tab === 'benchmarking_overview') { %>
         <div class="building-sidebar-description">
           <div>
             Energy Benchmarking is the foundation of building energy management
@@ -66,14 +66,14 @@
         <div class="building-sidebar-description">
           <% if (cbpsFlag) { %>
           <div>
-            Commercial buildings in Washington greater than 50,000 square feet
+            Commercial buildings in Washington larger than 50,000 square feet
             (Tier 1 buildings) must achieve performance targets under
             Washington’s Clean Buildings Performance Standard (CBPS) law.
           </div>
 
           <% } else { %>
           <div>
-            Multifamily buildings greater than 20,000 square feet and commercial
+            Multifamily buildings larger than 20,000 square feet and commercial
             buildings 20,001–50,000 square feet (Tier 2 buildings) do not
             currently need to meet CBPS targets, but must comply with other
             program requirements.
@@ -102,7 +102,7 @@
     <!-- MAIN CONTENT -->
     <div class="building-main">
       <!-- BENCHMARKING OVERVIEW -->
-      <% if (tab === 'benchmark_overview') { %>
+      <% if (tab === 'benchmarking_overview') { %>
       <div class="building-main-section">
         <!-- Overview -->
         <div class="building-main-chart-container">
@@ -250,7 +250,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2031</td>
+                <td><%= targetYears.bepstarget_2031 %></td>
                 <td><%= bepstarget_2031 %></td>
               </tr>
               <!-- third row -->
@@ -269,7 +269,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2036</td>
+                <td><%= targetYears.bepstarget_2036 %></td>
                 <td><%= bepstarget_2036 %></td>
               </tr>
               <!-- fourth row -->
@@ -288,7 +288,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2041</td>
+                <td><%= targetYears.bepstarget_2041 %></td>
                 <td><%= bepstarget_2041 %></td>
               </tr>
               <!-- fifth row -->
@@ -307,14 +307,14 @@
                     </div>
                   </div>
                 </td>
-                <td>2046</td>
+                <td><%= targetYears.bepstarget_2046 %></td>
                 <td><%= bepstarget_2046 %></td>
               </tr>
             </table>
           </div>
           <div class="text-asterisk">
-            *Compliance Year Deadlines for Buildings >220,000 SF are October 1st
-            of the year specified.
+            *Compliance Year Deadlines for Buildings <%= sfRangeText %> SF are
+            October 1st of the year specified.
           </div>
           <div class="text-asterisk">
             ** Targets are estimated by prorating the published BEPS targets for
@@ -400,7 +400,7 @@
           </div>
         </div>
         <!-- First compliance interval -->
-        <% if(cbpsFlag && showCharts.first_compliance_interval) { %>
+        <% if(showCharts.first_compliance_interval) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">FIRST COMPLIANCE INTERVAL</div>
           <div id="first-compliance-interval-chart" />
@@ -413,7 +413,7 @@
             <div class="building-main-overview-container">
               <div class="text-copy-large">
                 Visit the Washington Department of Commerce website for steps to
-                comply:
+                comply
               </div>
               <a
                 target="_blank"
@@ -427,7 +427,7 @@
             <div class="building-main-overview-container">
               <div class="text-copy-large">
                 Learn about free technical support options for buildings in
-                Seattle:
+                Seattle
               </div>
               <a
                 target="_blank"

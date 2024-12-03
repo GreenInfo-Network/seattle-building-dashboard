@@ -40,7 +40,8 @@ define([
         bepstarget_2036: 'number',
         bepstarget_2041: 'number',
         bepstarget_2046: 'number',
-        beps_firstcomplianceyear: 'number'
+        beps_firstcomplianceyear: 'number',
+        year: 'number'
       });
 
       if (!valid) {
@@ -54,7 +55,8 @@ define([
         bepstarget_2036,
         bepstarget_2041,
         bepstarget_2046,
-        beps_firstcomplianceyear
+        beps_firstcomplianceyear,
+        year
       } = typedData;
 
       function roundnum(num) {
@@ -67,8 +69,8 @@ define([
       const getNextTarget = () => {
         const years = [2031, 2036, 2041, 2046];
         const firstComplianceYear = Number(beps_firstcomplianceyear);
-        const index = years.findIndex(y => y > firstComplianceYear);
-        return years[index - 1];
+        const index = years.findIndex(y => y > firstComplianceYear && y > year);
+        return years?.[index - 1] ?? years?.[years.length - 1];
       };
 
       const nextTargetValue = Number(data[0][`bepstarget_${getNextTarget()}`]);
@@ -86,6 +88,8 @@ define([
       let greenStripedBarLabel = '';
       let redBarLabel = '';
 
+      let isMeetingTarget;
+
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
@@ -94,6 +98,8 @@ define([
 
         redBarLabel = `(GHGI current) ${currentValue}`;
         greenBarLabel = `(GHGI target) ${nextTargetValue}`;
+
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
@@ -104,6 +110,8 @@ define([
           2
         )}`;
         greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
+
+        isMeetingTarget = true;
       }
 
       const chartData = [
@@ -122,7 +130,9 @@ define([
       return {
         chartData,
         beps_firstcomplianceyear,
-        maxGhgi
+        maxGhgi,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
 

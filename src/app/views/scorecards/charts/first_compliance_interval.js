@@ -68,6 +68,8 @@ define([
       let greenStripedBarLabel = '';
       let redBarLabel = '';
 
+      let isMeetingTarget;
+
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
@@ -76,6 +78,8 @@ define([
 
         redBarLabel = `(EUI current) ${currentValue}`;
         greenBarLabel = `(EUI target) ${nextTargetValue}`;
+
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
@@ -84,6 +88,8 @@ define([
 
         greenStripedBarLabel = `(EUI target) ${nextTargetValue}`;
         greenBarLabel = `(EUI current) ${currentValue}`;
+
+        isMeetingTarget = true;
       }
 
       const chartData = [
@@ -102,7 +108,10 @@ define([
       return {
         chartData,
         maxVal,
-        cbps_date
+        cbps_date,
+        cbps_flag,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
 
@@ -275,7 +284,7 @@ define([
 
     afterRender: function () {
       const chartData = this.chartData();
-      if (!chartData) return;
+      if (!chartData || !chartData?.cbps_flag) return;
       this.renderChart(chartData.chartData, chartData.maxVal);
     }
   });

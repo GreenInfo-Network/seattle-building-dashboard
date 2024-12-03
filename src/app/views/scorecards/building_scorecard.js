@@ -299,30 +299,75 @@ define([
         this.charts['eui']?.chart_first_ghgi_target?.showChart ?? false;
 
       // First compliance interval
-      if (building.cbps_flag) {
-        // render first compliance interval chart (first_compliance_interval.js)
-        if (!this.charts['eui'].chart_first_compliance_interval) {
-          let building_years = Object.keys(building_data).sort(function (a, b) {
-            return parseInt(a) - parseInt(b);
+      // render first compliance interval chart (first_compliance_interval.js)
+      if (!this.charts['eui'].chart_first_compliance_interval) {
+        let building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+
+        const latestYear = building_years[building_years.length - 1];
+
+        this.charts['eui'].chart_first_compliance_interval =
+          new FirstComplianceIntervalView({
+            formatters: this.formatters,
+            data: [building],
+            name: name,
+            year: selected_year,
+            latestYear: latestYear,
+            parent: el[0]
           });
-
-          const latestYear = building_years[building_years.length - 1];
-
-          this.charts['eui'].chart_first_compliance_interval =
-            new FirstComplianceIntervalView({
-              formatters: this.formatters,
-              data: [building],
-              name: name,
-              year: selected_year,
-              latestYear: latestYear,
-              parent: el[0]
-            });
-        }
         this.charts['eui'].chart_first_compliance_interval.chartData();
       }
 
       showCharts.first_compliance_interval =
         this.charts['eui']?.chart_first_compliance_interval?.showChart ?? false;
+
+      const firstComplianceYear = Number(
+        building?.beps_firstcomplianceyear ?? 2031
+      );
+      const yearWindowShift = firstComplianceYear - 2031;
+
+      const targetYears = {
+        // Note that bepstarget_2027 is not a real field
+        bepstarget_2031: 2031 + yearWindowShift,
+        bepstarget_2036: 2036 + yearWindowShift,
+        bepstarget_2041: 2041 + yearWindowShift,
+        bepstarget_2046: 2046 + yearWindowShift
+      };
+
+      const getSfText = () => {
+        function numberWithCommas(x) {
+          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        const totalGfa =
+          (building?.largestpropertyusetypegfa ?? 0) +
+          (building?.secondlargestpropertyusetypegfa ?? 0) +
+          (building?.thirdlargestpropertyusetypegfa ?? 0);
+
+        const amounts = [
+          [20001, 30000],
+          [30001, 50000],
+          [50001, 90000],
+          [90001, 220000],
+          [220000]
+        ];
+
+        let relevantAmounts = amounts.find(
+          range => range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa)
+        );
+
+        relevantAmounts = relevantAmounts.map(numberWithCommas);
+
+        let rangeText = ``;
+
+        if (relevantAmounts.length === 1) {
+          rangeText = `> ${relevantAmounts[0]} SF`;
+        } else {
+          rangeText = `${relevantAmounts[0]}-${relevantAmounts[1]}`;
+        }
+        return rangeText;
+      };
 
       this.templateArgs = {
         active: 'active',
@@ -339,9 +384,12 @@ define([
         bepstarget_2036,
         bepstarget_2041,
         bepstarget_2046,
+        // Since the fields above are windows, each building has specific years in those windows
+        targetYears,
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,
         // show chart flags
-        showCharts
+        showCharts,
+        sfRangeText: getSfText()
       };
 
       el.html(this.template(this.templateArgs));
@@ -376,12 +424,10 @@ define([
       this.charts['eui'].chart_first_ghgi_target.afterRender();
 
       // render first compliance interval chart (first_compliance_interval.js)
-      if (building.cbps_flag) {
-        el.find('#first-compliance-interval-chart').html(
-          this.charts['eui'].chart_first_compliance_interval.render()
-        );
-        this.charts['eui'].chart_first_compliance_interval.afterRender();
-      }
+      el.find('#first-compliance-interval-chart').html(
+        this.charts['eui'].chart_first_compliance_interval.render()
+      );
+      this.charts['eui'].chart_first_compliance_interval.afterRender();
 
       // Add building comments (??)
       if (!this.commentview) {
