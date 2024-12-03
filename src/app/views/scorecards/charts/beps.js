@@ -50,7 +50,10 @@ define([
 
     renderChart: function (buildingData) {
       const totalGhgi = buildingData?.total_ghg_emissions_intensity;
-      const maxGhgi = Math.max(5, totalGhgi);
+      const maxGhgi = Math.max(
+        buildingData?.bepstarget_2031 ?? 0,
+        Math.ceil(totalGhgi)
+      );
 
       const divisor = 100 / maxGhgi;
       const multiplier = totalGhgi / maxGhgi;
@@ -75,7 +78,7 @@ define([
 
       if (!parent.node()) return;
 
-      const margin = { top: 0, right: 0, bottom: 50, left: 50 };
+      const margin = { top: 20, right: 0, bottom: 50, left: 50 };
 
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
@@ -139,7 +142,13 @@ define([
         .append('g')
         .attr('class', 'text-chart')
         .attr('transform', `translate(${X_AXIS_PADDING * -1}, 0)`)
-        .call(d3.axisLeft(y).ticks(6).tickSize(0));
+        .call(
+          d3
+            .axisLeft(y)
+            .ticks(6)
+            .tickSize(0)
+            .tickFormat(d => `${d.toFixed(1)}`)
+        );
 
       yAxis.select('.domain').attr('stroke', 'transparent');
 
@@ -147,7 +156,7 @@ define([
         .append('text')
         .attr('class', 'beps-bar-y-axis-label text-chart')
         .attr('text-anchor', 'middle')
-        .attr('y', -1 * (X_AXIS_PADDING + X_AXIS_PADDING + FONT_SIZE))
+        .attr('y', -1 * ((X_AXIS_PADDING + FONT_SIZE) * 2))
         .attr('x', height / -2)
         .attr('transform', 'rotate(-90)')
         .text('GHGI (kgCO2e/sf/yr)');
@@ -185,10 +194,16 @@ define([
         .attr('width', x.bandwidth());
 
       // Add year targets
+      // 2031 is the start of the first window (2031 - 2035) so the shift
+      // states where in a window a particular building's targets are
+      const firstComplianceYear = Number(
+        buildingData?.beps_firstcomplianceyear ?? 2031
+      );
+      const yearWindowShift = firstComplianceYear - 2031;
       const targetYears = Object.entries(buildingData)
         .filter(([k, v]) => k.startsWith('bepstarget_'))
         .reduce((acc, [k, v]) => {
-          const year = k.split('_')[1];
+          const year = `${Number(k.split('_')[1]) + yearWindowShift}`;
           acc[year] = Number(v);
           return acc;
         }, {});
@@ -196,7 +211,7 @@ define([
       let targets = new Set();
 
       for (const targetData of Object.entries(targetYears)) {
-        const [year, target] = targetData;
+        let [year, target] = targetData;
 
         if (targets.has(target)) continue;
 

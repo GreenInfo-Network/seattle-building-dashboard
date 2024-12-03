@@ -38,8 +38,7 @@ define([
         site_eui_wn: 'number', // current
         cbpseuitarget: 'number', //target
         cbps_date: 'number', // compliance year
-        cbps_flag: 'boolean', //compliance flag TODO if flag and no target, dont show
-        source_eui_wn: 'number' // TODO remove
+        cbps_flag: 'boolean' //compliance flag TODO if flag and no target, dont show
       });
 
       if (!valid) {
@@ -47,24 +46,17 @@ define([
         return false;
       }
 
-      const {
-        site_eui_wn,
-        cbpseuitarget,
-        cbps_date,
-        cbps_flag,
-        source_eui_wn
-      } = typedData;
+      const { site_eui_wn, cbpseuitarget, cbps_date, cbps_flag } = typedData;
 
       function roundnum(num) {
         return Math.ceil(num / 50) * 50;
       }
 
-      // TODO confirm this is the correct thing to be using
-      const maxVal = roundnum(source_eui_wn);
+      const maxVal = roundnum(
+        Math.max(Number(site_eui_wn), Number(cbpseuitarget))
+      );
 
-      // TODO limit to two decimals
-      const nextTargetValue = Number(Number(cbpseuitarget).toFixed(1));
-
+      const nextTargetValue = Number(cbpseuitarget);
       const currentValue = Number(Number(site_eui_wn).toFixed(1));
 
       let greenBar = 0;

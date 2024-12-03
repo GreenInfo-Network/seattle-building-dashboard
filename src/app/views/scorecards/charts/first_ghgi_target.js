@@ -57,16 +57,18 @@ define([
         beps_firstcomplianceyear
       } = typedData;
 
-      const totalGhgi = total_ghg_emissions_intensity;
-      const maxGhgi = Math.max(5, totalGhgi);
+      function roundnum(num) {
+        return Math.ceil(num / 5) * 5;
+      }
 
-      // TODO Why does beps_firstcomplianceyear not match a target year for some buildings?
-      // Sure this logic is incorrect
-      // Example: http://0.0.0.0:8080/#seattle/2023?categories[0][field]=neighborhood&categories[0][values][]=DOWNTOWN&categories[0][values][]=EAST&categories[0][values][]=LAKE+UNION&categories[0][values][]=GREATER+DUWAMISH&categories[0][values][]=MAGNOLIA+%2F+QUEEN+ANNE&categories[0][values][]=NORTHWEST&categories[0][values][]=DELRIDGE+NEIGHBORHOODS&categories[0][values][]=CENTRAL&categories[0][values][]=NORTHEAST&categories[0][values][]=BALLARD&categories[0][values][]=SOUTHWEST&categories[0][values][]=SOUTHEAST&categories[0][values][]=NORTH&categories[0][values][]=&categories[0][other]=false&categories[1][field]=councildistrict&categories[1][values][]=1&categories[1][values][]=2&categories[1][values][]=3&categories[1][values][]=4&categories[1][values][]=5&categories[1][values][]=6&categories[1][values][]=7&categories[1][other]=false&layer=total_ghg_emissions&sort=total_ghg_emissions&order=desc&lat=47.61947&lng=-122.35637&zoom=14&building=745&report_active=true&tab=benchmark_overview
+      const totalGhgi = total_ghg_emissions_intensity;
+      const maxGhgi = Math.max(5, roundnum(totalGhgi));
+
       const getNextTarget = () => {
         const years = [2031, 2036, 2041, 2046];
         const firstComplianceYear = Number(beps_firstcomplianceyear);
-        return years.find(y => y >= firstComplianceYear);
+        const index = years.findIndex(y => y > firstComplianceYear);
+        return years[index - 1];
       };
 
       const nextTargetValue = Number(data[0][`bepstarget_${getNextTarget()}`]);
@@ -250,17 +252,7 @@ define([
           .append('text')
           .attr('class', 'first-ghgi-target-x-axis-label text-chart')
           .attr('text-anchor', d => {
-            // TODO still haven't totally sorted out overlaps
-            // const textPos = x(d[0][1]);
-            // const max = width - 100;
-            // const min = 100;
             let anchor = labelTextAnchor[k];
-            // if (textPos > max) {
-            //   anchor = 'end';
-            // }
-            // if (textPos < min) {
-            //   anchor = 'start';
-            // }
             return anchor;
           })
           .attr('x', d => {

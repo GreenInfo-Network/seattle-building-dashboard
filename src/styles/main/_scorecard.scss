@@ -20,7 +20,7 @@ $sc-font-std: 1rem;
 $sc-font-lg: 1.5rem;
 $sc-font-lgr: 4rem;
 
-// WIP CSS------------------------------------------------------------------------
+// Building scorecard CSS------------------------------------------------------------------------
 // TODO fix this sizing as a base for rem
 html {
   font-size: 14px;
@@ -54,8 +54,6 @@ $electric-color: #8eb1c7;
 $steam-color: #f9c064;
 
 $dataviz-negative: #94778b;
-
-// TODO use open sans
 
 .text-tiny {
   font-size: $text-size-extra-small;
@@ -227,7 +225,6 @@ $dataviz-negative: #94778b;
 }
 
 #building-scorecard {
-  // TODO Go back to none?
   display: block;
   width: 100%;
   height: 100%;
