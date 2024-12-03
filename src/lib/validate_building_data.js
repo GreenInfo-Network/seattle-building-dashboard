@@ -18,12 +18,7 @@ define([], function () {
       switch (type) {
         // String
         case 'string': {
-          if (actualType !== type) {
-            valid = false;
-            console.warn(`${key} should be a string but is ${actualType}`);
-          } else {
-            nextData[key] = value;
-          }
+          nextData[key] = `${value}`;
           break;
         }
         // Number

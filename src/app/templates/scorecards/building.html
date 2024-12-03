@@ -163,23 +163,29 @@
           </div>
         </div>
         <!-- Building info -->
+        <% if (showCharts.use_types) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">BUILDING INFO</div>
           <div id="use-types-chart" />
         </div>
+        <% } %>
         <!-- Energy & Emissions Breakdown -->
-        <% if (showFueluseChart) { %>
+        <% if (showCharts.fueluse) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">ENERGY & EMISSIONS BREAKDOWN</div>
           <div id="fueluse-chart" />
         </div>
         <% } %>
+
         <!-- Energy Performance Over Time -->
+        <% if (showCharts.performance_over_time) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">ENERGY PERFORMANCE OVER TIME</div>
           <div id="performance-over-time-chart" />
         </div>
+        <% } %>
       </div>
+
       <% } %>
       <!-- EMISSIONS TARGETS -->
       <% if (tab === 'emissions_targets') { %>
@@ -310,10 +316,13 @@
           <div id="first-ghgi-target-chart" />
         </div>
         <!-- Plan for Future Targets -->
+        <% if (showCharts.beps) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">PLAN FOR FUTURE TARGETS</div>
           <div id="beps-chart" />
         </div>
+        <% } %>
+
         <!-- Take action -->
         <div class="building-main-chart-container">
           <div class="text-subheader">TAKE ACTION</div>

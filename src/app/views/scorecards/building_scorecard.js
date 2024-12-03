@@ -181,42 +181,16 @@ define([
         bepstarget_2046
       } = building;
 
-      // fueluse
-      // beps
-      // use_types
-      // performance_over_time
-      // first_ghgi_target
-      // first_compliance_interval
-
-      this.templateArgs = {
-        active: 'active',
-        name,
-        addr1: building.reported_address,
-        addr2: this.addressLine2(building),
-        year: selected_year,
-        year_built: building.yearbuilt,
-        ess_logo: this.energyStarCertified('eui', building, config),
-        site_eui_wn: Number(site_eui_wn).toFixed(1),
-        total_ghg: Number(total_ghg).toFixed(2),
-        tab: this.state.get('tab'),
-        bepstarget_2031,
-        bepstarget_2036,
-        bepstarget_2041,
-        bepstarget_2046,
-        cbpsFlag: building.cbps_flag && building.cbpseuitarget,
-        // show chart flags
-        showFueluseChart: true,
-        showBepsChart: true
-      };
-
-      el.html(this.template(this.templateArgs));
-
+      // CHARTS
       // set chart hash
       if (!this.charts.hasOwnProperty('eui')) this.charts['eui'] = {};
 
-      // ----------------------------------------------------------------------------------------------------
+      const showCharts = {
+        fueluse: false,
+        beps: false
+      };
 
-      // render fuel use chart (fueluse.js)
+      // Fueluse
       if (!this.charts['eui'].chart_fueluse) {
         this.charts['eui'].chart_fueluse = new FuelUseView({
           formatters: this.formatters,
@@ -225,18 +199,11 @@ define([
           year: selected_year,
           parent: el[0]
         });
+        this.charts['eui'].chart_fueluse.chartData();
       }
+      showCharts.fueluse = this.charts['eui'].chart_fueluse.showChart;
 
-      el.find('#fueluse-chart').html(this.charts['eui'].chart_fueluse.render());
-      this.charts['eui'].chart_fueluse.afterRender();
-
-      // If the data isn't there or has an error, don't show the space for this chart
-      const showFueluseChart = this.charts['eui'].chart_fueluse.showChart;
-      el.html(this.template({ ...this.templateArgs, showFueluseChart }));
-
-      // ----------------------------------------------------------------------------------------------------
-
-      // render BEPs chart (beps.js)
+      // BEPs
       if (!this.charts['eui'].chart_beps) {
         this.charts['eui'].chart_beps = new BepsView({
           formatters: this.formatters,
@@ -245,18 +212,11 @@ define([
           year: selected_year,
           parent: el[0]
         });
+        this.charts['eui'].chart_beps.chartData();
       }
+      showCharts.beps = this.charts['eui'].chart_beps.showChart;
 
-      el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
-      this.charts['eui'].chart_beps.afterRender();
-
-      // If the data isn't there or has an error, don't show the space for this chart
-      const showBepsChart = this.charts['eui'].chart_beps.showChart;
-      el.html(this.template({ ...this.templateArgs, showBepsChart }));
-
-      // ----------------------------------------------------------------------------------------------------
-
-      // render Building use type chart (use_types.js)
+      // Building use types
       if (!this.charts['eui'].chart_use_types) {
         this.charts['eui'].chart_use_types = new UseTypesView({
           formatters: this.formatters,
@@ -265,16 +225,11 @@ define([
           year: selected_year,
           parent: el[0]
         });
+        this.charts['eui'].chart_use_types.chartData();
       }
+      showCharts.use_types = this.charts['eui'].chart_use_types.showChart;
 
-      el.find('#use-types-chart').html(
-        this.charts['eui'].chart_use_types.render()
-      );
-      this.charts['eui'].chart_use_types.afterRender();
-
-      // ----------------------------------------------------------------------------------------------------
-
-      // render performance over time chart (performance_over_time.js)
+      // Performance over time
       if (!this.charts['eui'].chart_performance_over_time) {
         // avail_years comes from seattle.json and shows all available years
         // we want all years for this building
@@ -312,8 +267,53 @@ define([
             view: 'eui',
             parent: el[0]
           });
+        this.charts['eui'].chart_performance_over_time.chartData();
       }
 
+      showCharts.performance_over_time =
+        this.charts['eui'].chart_performance_over_time.showChart;
+
+      this.templateArgs = {
+        active: 'active',
+        name,
+        addr1: building.reported_address,
+        addr2: this.addressLine2(building),
+        year: selected_year,
+        year_built: building.yearbuilt,
+        ess_logo: this.energyStarCertified('eui', building, config),
+        site_eui_wn: Number(site_eui_wn).toFixed(1),
+        total_ghg: Number(total_ghg).toFixed(2),
+        tab: this.state.get('tab'),
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046,
+        cbpsFlag: building.cbps_flag && building.cbpseuitarget,
+        // show chart flags
+        showCharts
+      };
+
+      el.html(this.template(this.templateArgs));
+
+      // Render charts
+
+      // render fuel use chart (fueluse.js)
+      el.find('#fueluse-chart').html(this.charts['eui'].chart_fueluse.render());
+      this.charts['eui'].chart_fueluse.afterRender();
+
+      // render BEPs chart (beps.js)
+      el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
+      this.charts['eui'].chart_beps.afterRender();
+
+      // render Building use type chart (use_types.js)
+      el.find('#use-types-chart').html(
+        this.charts['eui'].chart_use_types.render()
+      );
+      this.charts['eui'].chart_use_types.afterRender();
+
+      // ----------------------------------------------------------------------------------------------------
+
+      // render performance over time chart (performance_over_time.js)
       el.find('#performance-over-time-chart').html(
         this.charts['eui'].chart_performance_over_time.render()
       );

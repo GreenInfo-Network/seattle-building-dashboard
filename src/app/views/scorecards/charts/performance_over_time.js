@@ -4,8 +4,17 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/performance_over_time.html'
-], function ($, _, Backbone, d3, wrap, PerformanceOverTimeTemplate) {
+], function (
+  $,
+  _,
+  Backbone,
+  d3,
+  wrap,
+  validateBuildingData,
+  PerformanceOverTimeTemplate
+) {
   var PerformanceOverTimeView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(PerformanceOverTimeTemplate);
@@ -15,13 +24,30 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
 
-      const chartData = data.map(v => {
+      const validated = data.map(d =>
+        validateBuildingData(d, {
+          id: 'string',
+          value: 'number',
+          year: 'number'
+        })
+      );
+
+      const valid = validated.every(d => d.valid);
+      const typedData = validated.map(d => d.typedData);
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
+      const chartData = typedData.map(v => {
         return {
           n: v?.value,
           name: v?.id,
@@ -192,12 +218,15 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData);
     }
   });
 
