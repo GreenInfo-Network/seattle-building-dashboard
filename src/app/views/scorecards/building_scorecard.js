@@ -201,7 +201,8 @@ define([
         });
         this.charts['eui'].chart_fueluse.chartData();
       }
-      showCharts.fueluse = this.charts['eui'].chart_fueluse.showChart;
+      showCharts.fueluse =
+        this.charts['eui']?.chart_fueluse?.showChart ?? false;
 
       // BEPs
       if (!this.charts['eui'].chart_beps) {
@@ -214,7 +215,7 @@ define([
         });
         this.charts['eui'].chart_beps.chartData();
       }
-      showCharts.beps = this.charts['eui'].chart_beps.showChart;
+      showCharts.beps = this.charts['eui']?.chart_beps?.showChart ?? false;
 
       // Building use types
       if (!this.charts['eui'].chart_use_types) {
@@ -227,7 +228,8 @@ define([
         });
         this.charts['eui'].chart_use_types.chartData();
       }
-      showCharts.use_types = this.charts['eui'].chart_use_types.showChart;
+      showCharts.use_types =
+        this.charts['eui']?.chart_use_types?.showChart ?? false;
 
       // Performance over time
       if (!this.charts['eui'].chart_performance_over_time) {
@@ -271,7 +273,56 @@ define([
       }
 
       showCharts.performance_over_time =
-        this.charts['eui'].chart_performance_over_time.showChart;
+        this.charts['eui']?.chart_performance_over_time?.showChart ?? false;
+
+      // First GHGI target
+      if (!this.charts['eui'].chart_first_ghgi_target) {
+        let building_years = Object.keys(building_data).sort(function (a, b) {
+          return parseInt(a) - parseInt(b);
+        });
+
+        const latestYear = building_years[building_years.length - 1];
+
+        this.charts['eui'].chart_first_ghgi_target = new FirstGhgiTargetView({
+          formatters: this.formatters,
+          data: [building],
+          name: name,
+          year: selected_year,
+          latestYear: latestYear,
+          parent: el[0]
+        });
+
+        this.charts['eui'].chart_first_ghgi_target.chartData();
+      }
+
+      showCharts.first_ghgi_target =
+        this.charts['eui']?.chart_first_ghgi_target?.showChart ?? false;
+
+      // First compliance interval
+      if (building.cbps_flag) {
+        // render first compliance interval chart (first_compliance_interval.js)
+        if (!this.charts['eui'].chart_first_compliance_interval) {
+          let building_years = Object.keys(building_data).sort(function (a, b) {
+            return parseInt(a) - parseInt(b);
+          });
+
+          const latestYear = building_years[building_years.length - 1];
+
+          this.charts['eui'].chart_first_compliance_interval =
+            new FirstComplianceIntervalView({
+              formatters: this.formatters,
+              data: [building],
+              name: name,
+              year: selected_year,
+              latestYear: latestYear,
+              parent: el[0]
+            });
+        }
+        this.charts['eui'].chart_first_compliance_interval.chartData();
+      }
+
+      showCharts.first_compliance_interval =
+        this.charts['eui']?.chart_first_compliance_interval?.showChart ?? false;
 
       this.templateArgs = {
         active: 'active',
@@ -305,13 +356,11 @@ define([
       el.find('#beps-chart').html(this.charts['eui'].chart_beps.render());
       this.charts['eui'].chart_beps.afterRender();
 
-      // render Building use type chart (use_types.js)
+      // render building use type chart (use_types.js)
       el.find('#use-types-chart').html(
         this.charts['eui'].chart_use_types.render()
       );
       this.charts['eui'].chart_use_types.afterRender();
-
-      // ----------------------------------------------------------------------------------------------------
 
       // render performance over time chart (performance_over_time.js)
       el.find('#performance-over-time-chart').html(
@@ -319,59 +368,20 @@ define([
       );
       this.charts['eui'].chart_performance_over_time.afterRender();
 
-      // ----------------------------------------------------------------------------------------------------
-
       // render first ghgi target chart (first_ghgi_target.js)
-      if (!this.charts['eui'].chart_first_ghgi_target) {
-        let building_years = Object.keys(building_data).sort(function (a, b) {
-          return parseInt(a) - parseInt(b);
-        });
-
-        const latestYear = building_years[building_years.length - 1];
-
-        this.charts['eui'].chart_first_ghgi_target = new FirstGhgiTargetView({
-          formatters: this.formatters,
-          data: [building],
-          name: name,
-          year: selected_year,
-          latestYear: latestYear,
-          parent: el[0]
-        });
-      }
 
       el.find('#first-ghgi-target-chart').html(
         this.charts['eui'].chart_first_ghgi_target.render()
       );
       this.charts['eui'].chart_first_ghgi_target.afterRender();
 
-      // ----------------------------------------------------------------------------------------------------
-
+      // render first compliance interval chart (first_compliance_interval.js)
       if (building.cbps_flag) {
-        // render first compliance interval chart (first_compliance_interval.js)
-        if (!this.charts['eui'].chart_first_compliance_interval) {
-          let building_years = Object.keys(building_data).sort(function (a, b) {
-            return parseInt(a) - parseInt(b);
-          });
-
-          const latestYear = building_years[building_years.length - 1];
-
-          this.charts['eui'].chart_first_compliance_interval =
-            new FirstComplianceIntervalView({
-              formatters: this.formatters,
-              data: [building],
-              name: name,
-              year: selected_year,
-              latestYear: latestYear,
-              parent: el[0]
-            });
-        }
-
         el.find('#first-compliance-interval-chart').html(
           this.charts['eui'].chart_first_compliance_interval.render()
         );
         this.charts['eui'].chart_first_compliance_interval.afterRender();
       }
-      // ----------------------------------------------------------------------------------------------------
 
       // Add building comments (??)
       if (!this.commentview) {

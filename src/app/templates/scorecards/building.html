@@ -311,10 +311,12 @@
           </div>
         </div>
         <!-- First GHGI Target -->
+        <% if (showCharts.first_ghgi_target) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">FIRST GHGI TARGET</div>
           <div id="first-ghgi-target-chart" />
         </div>
+        <% } %>
         <!-- Plan for Future Targets -->
         <% if (showCharts.beps) { %>
         <div class="building-main-chart-container">
@@ -385,7 +387,7 @@
           </div>
         </div>
         <!-- First compliance interval -->
-        <% if(cbpsFlag) { %>
+        <% if(cbpsFlag && showCharts.first_compliance_interval) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">FIRST COMPLIANCE INTERVAL</div>
           <div id="first-compliance-interval-chart" />

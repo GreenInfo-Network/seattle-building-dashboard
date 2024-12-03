@@ -4,8 +4,17 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/first_compliance_interval.html'
-], function ($, _, Backbone, d3, wrap, FirstComplianceIntervalTemplate) {
+], function (
+  $,
+  _,
+  Backbone,
+  d3,
+  wrap,
+  validateBuildingData,
+  FirstComplianceIntervalTemplate
+) {
   var FirstComplianceIntervalView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(FirstComplianceIntervalTemplate);
@@ -16,19 +25,35 @@ define([
       this.latestYear = options.latestYear || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
 
+      const buildingData = data[0];
+
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        site_eui_wn: 'number', // current
+        cbpseuitarget: 'number', //target
+        cbps_date: 'number', // compliance year
+        cbps_flag: 'boolean', //compliance flag TODO if flag and no target, dont show
+        source_eui_wn: 'number' // TODO remove
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
       const {
-        site_eui_wn, // current
-        cbpseuitarget, //target
-        cbps_date, // compliance year
-        cbps_flag, //compliance flag TODO if flag and no target, dont show
-        source_eui_wn // need to check what this is exactly...
-      } = data[0];
+        site_eui_wn,
+        cbpseuitarget,
+        cbps_date,
+        cbps_flag,
+        source_eui_wn
+      } = typedData;
 
       function roundnum(num) {
         return Math.ceil(num / 50) * 50;
@@ -251,12 +276,15 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData, chartData?.maxVal);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData, chartData.maxVal);
     }
   });
 
