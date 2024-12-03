@@ -74,6 +74,7 @@ define([
     copyUrl: function () {
       const url = window.location.href;
       try {
+        // This will only work in a prod env with https
         navigator.clipboard.writeText(url);
       } catch (err) {
         console.warn(err);
