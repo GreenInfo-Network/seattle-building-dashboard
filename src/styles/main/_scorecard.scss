@@ -24,6 +24,10 @@ $sc-font-lgr: 4rem;
 // TODO fix this sizing as a base for rem
 html {
   font-size: 14px;
+
+  @media print {
+    font-size: 12px;
+  }
 }
 // Text sizes
 $text-size-extra-small: 0.75rem;
