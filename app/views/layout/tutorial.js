@@ -76,7 +76,6 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
               selected_buildings: []
             }); // deselect any selected bldgs
           },
-
           popover: {
             title: 'Search',
             description: 'Use the Search bar to find a building based on its name, address, or Seattle OSE building ID.'
@@ -98,9 +97,9 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
                 id: 'proptype-menu-image',
                 css: {
                   'z-index': 999999,
-                  'position': 'fixed',
-                  'width': 234,
-                  'height': 234
+                  position: 'fixed',
+                  width: 234,
+                  height: 234
                 }
               }).insertAfter('#building-proptype-selector select');
               driverObj.moveNext();
@@ -109,7 +108,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
         }, {
           element: '#proptype-menu-image',
           onHighlighted: function onHighlighted() {
-            // This steals focus from the select, 
+            // This steals focus from the select,
             // which is why we had to add an image of the menu in the previous step
             document.querySelector('.driver-popover').focus();
           },
@@ -189,7 +188,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
             onNextClick: function onNextClick() {
               // pretend to click this building (id 357 is specific to Seattle Municipal Tower)
               mapview.currentLayerView.onFeatureClick(null, null, null, {
-                'id': '357'
+                id: '357'
               });
               driverObj.moveNext();
             }
@@ -216,7 +215,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
             onNextClick: function onNextClick() {
               // Click "Show Report"
               $('button#view-report').click();
-              // without this delay, seems that Driver cannot find the element 
+              // without this delay, seems that Driver cannot find the element
               setTimeout(function () {
                 driverObj.moveNext();
               }, 750);

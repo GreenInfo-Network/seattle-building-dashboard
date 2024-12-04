@@ -1,16 +1,12 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts/fueluse', './charts/beps', './charts/use_types', './charts/performance_over_time', './charts/first_ghgi_target', './charts/first_compliance_interval',
-//
-'./charts/performance_standard', './charts/shift', './charts/comments', 'models/building_color_bucket_calculator', 'text!templates/scorecards/building.html'], function ($, _, Backbone, d3, wrap, FuelUseView, BepsView, UseTypesView, PerformanceOverTimeView, FirstGhgiTargetView, FirstComplianceIntervalView,
-//
-PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, BuildingTemplate) {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts/fueluse', './charts/beps', './charts/use_types', './charts/performance_over_time', './charts/first_ghgi_target', './charts/first_compliance_interval', './charts/comments', 'text!templates/scorecards/building.html'], function ($, _, Backbone, d3, wrap, FuelUseView, BepsView, UseTypesView, PerformanceOverTimeView, FirstGhgiTargetView, FirstComplianceIntervalView, CommentView, BuildingTemplate) {
   var BuildingScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
       var _this = this;
@@ -26,6 +22,19 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
       $(window).on('resize', function () {
         _this.render();
       });
+
+      // This re-renders all charts on print
+      if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        var that = this;
+        mediaQueryList.addListener(function (mql) {
+          if (mql.matches) {
+            that.render();
+          } else {
+            that.render();
+          }
+        });
+      }
       this.charts = {};
       return this;
     },
@@ -34,7 +43,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
     },
     onClickOut: function onClickOut(evt) {
       var _evt$target;
-      var nextTab = evt === null || evt === void 0 ? void 0 : (_evt$target = evt.target) === null || _evt$target === void 0 ? void 0 : _evt$target.id;
+      var nextTab = evt === null || evt === void 0 || (_evt$target = evt.target) === null || _evt$target === void 0 ? void 0 : _evt$target.id;
       if (!nextTab) return;
       this.state.set({
         tab: nextTab
@@ -105,21 +114,15 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
       var _this$charts$eui$char,
         _this$charts$eui,
         _this$charts$eui$char2,
-        _this$charts$eui$char3,
         _this$charts$eui2,
-        _this$charts$eui2$cha,
-        _this$charts$eui$char4,
+        _this$charts$eui$char3,
         _this$charts$eui3,
-        _this$charts$eui3$cha,
-        _this$charts$eui$char5,
+        _this$charts$eui$char4,
         _this$charts$eui4,
-        _this$charts$eui4$cha,
-        _this$charts$eui$char6,
+        _this$charts$eui$char5,
         _this$charts$eui5,
-        _this$charts$eui5$cha,
-        _this$charts$eui$char7,
+        _this$charts$eui$char6,
         _this$charts$eui6,
-        _this$charts$eui6$cha,
         _building$beps_firstc,
         _this3 = this;
       var building = building_data[selected_year];
@@ -157,7 +160,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_fueluse.chartData();
       }
-      showCharts.fueluse = (_this$charts$eui$char = (_this$charts$eui = this.charts['eui']) === null || _this$charts$eui === void 0 ? void 0 : (_this$charts$eui$char2 = _this$charts$eui.chart_fueluse) === null || _this$charts$eui$char2 === void 0 ? void 0 : _this$charts$eui$char2.showChart) !== null && _this$charts$eui$char !== void 0 ? _this$charts$eui$char : false;
+      showCharts.fueluse = (_this$charts$eui$char = (_this$charts$eui = this.charts['eui']) === null || _this$charts$eui === void 0 || (_this$charts$eui = _this$charts$eui.chart_fueluse) === null || _this$charts$eui === void 0 ? void 0 : _this$charts$eui.showChart) !== null && _this$charts$eui$char !== void 0 ? _this$charts$eui$char : false;
 
       // BEPs
       if (!this.charts['eui'].chart_beps) {
@@ -170,7 +173,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_beps.chartData();
       }
-      showCharts.beps = (_this$charts$eui$char3 = (_this$charts$eui2 = this.charts['eui']) === null || _this$charts$eui2 === void 0 ? void 0 : (_this$charts$eui2$cha = _this$charts$eui2.chart_beps) === null || _this$charts$eui2$cha === void 0 ? void 0 : _this$charts$eui2$cha.showChart) !== null && _this$charts$eui$char3 !== void 0 ? _this$charts$eui$char3 : false;
+      showCharts.beps = (_this$charts$eui$char2 = (_this$charts$eui2 = this.charts['eui']) === null || _this$charts$eui2 === void 0 || (_this$charts$eui2 = _this$charts$eui2.chart_beps) === null || _this$charts$eui2 === void 0 ? void 0 : _this$charts$eui2.showChart) !== null && _this$charts$eui$char2 !== void 0 ? _this$charts$eui$char2 : false;
 
       // Building use types
       if (!this.charts['eui'].chart_use_types) {
@@ -183,7 +186,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_use_types.chartData();
       }
-      showCharts.use_types = (_this$charts$eui$char4 = (_this$charts$eui3 = this.charts['eui']) === null || _this$charts$eui3 === void 0 ? void 0 : (_this$charts$eui3$cha = _this$charts$eui3.chart_use_types) === null || _this$charts$eui3$cha === void 0 ? void 0 : _this$charts$eui3$cha.showChart) !== null && _this$charts$eui$char4 !== void 0 ? _this$charts$eui$char4 : false;
+      showCharts.use_types = (_this$charts$eui$char3 = (_this$charts$eui3 = this.charts['eui']) === null || _this$charts$eui3 === void 0 || (_this$charts$eui3 = _this$charts$eui3.chart_use_types) === null || _this$charts$eui3 === void 0 ? void 0 : _this$charts$eui3.showChart) !== null && _this$charts$eui$char3 !== void 0 ? _this$charts$eui$char3 : false;
 
       // Performance over time
       if (!this.charts['eui'].chart_performance_over_time) {
@@ -214,7 +217,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_performance_over_time.chartData();
       }
-      showCharts.performance_over_time = (_this$charts$eui$char5 = (_this$charts$eui4 = this.charts['eui']) === null || _this$charts$eui4 === void 0 ? void 0 : (_this$charts$eui4$cha = _this$charts$eui4.chart_performance_over_time) === null || _this$charts$eui4$cha === void 0 ? void 0 : _this$charts$eui4$cha.showChart) !== null && _this$charts$eui$char5 !== void 0 ? _this$charts$eui$char5 : false;
+      showCharts.performance_over_time = (_this$charts$eui$char4 = (_this$charts$eui4 = this.charts['eui']) === null || _this$charts$eui4 === void 0 || (_this$charts$eui4 = _this$charts$eui4.chart_performance_over_time) === null || _this$charts$eui4 === void 0 ? void 0 : _this$charts$eui4.showChart) !== null && _this$charts$eui$char4 !== void 0 ? _this$charts$eui$char4 : false;
 
       // First GHGI target
       if (!this.charts['eui'].chart_first_ghgi_target) {
@@ -232,7 +235,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_first_ghgi_target.chartData();
       }
-      showCharts.first_ghgi_target = (_this$charts$eui$char6 = (_this$charts$eui5 = this.charts['eui']) === null || _this$charts$eui5 === void 0 ? void 0 : (_this$charts$eui5$cha = _this$charts$eui5.chart_first_ghgi_target) === null || _this$charts$eui5$cha === void 0 ? void 0 : _this$charts$eui5$cha.showChart) !== null && _this$charts$eui$char6 !== void 0 ? _this$charts$eui$char6 : false;
+      showCharts.first_ghgi_target = (_this$charts$eui$char5 = (_this$charts$eui5 = this.charts['eui']) === null || _this$charts$eui5 === void 0 || (_this$charts$eui5 = _this$charts$eui5.chart_first_ghgi_target) === null || _this$charts$eui5 === void 0 ? void 0 : _this$charts$eui5.showChart) !== null && _this$charts$eui$char5 !== void 0 ? _this$charts$eui$char5 : false;
 
       // First compliance interval
       // render first compliance interval chart (first_compliance_interval.js)
@@ -251,7 +254,7 @@ PerformanceStandardView, ShiftView, CommentView, BuildingColorBucketCalculator, 
         });
         this.charts['eui'].chart_first_compliance_interval.chartData();
       }
-      showCharts.first_compliance_interval = (_this$charts$eui$char7 = (_this$charts$eui6 = this.charts['eui']) === null || _this$charts$eui6 === void 0 ? void 0 : (_this$charts$eui6$cha = _this$charts$eui6.chart_first_compliance_interval) === null || _this$charts$eui6$cha === void 0 ? void 0 : _this$charts$eui6$cha.showChart) !== null && _this$charts$eui$char7 !== void 0 ? _this$charts$eui$char7 : false;
+      showCharts.first_compliance_interval = (_this$charts$eui$char6 = (_this$charts$eui6 = this.charts['eui']) === null || _this$charts$eui6 === void 0 || (_this$charts$eui6 = _this$charts$eui6.chart_first_compliance_interval) === null || _this$charts$eui6 === void 0 ? void 0 : _this$charts$eui6.showChart) !== null && _this$charts$eui$char6 !== void 0 ? _this$charts$eui$char6 : false;
       var firstComplianceYear = Number((_building$beps_firstc = building === null || building === void 0 ? void 0 : building.beps_firstcomplianceyear) !== null && _building$beps_firstc !== void 0 ? _building$beps_firstc : 2031);
       var yearWindowShift = firstComplianceYear - 2031;
       var targetYears = {

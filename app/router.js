@@ -4,7 +4,7 @@
 //
 define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/scorecard', 'collections/city_buildings', 'views/map/map', 'views/map/address_search_autocomplete', 'views/map/year_control', 'views/layout/activity_indicator', 'views/layout/building_counts', 'views/layout/compare_bar', 'views/scorecards/controller', 'views/layout/button', 'views/layout/mobile-alert', 'views/modals/modal-model', 'views/modals/modal', 'views/layout/footer', 'views/layout/tutorial', 'views/modals/splash'], function ($, deparam, _, Backbone, CityModel, ScorecardModel, CityBuildings, MapView, AddressSearchView, YearControlView, ActivityIndicator, BuildingCounts, CompareBar, ScorecardController, Button, MobileAlert, ModalModel, ModalController, FooterView, TutorialView, SplashView) {
   var RouterState = Backbone.Model.extend({
-    queryFields: ['filters', 'categories', 'layer', 'metrics', 'sort', 'order', 'lat', 'lng', 'zoom', 'building', 'report_active', 'city_report_active', 'tab'],
+    queryFields: ['filters', 'categories', 'layer', 'metrics', 'sort', 'order', 'lat', 'lng', 'zoom', 'building', 'report_active', 'tab'],
     defaults: {
       metrics: [],
       categories: [],
@@ -20,9 +20,6 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
       if (attributes.hasOwnProperty('report_active') && !attributes.report_active) {
         delete attributes.report_active;
       }
-      if (attributes.hasOwnProperty('city_report_active') && !attributes.city_report_active) {
-        delete attributes.city_report_active;
-      }
       if (attributes.hasOwnProperty('building') && _.isNull(attributes.building)) {
         delete attributes.building;
       }
@@ -34,9 +31,6 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
     mapParamsToState: function mapParamsToState(params) {
       if (params.hasOwnProperty('report_active') && !_.isBoolean(params.report_active)) {
         params.report_active = params.report_active === 'true';
-      }
-      if (params.hasOwnProperty('city_report_active') && !_.isBoolean(params.city_report_active)) {
-        params.city_report_active = params.city_report_active === 'true';
       }
       return params;
     },
@@ -149,11 +143,6 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
       new FooterView({
         state: state
       });
-      new Button({
-        el: '#city-scorcard-toggle',
-        onClick: _.bind(this.toggleCityScorecard, this),
-        value: 'Citywide Report'
-      });
       // hack: the turorial needs state from the map, which isn't present until after the map loads
       // TODO: define and instantiate these views in the mapView/building_layer?
       setTimeout(function () {
@@ -166,11 +155,6 @@ define(['jquery', 'deparam', 'underscore', 'backbone', 'models/city', 'models/sc
         });
       }, 3000);
       this.state.on('change', this.onChange, this);
-    },
-    toggleCityScorecard: function toggleCityScorecard() {
-      this.state.set({
-        city_report_active: true
-      });
     },
     onChange: function onChange() {
       var changed = _.keys(this.state.changed);

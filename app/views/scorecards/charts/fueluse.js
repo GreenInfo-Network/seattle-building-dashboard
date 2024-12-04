@@ -1,5 +1,6 @@
 "use strict";
 
+function _readOnlyError(r) { throw new TypeError('"' + r + '" is read-only'); }
 define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/fueluse.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
     TYPICAL_CAR_EMMISSION: 4.7,
@@ -171,8 +172,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         var height = y(d[EMISSIONS_INDEX][0]) - y(d[EMISSIONS_INDEX][1]);
         return y(d[EMISSIONS_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
       }).text(function (d) {
-        var _d$EMISSIONS_INDEX, _d$EMISSIONS_INDEX$da;
-        return "".concat((_d$EMISSIONS_INDEX = d[EMISSIONS_INDEX]) === null || _d$EMISSIONS_INDEX === void 0 ? void 0 : (_d$EMISSIONS_INDEX$da = _d$EMISSIONS_INDEX.data) === null || _d$EMISSIONS_INDEX$da === void 0 ? void 0 : _d$EMISSIONS_INDEX$da[d === null || d === void 0 ? void 0 : d.key], "%");
+        var _d$EMISSIONS_INDEX;
+        return "".concat((_d$EMISSIONS_INDEX = d[EMISSIONS_INDEX]) === null || _d$EMISSIONS_INDEX === void 0 || (_d$EMISSIONS_INDEX = _d$EMISSIONS_INDEX.data) === null || _d$EMISSIONS_INDEX === void 0 ? void 0 : _d$EMISSIONS_INDEX[d === null || d === void 0 ? void 0 : d.key], "%");
       });
 
       // Usage percentages
@@ -183,8 +184,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         var height = y(d[USAGE_INDEX][0]) - y(d[USAGE_INDEX][1]);
         return y(d[USAGE_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
       }).text(function (d) {
-        var _d$USAGE_INDEX, _d$USAGE_INDEX$data;
-        return "".concat((_d$USAGE_INDEX = d[USAGE_INDEX]) === null || _d$USAGE_INDEX === void 0 ? void 0 : (_d$USAGE_INDEX$data = _d$USAGE_INDEX.data) === null || _d$USAGE_INDEX$data === void 0 ? void 0 : _d$USAGE_INDEX$data[d === null || d === void 0 ? void 0 : d.key], "%");
+        var _d$USAGE_INDEX;
+        return "".concat((_d$USAGE_INDEX = d[USAGE_INDEX]) === null || _d$USAGE_INDEX === void 0 || (_d$USAGE_INDEX = _d$USAGE_INDEX.data) === null || _d$USAGE_INDEX === void 0 ? void 0 : _d$USAGE_INDEX[d === null || d === void 0 ? void 0 : d.key], "%");
       });
     },
     render: function render() {
