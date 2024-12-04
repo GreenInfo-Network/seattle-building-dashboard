@@ -124,6 +124,7 @@ define([
 
     renderChart: function (chartData) {
       const FONT_SIZE = 12;
+      const PADDING = 6;
 
       const parent = d3.select(this.viewParent).select('.use-types-chart');
 
@@ -178,10 +179,47 @@ define([
           d => `use-types-chart-section use-types-chart-${d.data.key}`
         );
 
+      const padLabel = FONT_SIZE + PADDING;
+      let compareTranslation;
+      let largerRadius = radius + padLabel;
+      let largerRadiusArcGenerator = d3
+        .arc()
+        .innerRadius(0)
+        .outerRadius(largerRadius);
+
+      const testing = data_ready
+        // Sort largest to smallest
+        .sort((a, b) => b.value - a.value)
+        // If overlapping, calculate translation on larger arc out from center
+        .reduce((acc, d) => {
+          let translate = arcGenerator.centroid(d);
+
+          if (compareTranslation) {
+            const [x, y] = compareTranslation;
+            let [tx, ty] = translate;
+
+            if (Math.abs(tx - x) < padLabel || Math.abs(ty - y) < padLabel) {
+              translate = largerRadiusArcGenerator.centroid(d);
+              largerRadius = largerRadius + padLabel;
+              largerRadiusArcGenerator = d3
+                .arc()
+                .innerRadius(0)
+                .outerRadius(largerRadius);
+            }
+          }
+
+          compareTranslation = translate;
+
+          const next = { ...d, translate };
+          acc.push(next);
+          return acc;
+        }, []);
+
       // Now add the annotation. Use the centroid method to get the best coordinates
+      // This is just to add a stroke behind percentage text
       svg
         .selectAll('mySlices')
-        .data(data_ready)
+        .data(testing)
         .enter()
         .append('text')
         .text(function (d) {
@@ -189,7 +227,23 @@ define([
           return percent;
         })
         .attr('transform', function (d) {
-          return 'translate(' + arcGenerator.centroid(d) + ')';
+          return 'translate(' + d.translate + ')';
+        })
+        .attr('class', 'text-chart pie-chart-text')
+        .style('text-anchor', 'middle')
+        .style('font-size', FONT_SIZE);
+      // This is the percentage text itself
+      svg
+        .selectAll('mySlices')
+        .data(testing)
+        .enter()
+        .append('text')
+        .text(function (d) {
+          const percent = `${Math.round(d.value)}%`;
+          return percent;
+        })
+        .attr('transform', function (d) {
+          return 'translate(' + d.translate + ')';
         })
         .attr('class', 'text-chart')
         .style('text-anchor', 'middle')

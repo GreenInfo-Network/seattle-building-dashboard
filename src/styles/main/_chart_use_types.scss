@@ -101,8 +101,7 @@
 
     &-chart {
       font-size: 0.8rem;
-      height: 150px;
-      width: 150px;
+      width: 50%;
 
       svg {
         height: 100%;
@@ -124,6 +123,11 @@
 
       &-third {
         fill: $third;
+      }
+
+      .pie-chart-text {
+        stroke: white;
+        stroke-width: 2px;
       }
     }
   }
