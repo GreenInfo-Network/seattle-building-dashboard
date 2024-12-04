@@ -499,6 +499,15 @@ $dataviz-negative: #94778b;
     max-width: 1080px;
     min-width: 920px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+    &-inner {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   #scorecard-content {
@@ -576,6 +585,7 @@ $dataviz-negative: #94778b;
       height: 40px;
       font-size: 12px;
       font-weight: bold;
+      background-color: $white;
 
       a {
         color: $dark-blue;
@@ -596,29 +606,6 @@ $dataviz-negative: #94778b;
   body {
     background-color: #fff;
     overflow: visible;
-  }
-
-  /* Avoid header added by Seattle from peaking through on print */
-  #seaGovHeader {
-    display: none;
-  }
-
-  #scorecard .scorecard-wrapper.no-energy-star-score {
-    // When there is no energy star chart, we can let the EUI compare chart
-    // and trends take up more space
-    .compare-chart {
-      height: 250px;
-    }
-
-    #change-chart #change-chart-vis {
-      height: 200px;
-    }
-
-    #scorecard-view {
-      .scorecard-compare-chart.scorecard-energy-star-print-only {
-        display: none;
-      }
-    }
   }
 
   #footer {
