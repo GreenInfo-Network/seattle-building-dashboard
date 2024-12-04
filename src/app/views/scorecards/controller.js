@@ -51,7 +51,6 @@ define([
 
     events: {
       'click #back-to-map-link': 'closeReport',
-      'click #comparison-view-link': 'showComparisonView',
       'click .scorecard-tab-click': 'setTab',
       'click #share-link': 'copyUrl'
     },
