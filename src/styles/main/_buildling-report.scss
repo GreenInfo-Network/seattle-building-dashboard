@@ -14,15 +14,18 @@
     text-overflow: ellipsis;
   }
 
-  td:first-child div, h2 {
+  td:first-child div,
+  h2 {
     margin: 0 1rem 0 0.5rem;
   }
 
-  th + th, td + td {
+  th + th,
+  td + td {
     max-width: 11em;
   }
 
-  th, label {
+  th,
+  label {
     font-weight: 400;
   }
 
@@ -64,7 +67,8 @@
     padding: 0 0.25em;
   }
 
-  label .asc, label .desc {
+  label .asc,
+  label .desc {
     display: none;
     right: 1em;
   }
@@ -74,12 +78,13 @@
     display: none;
   }
 
-  td:first-child div:first-child, td:first-child div:first-child + div {
+  td:first-child div:first-child,
+  td:first-child div:first-child + div {
     display: block;
   }
 
   td:first-child div + div {
-    margin-top: .25em;
+    margin-top: 0.25em;
   }
 
   .metric-container,
@@ -110,11 +115,13 @@
     background-color: #fff;
   }
 
-  th:first-child, td:first-child {
+  th:first-child,
+  td:first-child {
     text-align: right;
   }
 
-  th, label {
+  th,
+  label {
     text-transform: uppercase;
   }
 
@@ -139,12 +146,14 @@
     text-transform: uppercase;
   }
 
-  .subheader, .average-info {
+  .subheader,
+  .average-info {
     color: $medium-gray;
     text-transform: uppercase;
   }
 
-  .averages .subheader, .averages .average-container {
+  .averages .subheader,
+  .averages .average-container {
     text-align: center;
   }
 

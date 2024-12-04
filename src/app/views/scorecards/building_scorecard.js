@@ -10,11 +10,7 @@ define([
   './charts/performance_over_time',
   './charts/first_ghgi_target',
   './charts/first_compliance_interval',
-  //
-  './charts/performance_standard',
-  './charts/shift',
   './charts/comments',
-  'models/building_color_bucket_calculator',
   'text!templates/scorecards/building.html'
 ], function (
   $,
@@ -28,11 +24,7 @@ define([
   PerformanceOverTimeView,
   FirstGhgiTargetView,
   FirstComplianceIntervalView,
-  //
-  PerformanceStandardView,
-  ShiftView,
   CommentView,
-  BuildingColorBucketCalculator,
   BuildingTemplate
 ) {
   var BuildingScorecard = Backbone.View.extend({

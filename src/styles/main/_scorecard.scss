@@ -547,7 +547,7 @@ $dataviz-negative: #94778b;
     padding: 0;
     font-size: 18px;
     font-weight: 600;
-    color: $blue_new;
+    color: $paragraph;
     text-transform: uppercase;
     line-height: 1;
 
@@ -593,53 +593,6 @@ $dataviz-negative: #94778b;
     font-weight: $sc-weight-bd;
   }
 
-  .sc-txt {
-    margin: 0;
-    padding: 0;
-    color: $sc-blue;
-    font-size: $sc-font-std;
-    font-weight: $sc-weight;
-    line-height: 1.2;
-
-    &.white {
-      color: $sc-white;
-    }
-    &.orange {
-      color: $sc-orange;
-    }
-    &.blue-new {
-      color: $blue-new;
-    }
-    &.grey {
-      color: $sc-grey;
-    }
-
-    &.tiny {
-      font-size: $sc-font-tiny;
-    }
-    &.small {
-      font-size: 16px;
-    }
-    &.x-small {
-      font-size: 14px;
-    }
-
-    &.light {
-      font-weight: $sc-weight-lt;
-    }
-    &.bold {
-      font-weight: $sc-weight-bd;
-    }
-
-    &.pg {
-      line-height: 1.2;
-    }
-
-    @media print {
-      font-size: $sc-font-std * 0.75;
-    }
-  }
-
   .sc-details-value {
     margin-bottom: 0.5rem;
 
@@ -663,14 +616,6 @@ $dataviz-negative: #94778b;
 
       @media print {
         margin-bottom: 0.5rem;
-      }
-
-      .sc-heading {
-        margin-bottom: 8px;
-
-        @media print {
-          margin-bottom: 0.25rem;
-        }
       }
     }
   }
@@ -1403,10 +1348,6 @@ $dataviz-negative: #94778b;
 
         label.cb-plain {
           line-height: 1;
-
-          &.sc-txt {
-            text-transform: uppercase;
-          }
 
           input[type='checkbox'] {
             display: none;

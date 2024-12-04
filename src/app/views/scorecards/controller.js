@@ -4,19 +4,8 @@ define([
   'backbone',
   'd3',
   './building_scorecard',
-  './city_scorecard',
-  './links',
   'text!templates/scorecards/scorecard.html'
-], function (
-  $,
-  _,
-  Backbone,
-  d3,
-  BuildingScorecard,
-  CityScorecard,
-  Links,
-  ScorecardTemplate
-) {
+], function ($, _, Backbone, d3, BuildingScorecard, ScorecardTemplate) {
   const ScorecardController = Backbone.View.extend({
     el: $('#scorecard'),
 
@@ -30,11 +19,7 @@ define([
         'change:report_active',
         this.onBuildingReportActive
       );
-      this.listenTo(
-        this.state,
-        'change:city_report_active',
-        this.onCityReportActive
-      );
+
       this.listenTo(this.state, 'change:tab', this.setTabClasses);
 
       const scorecard = this.state.get('scorecard');
@@ -106,12 +91,6 @@ define([
       if (this.state.get('report_active') === true) {
         this.state.set({ tab: 'benchmarking_overview' });
       }
-      this.render();
-    },
-
-    onCityReportActive: function () {
-      this.activekey = 'city_report_active';
-      this.viewclass = CityScorecard;
       this.render();
     },
 
@@ -190,35 +169,6 @@ define([
       this.view = null;
     },
 
-    getLinksTable: function () {
-      const city = this.state.get('city');
-      const table = city && city.get && city.get('scorecard');
-      return (table && table.links_table) || 'links';
-    },
-
-    renderLinks: function (building, building_type, isBuildingRenderer) {
-      if (this.linksView) this.removeLinks();
-
-      if (!isBuildingRenderer) return;
-
-      // Add links to parent
-      this.linksView = new Links({
-        links_table: this.getLinksTable(),
-        link_type: building_type,
-        building,
-        el: this.$el.find('#links')
-      });
-    },
-
-    removeLinks: function () {
-      if (this.linksView) {
-        this.linksView.close();
-        this.linksView.remove();
-      }
-
-      this.linksView = null;
-    },
-
     getSubViewOptions: function () {
       return {
         el: '#scorecard-content',
@@ -264,8 +214,6 @@ define([
         })
       );
 
-      this.renderLinks(building, building_type, isBuildingRenderer);
-
       this.updateViewClass();
 
       if (!this.viewclass) return;
@@ -275,7 +223,6 @@ define([
 
     hideScorecard: function () {
       this.$el.toggleClass('active', false);
-      this.removeLinks();
       this.removeView();
       this.viewclass = null;
       this.$el.html('');
