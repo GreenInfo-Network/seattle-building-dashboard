@@ -6,7 +6,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/first_compliance_interval.html'], function ($, _, Backbone, d3, wrap, FirstComplianceIntervalTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/first_compliance_interval.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, FirstComplianceIntervalTemplate) {
   var FirstComplianceIntervalView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.template = _.template(FirstComplianceIntervalTemplate);
@@ -17,37 +17,37 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.latestYear = options.latestYear || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
-
-      // site_eui;
-      // site_eui_wn;
-      // source_eui;
-      // source_eui_wn;
-      // building_type_eui;
-      // building_type_eui_wn;
-      // cbps_date;
-      // cbps_flag;
-      // cbpseuitarget;
-
-      var _data$ = data[0],
-        site_eui_wn = _data$.site_eui_wn,
-        cbpseuitarget = _data$.cbpseuitarget,
-        cbps_date = _data$.cbps_date,
-        cbps_flag = _data$.cbps_flag,
-        source_eui_wn = _data$.source_eui_wn;
+      var buildingData = data[0];
+      var _validateBuildingData = validateBuildingData(buildingData, {
+          site_eui_wn: 'number',
+          // current
+          cbpseuitarget: 'number',
+          //target
+          cbps_date: 'number',
+          // compliance year
+          cbps_flag: 'boolean' //compliance flag TODO if flag and no target, dont show
+        }),
+        typedData = _validateBuildingData.typedData,
+        valid = _validateBuildingData.valid;
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+      var site_eui_wn = typedData.site_eui_wn,
+        cbpseuitarget = typedData.cbpseuitarget,
+        cbps_date = typedData.cbps_date,
+        cbps_flag = typedData.cbps_flag;
       function roundnum(num) {
         return Math.ceil(num / 50) * 50;
       }
-
-      // TODO confirm this is the correct thing to be using
-      var maxVal = roundnum(source_eui_wn);
-
-      // TODO limit to two decimals
-      var nextTargetValue = cbpseuitarget;
-      var currentValue = Number(site_eui_wn).toFixed(1);
+      var maxVal = roundnum(Math.max(Number(site_eui_wn), Number(cbpseuitarget)));
+      var nextTargetValue = Number(cbpseuitarget);
+      var currentValue = Number(Number(site_eui_wn).toFixed(1));
       var greenBar = 0;
       var greenStripedBar = 0;
       var redBar = 0;
@@ -55,18 +55,21 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var greenBarLabel = '';
       var greenStripedBarLabel = '';
       var redBarLabel = '';
+      var isMeetingTarget;
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
         whiteBackground = maxVal - (redBar + greenBar);
         redBarLabel = "(EUI current) ".concat(currentValue);
         greenBarLabel = "(EUI target) ".concat(nextTargetValue);
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
         whiteBackground = maxVal - (greenStripedBar + greenBar);
         greenStripedBarLabel = "(EUI target) ".concat(nextTargetValue);
         greenBarLabel = "(EUI current) ".concat(currentValue);
+        isMeetingTarget = true;
       }
       var chartData = [{
         group: 'first_compliance_interval',
@@ -81,7 +84,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       return {
         chartData: chartData,
         maxVal: maxVal,
-        cbps_date: cbps_date
+        cbps_date: cbps_date,
+        cbps_flag: cbps_flag,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
     renderChart: function renderChart(chartData, maxVal) {
@@ -95,9 +101,9 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // set the dimensions and margins of the graph
       var margin = {
           top: 30,
-          right: 30,
+          right: 120,
           bottom: 30,
-          left: 50
+          left: 130
         },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
@@ -154,13 +160,25 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           v = _ref2[1];
         return k.endsWith('Label') && !!v;
       }));
-      for (var _i2 = 0, _Object$entries = Object.entries(labelData); _i2 < _Object$entries.length; _i2++) {
+      var _loop = function _loop() {
         var entry = _Object$entries[_i2];
         var _entry = _slicedToArray(entry, 2),
           k = _entry[0],
           v = _entry[1];
         var barName = ".first-compliance-interval-".concat(k.replace('Label', ''));
-        d3.select(barName).append('text').attr('class', 'first-compliance-interval-x-axis-label text-chart').attr('text-anchor', labelTextAnchor[k]).attr('x', function (d) {
+        d3.select(barName).append('text').attr('class', 'first-compliance-interval-x-axis-label text-chart').attr('text-anchor', function (d) {
+          // const textPos = x(d[0][1]);
+          // const max = width - 100;
+          // const min = 100;
+          var anchor = labelTextAnchor[k];
+          // if (textPos > max) {
+          //   anchor = 'end';
+          // }
+          // if (textPos < min) {
+          //   anchor = 'start';
+          // }
+          return anchor;
+        }).attr('x', function (d) {
           return x(d[0][1]);
         }).attr('y', function (d) {
           return -2 * PADDING;
@@ -170,14 +188,20 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           // 3 is half of width
           return "translate( ".concat(x(d[0][1]) - 3, ", ").concat(PADDING * -1, ")");
         }).attr('d', 'M3.43259 4.25C3.24014 4.58333 2.75902 4.58333 2.56657 4.25L0.834517 1.25C0.642067 0.916667 0.882629 0.5 1.26753 0.5L4.73163 0.5C5.11653 0.5 5.35709 0.916667 5.16464 1.25L3.43259 4.25Z').attr('fill', 'black');
+      };
+      for (var _i2 = 0, _Object$entries = Object.entries(labelData); _i2 < _Object$entries.length; _i2++) {
+        _loop();
       }
     },
     render: function render() {
-      return this.template(this.chartData());
+      var chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderChart(chartData === null || chartData === void 0 ? void 0 : chartData.chartData, chartData === null || chartData === void 0 ? void 0 : chartData.maxVal);
+      if (!chartData || !(chartData !== null && chartData !== void 0 && chartData.cbps_flag)) return;
+      this.renderChart(chartData.chartData, chartData.maxVal);
     }
   });
   return FirstComplianceIntervalView;

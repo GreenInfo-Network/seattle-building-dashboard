@@ -6,7 +6,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-define(['jquery', 'underscore', 'backbone', './charts/fueluse', './charts/shift', './charts/building_type_table', 'models/building_color_bucket_calculator', 'text!templates/scorecards/city.html'], function ($, _, Backbone, FuelUseView, ShiftView, BuildingTypeTableView, BuildingColorBucketCalculator, ScorecardTemplate) {
+define(['jquery', 'underscore', 'backbone',
+// TODO do we need this old file for the city scorecard?
+'./charts/fueluse', './charts/shift', './charts/building_type_table', 'models/building_color_bucket_calculator', 'text!templates/scorecards/city.html'], function ($, _, Backbone, FuelUseView, ShiftView, BuildingTypeTableView, BuildingColorBucketCalculator, ScorecardTemplate) {
   var CityScorecard = Backbone.View.extend({
     initialize: function initialize(options) {
       this.state = options.state;
@@ -31,7 +33,7 @@ define(['jquery', 'underscore', 'backbone', './charts/fueluse', './charts/shift'
         return false;
       }
       scorecardState.set({
-        'view': value
+        view: value
       });
     },
     onViewChange: function onViewChange() {

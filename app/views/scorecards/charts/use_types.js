@@ -6,7 +6,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/use_types.html'], function ($, _, Backbone, d3, wrap, UseTypesTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/use_types.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, UseTypesTemplate) {
   var UseTypesView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.template = _.template(UseTypesTemplate);
@@ -16,20 +16,38 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
-      var _data$ = data[0],
-        largestpropertyusetypegfa = _data$.largestpropertyusetypegfa,
-        secondlargestpropertyusetypegfa = _data$.secondlargestpropertyusetypegfa,
-        thirdlargestpropertyusetypegfa = _data$.thirdlargestpropertyusetypegfa,
-        largestpropertyusetype = _data$.largestpropertyusetype,
-        secondlargestpropertyusetype = _data$.secondlargestpropertyusetype,
-        thirdlargestpropertyusetype = _data$.thirdlargestpropertyusetype,
-        id = _data$.id,
-        yearbuilt_string = _data$.yearbuilt_string,
-        yearbuilt = _data$.yearbuilt;
+      var buildingData = data[0];
+      var _validateBuildingData = validateBuildingData(buildingData, {
+          largestpropertyusetypegfa: 'number',
+          secondlargestpropertyusetypegfa: 'number',
+          thirdlargestpropertyusetypegfa: 'number',
+          largestpropertyusetype: 'string',
+          secondlargestpropertyusetype: 'string',
+          thirdlargestpropertyusetype: 'string',
+          id: 'number',
+          yearbuilt_string: 'string',
+          yearbuilt: 'number'
+        }),
+        typedData = _validateBuildingData.typedData,
+        valid = _validateBuildingData.valid;
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+      var largestpropertyusetypegfa = typedData.largestpropertyusetypegfa,
+        secondlargestpropertyusetypegfa = typedData.secondlargestpropertyusetypegfa,
+        thirdlargestpropertyusetypegfa = typedData.thirdlargestpropertyusetypegfa,
+        largestpropertyusetype = typedData.largestpropertyusetype,
+        secondlargestpropertyusetype = typedData.secondlargestpropertyusetype,
+        thirdlargestpropertyusetype = typedData.thirdlargestpropertyusetype,
+        id = typedData.id,
+        yearbuilt_string = typedData.yearbuilt_string,
+        yearbuilt = typedData.yearbuilt;
       var totalGfa = Number(largestpropertyusetypegfa !== null && largestpropertyusetypegfa !== void 0 ? largestpropertyusetypegfa : 0) + Number(secondlargestpropertyusetypegfa !== null && secondlargestpropertyusetypegfa !== void 0 ? secondlargestpropertyusetypegfa : 0) + Number(thirdlargestpropertyusetypegfa !== null && thirdlargestpropertyusetypegfa !== void 0 ? thirdlargestpropertyusetypegfa : 0);
       var chartData = {
         first: largestpropertyusetypegfa ? largestpropertyusetypegfa / totalGfa * 100 : 0,
@@ -40,16 +58,16 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
       var _totalSquareFootage = numberWithCommas(totalGfa);
-      var getLegendText = function getLegendText(gfa) {
+      var getLegendText = function getLegendText(gfa, useType) {
         if (isNaN(gfa)) return null;
         var roundedGfa = Math.round(gfa);
         if (gfa === 0) return null;
-        var next = "".concat(roundedGfa, "% ").concat(largestpropertyusetype);
+        var next = "".concat(roundedGfa, "% ").concat(useType);
         return next;
       };
-      var _legendFirstText = getLegendText(chartData.first);
-      var _legendSecondText = getLegendText(chartData.second);
-      var _legendThirdText = getLegendText(chartData.third);
+      var _legendFirstText = getLegendText(chartData.first, largestpropertyusetype);
+      var _legendSecondText = getLegendText(chartData.second, secondlargestpropertyusetype);
+      var _legendThirdText = getLegendText(chartData.third, thirdlargestpropertyusetype);
       var _buildingId = id;
       var _yearBuilt = yearbuilt_string !== null && yearbuilt_string !== void 0 ? yearbuilt_string : "".concat(yearbuilt);
       var _useTypeNum = [_legendFirstText, _legendSecondText, _legendThirdText].filter(function (v) {
@@ -114,11 +132,14 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }).attr('class', 'text-chart').style('text-anchor', 'middle').style('font-size', FONT_SIZE);
     },
     render: function render() {
-      return this.template(this.chartData());
+      var chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderChart(chartData === null || chartData === void 0 ? void 0 : chartData.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData);
     }
   });
   return UseTypesView;

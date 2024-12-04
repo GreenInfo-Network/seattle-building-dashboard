@@ -7,7 +7,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/performance_over_time.html'], function ($, _, Backbone, d3, wrap, PerformanceOverTimeTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/performance_over_time.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, PerformanceOverTimeTemplate) {
   var PerformanceOverTimeView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.template = _.template(PerformanceOverTimeTemplate);
@@ -17,11 +17,29 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
-      var chartData = data.map(function (v) {
+      var validated = data.map(function (d) {
+        return validateBuildingData(d, {
+          id: 'string',
+          value: 'number',
+          year: 'number'
+        });
+      });
+      var valid = validated.every(function (d) {
+        return d.valid;
+      });
+      var typedData = validated.map(function (d) {
+        return d.typedData;
+      });
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+      var chartData = typedData.map(function (v) {
         return {
           n: v === null || v === void 0 ? void 0 : v.value,
           name: v === null || v === void 0 ? void 0 : v.id,
@@ -135,11 +153,14 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }
     },
     render: function render() {
-      return this.template(this.chartData());
+      var chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderChart(chartData === null || chartData === void 0 ? void 0 : chartData.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData);
     }
   });
   return PerformanceOverTimeView;

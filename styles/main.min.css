@@ -3498,69 +3498,83 @@ div#simple-tooltip.cartodb-tooltip {
     padding-bottom: 3rem !important;
   }
 }
+html {
+  font-size: 14px;
+}
+@media print {
+  html {
+    font-size: 12px;
+  }
+}
+
 .text-tiny {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: #333;
 }
 
 .text-copy {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 300;
   color: #333;
 }
 
 .text-subheader {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #333;
 }
 
 .text-header {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #333;
 }
 
+.text-copy-semibold {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .text-copy-link {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #0046ad;
   text-decoration: underline;
 }
 
 .text-asterisk {
-  font-size: 0.775rem;
+  font-size: 0.875rem;
   font-weight: 300;
   color: #333;
 }
 
 .text-button {
-  font-size: 0.775rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #333;
 }
 
 .text-chart {
-  font-size: 0.775rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #333;
 }
 
 .text-table {
-  font-size: 0.775rem;
+  font-size: 0.875rem;
   font-weight: 400;
   color: #333;
 }
 
 .text-table-header {
-  font-size: 0.775rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #333;
 }
 
 .text-copy-large {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: #333;
 }
@@ -3684,7 +3698,7 @@ div#simple-tooltip.cartodb-tooltip {
           justify-content: center;
 }
 
-#scorecard-2 {
+#building-scorecard {
   display: block;
   width: 100%;
   height: 100%;
@@ -3694,26 +3708,30 @@ div#simple-tooltip.cartodb-tooltip {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-#scorecard-2.active {
+#building-scorecard.active {
   display: block;
 }
-#scorecard-2 .building-container {
+#building-scorecard .building-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   position: relative;
   width: 100%;
-  max-width: 960px;
+  max-width: 1080px;
   min-width: 920px;
+  padding-left: 1rem;
+  padding-right: 1rem;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   margin: 0 auto;
   gap: 1rem;
 }
-#scorecard-2 .building-sidebar {
+#building-scorecard .building-sidebar {
   max-width: 450px;
-  width: 35%;
+  width: 30%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3723,13 +3741,13 @@ div#simple-tooltip.cartodb-tooltip {
           flex-direction: column;
   gap: 0.5rem;
 }
-#scorecard-2 .building-sidebar-header {
+#building-scorecard .building-sidebar-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 0.5rem;
 }
-#scorecard-2 .building-sidebar-header-text {
+#building-scorecard .building-sidebar-header-text {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3738,7 +3756,7 @@ div#simple-tooltip.cartodb-tooltip {
       -ms-flex-direction: column;
           flex-direction: column;
 }
-#scorecard-2 .building-sidebar-header-icon {
+#building-scorecard .building-sidebar-header-icon {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3748,11 +3766,11 @@ div#simple-tooltip.cartodb-tooltip {
   -ms-flex-negative: 0;
       flex-shrink: 0;
 }
-#scorecard-2 .building-sidebar-perf-report {
+#building-scorecard .building-sidebar-perf-report {
   color: #969ba4;
   text-transform: uppercase;
 }
-#scorecard-2 .building-sidebar-description {
+#building-scorecard .building-sidebar-description {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3762,7 +3780,7 @@ div#simple-tooltip.cartodb-tooltip {
           flex-direction: column;
   gap: 0.5rem;
 }
-#scorecard-2 .building-sidebar-button {
+#building-scorecard .building-sidebar-button {
   background-color: #007749;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3781,15 +3799,15 @@ div#simple-tooltip.cartodb-tooltip {
   width: fit-content;
   cursor: pointer;
 }
-#scorecard-2 .building-sidebar-button:hover {
+#building-scorecard .building-sidebar-button:hover {
   background-color: #005635;
 }
-#scorecard-2 .building-main {
+#building-scorecard .building-main {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
-#scorecard-2 .building-main-section {
+#building-scorecard .building-main-section {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3800,7 +3818,7 @@ div#simple-tooltip.cartodb-tooltip {
   gap: 1rem;
   width: 100%;
 }
-#scorecard-2 .building-main-chart-container {
+#building-scorecard .building-main-chart-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3820,7 +3838,7 @@ div#simple-tooltip.cartodb-tooltip {
   line-height: 160%;
   gap: 0.5rem;
 }
-#scorecard-2 .building-main-overview-top {
+#building-scorecard .building-main-overview-top {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3830,14 +3848,14 @@ div#simple-tooltip.cartodb-tooltip {
           flex-direction: column;
   width: 100%;
 }
-#scorecard-2 .building-main-overview-bottom {
+#building-scorecard .building-main-overview-bottom {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 0.5rem;
   width: 100%;
 }
-#scorecard-2 .building-main-overview-header {
+#building-scorecard .building-main-overview-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3848,14 +3866,14 @@ div#simple-tooltip.cartodb-tooltip {
       -ms-flex-align: end;
           align-items: end;
 }
-#scorecard-2 .building-main-overview-header-icon {
+#building-scorecard .building-main-overview-header-icon {
   height: 4rem;
 }
-#scorecard-2 .building-main-overview-header-icon img {
+#building-scorecard .building-main-overview-header-icon img {
   height: 100%;
   width: auto;
 }
-#scorecard-2 .building-main-overview-container {
+#building-scorecard .building-main-overview-container {
   background-color: #ffffff;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3876,7 +3894,7 @@ div#simple-tooltip.cartodb-tooltip {
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-#scorecard-2 .building-main-overview-container-half {
+#building-scorecard .building-main-overview-container-half {
   background-color: #ffffff;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3890,7 +3908,7 @@ div#simple-tooltip.cartodb-tooltip {
   width: 50%;
   gap: 0.5rem;
 }
-#scorecard-2 .building-main-overview-button {
+#building-scorecard .building-main-overview-button {
   cursor: pointer;
   border-radius: 4px;
   background-color: #f1f1f1;
@@ -3908,10 +3926,10 @@ div#simple-tooltip.cartodb-tooltip {
   width: fit-content;
   color: #0046ad;
 }
-#scorecard-2 .building-main-overview-button:hover {
+#building-scorecard .building-main-overview-button:hover {
   background-color: #e4e4e4;
 }
-#scorecard-2 .building-main-overview-metric {
+#building-scorecard .building-main-overview-metric {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3920,43 +3938,43 @@ div#simple-tooltip.cartodb-tooltip {
           align-items: baseline;
   gap: 0.5rem;
 }
-#scorecard-2 .building-main-table {
+#building-scorecard .building-main-table {
   border-radius: 4px;
   overflow: hidden;
 }
-#scorecard-2 .building-main-table table {
+#building-scorecard .building-main-table table {
   border-spacing: 0;
   border-collapse: collapse;
   border-style: hidden;
   margin: 0;
 }
-#scorecard-2 .building-main-table-headers {
+#building-scorecard .building-main-table-headers {
   background-color: #0046ad;
   color: #ffffff;
   border-bottom: 1px solid #f1f1f1;
 }
-#scorecard-2 .building-main-table-headers th {
+#building-scorecard .building-main-table-headers th {
   text-align: center;
   border-right: 1px solid #f1f1f1;
 }
-#scorecard-2 .building-main-table-headers th:last-of-type {
+#building-scorecard .building-main-table-headers th:last-of-type {
   border-right: none;
 }
-#scorecard-2 .building-main-table-values {
+#building-scorecard .building-main-table-values {
   background-color: #ffffff;
   color: #333;
 }
-#scorecard-2 .building-main-table-values td {
+#building-scorecard .building-main-table-values td {
   text-align: center;
   border-right: 1px solid #f1f1f1;
   border-bottom: 1px solid #f1f1f1;
   padding: 0.5rem;
 }
-#scorecard-2 .building-main-table-values td:last-of-type {
+#building-scorecard .building-main-table-values td:last-of-type {
   border-right: none;
   border-bottom: none;
 }
-#scorecard-2 .building-main-table-value {
+#building-scorecard .building-main-table-value {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3968,7 +3986,10 @@ div#simple-tooltip.cartodb-tooltip {
       -ms-flex-align: start;
           align-items: start;
 }
-#scorecard-2 .building-main-cbps-container {
+#building-scorecard .building-main-table-value-bullet {
+  text-align: left;
+}
+#building-scorecard .building-main-cbps-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3978,7 +3999,7 @@ div#simple-tooltip.cartodb-tooltip {
           flex-direction: column;
   gap: 1rem;
 }
-#scorecard-2 .building-main-cbps-bullet {
+#building-scorecard .building-main-cbps-bullet {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3987,11 +4008,11 @@ div#simple-tooltip.cartodb-tooltip {
           align-items: center;
   gap: 1rem;
 }
-#scorecard-2 .building-main-cbps-bullet-icon {
+#building-scorecard .building-main-cbps-bullet-icon {
   height: 1.5rem;
   width: 1.5rem;
 }
-#scorecard-2 .building-main-cbps-bullet-icon img {
+#building-scorecard .building-main-cbps-bullet-icon img {
   height: 100%;
 }
 
@@ -4013,7 +4034,7 @@ div#simple-tooltip.cartodb-tooltip {
 #scorecard .scorecard-wrapper {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  max-width: 1080px;
   min-width: 920px;
   margin: 0 auto;
 }
@@ -5292,6 +5313,8 @@ div#simple-tooltip.cartodb-tooltip {
   #scorecard .scorecard--nav {
     margin-top: 0;
   }
+  #scorecard #print-link,
+  #scorecard #share-link,
   #scorecard #back-to-map-link {
     display: none;
   }

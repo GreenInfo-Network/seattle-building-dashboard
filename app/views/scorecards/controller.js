@@ -48,6 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
     copyUrl: function copyUrl() {
       var url = window.location.href;
       try {
+        // This will only work in a prod env with https
         navigator.clipboard.writeText(url);
       } catch (err) {
         console.warn(err);
@@ -71,14 +72,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
       this.viewclass = BuildingScorecard;
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
-        // TODO set back to benchmark_overview
         this.state.set({
-          tab: 'benchmark_overview'
+          tab: 'benchmarking_overview'
         });
-        // this.state.set({ tab: 'emissions_targets' });
-        // this.state.set({ tab: 'energy_targets' });
       }
-
       this.render();
     },
     onCityReportActive: function onCityReportActive() {
@@ -105,7 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', './cit
       var activeTab = this.state.get('tab');
 
       // set classes on tabs
-      var tabs = ['benchmark_overview', 'emissions_targets', 'energy_targets'];
+      var tabs = ['benchmarking_overview', 'emissions_targets', 'energy_targets'];
       var inActiveTabs = tabs.filter(function (t) {
         return t !== activeTab;
       });

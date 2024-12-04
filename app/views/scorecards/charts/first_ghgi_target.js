@@ -6,7 +6,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/first_ghgi_target.html'], function ($, _, Backbone, d3, wrap, FirstGhgiTargetTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/first_ghgi_target.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, FirstGhgiTargetTemplate) {
   var FirstGhgiTargetView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.template = _.template(FirstGhgiTargetTemplate);
@@ -17,18 +17,49 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.latestYear = options.latestYear || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
-      var _data$ = data[0],
-        total_ghg_emissions_intensity = _data$.total_ghg_emissions_intensity,
-        bepstarget_2031 = _data$.bepstarget_2031,
-        bepstarget_2036 = _data$.bepstarget_2036,
-        bepstarget_2041 = _data$.bepstarget_2041,
-        bepstarget_2046 = _data$.bepstarget_2046,
-        beps_firstcomplianceyear = _data$.beps_firstcomplianceyear;
-      var nextTargetValue = data[0]["bepstarget_".concat(beps_firstcomplianceyear)];
+      var buildingData = data[0];
+      var _validateBuildingData = validateBuildingData(buildingData, {
+          total_ghg_emissions_intensity: 'number',
+          bepstarget_2031: 'number',
+          bepstarget_2036: 'number',
+          bepstarget_2041: 'number',
+          bepstarget_2046: 'number',
+          beps_firstcomplianceyear: 'number',
+          year: 'number'
+        }),
+        typedData = _validateBuildingData.typedData,
+        valid = _validateBuildingData.valid;
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+      var total_ghg_emissions_intensity = typedData.total_ghg_emissions_intensity,
+        bepstarget_2031 = typedData.bepstarget_2031,
+        bepstarget_2036 = typedData.bepstarget_2036,
+        bepstarget_2041 = typedData.bepstarget_2041,
+        bepstarget_2046 = typedData.bepstarget_2046,
+        beps_firstcomplianceyear = typedData.beps_firstcomplianceyear,
+        year = typedData.year;
+      function roundnum(num) {
+        return Math.ceil(num / 5) * 5;
+      }
+      var totalGhgi = total_ghg_emissions_intensity;
+      var maxGhgi = Math.max(5, roundnum(totalGhgi));
+      var getNextTarget = function getNextTarget() {
+        var _years;
+        var years = [2031, 2036, 2041, 2046];
+        var firstComplianceYear = Number(beps_firstcomplianceyear);
+        var index = years.findIndex(function (y) {
+          return y > firstComplianceYear && y > year;
+        });
+        return (_years = years === null || years === void 0 ? void 0 : years[index - 1]) !== null && _years !== void 0 ? _years : years === null || years === void 0 ? void 0 : years[years.length - 1];
+      };
+      var nextTargetValue = Number(data[0]["bepstarget_".concat(getNextTarget())]);
       var currentValue = Number(Number(total_ghg_emissions_intensity).toFixed(2));
       var greenBar = 0;
       var greenStripedBar = 0;
@@ -37,18 +68,21 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var greenBarLabel = '';
       var greenStripedBarLabel = '';
       var redBarLabel = '';
+      var isMeetingTarget;
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
-        whiteBackground = 5 - (redBar + greenBar);
+        whiteBackground = maxGhgi - (redBar + greenBar);
         redBarLabel = "(GHGI current) ".concat(currentValue);
         greenBarLabel = "(GHGI target) ".concat(nextTargetValue);
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
-        whiteBackground = 5 - (greenStripedBar + greenBar);
-        greenStripedBarLabel = "(GHGI target) ".concat(nextTargetValue);
-        greenBarLabel = "(GHGI current) ".concat(currentValue);
+        whiteBackground = maxGhgi - (greenStripedBar + greenBar);
+        greenStripedBarLabel = "(GHGI target) ".concat(Number(nextTargetValue).toFixed(2));
+        greenBarLabel = "(GHGI current) ".concat(Number(currentValue).toFixed(2));
+        isMeetingTarget = true;
       }
       var chartData = [{
         group: 'first_ghgi_target',
@@ -62,10 +96,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       }];
       return {
         chartData: chartData,
-        beps_firstcomplianceyear: beps_firstcomplianceyear
+        beps_firstcomplianceyear: beps_firstcomplianceyear,
+        maxGhgi: maxGhgi,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
-    renderChart: function renderChart(chartData) {
+    renderChart: function renderChart(chartData, maxGhgi) {
       var FONT_SIZE = 12;
       var PADDING = 6;
       var parent = d3.select(this.viewParent).select('.first-ghgi-target-chart');
@@ -76,9 +113,9 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       // set the dimensions and margins of the graph
       var margin = {
           top: 30,
-          right: 30,
+          right: 120,
           bottom: 30,
-          left: 50
+          left: 130
         },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
@@ -93,7 +130,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       var y = d3.scaleBand().domain(groups).range([0, height]).padding([0.2]);
 
       // Add X axis
-      var x = d3.scaleLinear().domain([0, 5]).range([0, width]);
+      var x = d3.scaleLinear().domain([0, maxGhgi]).range([0, width]);
       var xAxis = svg.append('g').attr('class', 'first-ghgi-target-x-axis text-chart').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(10).tickSize(0));
 
       // Make the x axis line invisible
@@ -135,13 +172,16 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           v = _ref2[1];
         return k.endsWith('Label') && !!v;
       }));
-      for (var _i2 = 0, _Object$entries = Object.entries(labelData); _i2 < _Object$entries.length; _i2++) {
+      var _loop = function _loop() {
         var entry = _Object$entries[_i2];
         var _entry = _slicedToArray(entry, 2),
           k = _entry[0],
           v = _entry[1];
         var barName = ".first-ghgi-target-".concat(k.replace('Label', ''));
-        d3.select(barName).append('text').attr('class', 'first-ghgi-target-x-axis-label text-chart').attr('text-anchor', labelTextAnchor[k]).attr('x', function (d) {
+        d3.select(barName).append('text').attr('class', 'first-ghgi-target-x-axis-label text-chart').attr('text-anchor', function (d) {
+          var anchor = labelTextAnchor[k];
+          return anchor;
+        }).attr('x', function (d) {
           return x(d[0][1]);
         }).attr('y', function (d) {
           return -2 * PADDING;
@@ -151,14 +191,20 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
           // 3 is half of width
           return "translate( ".concat(x(d[0][1]) - 3, ", ").concat(PADDING * -1, ")");
         }).attr('d', 'M3.43259 4.25C3.24014 4.58333 2.75902 4.58333 2.56657 4.25L0.834517 1.25C0.642067 0.916667 0.882629 0.5 1.26753 0.5L4.73163 0.5C5.11653 0.5 5.35709 0.916667 5.16464 1.25L3.43259 4.25Z').attr('fill', 'black');
+      };
+      for (var _i2 = 0, _Object$entries = Object.entries(labelData); _i2 < _Object$entries.length; _i2++) {
+        _loop();
       }
     },
     render: function render() {
-      return this.template(this.chartData());
+      var chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
-      this.renderChart(chartData === null || chartData === void 0 ? void 0 : chartData.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData, chartData.maxGhgi);
     }
   });
   return FirstGhgiTargetView;

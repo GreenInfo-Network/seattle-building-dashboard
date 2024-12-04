@@ -1,7 +1,15 @@
 <div class="first-ghgi-target">
   <div class="first-ghgi-target-text-container text-copy">
-    This building is currently meeting its estimated BEPS target of 2.48 kg
-    CO2e/SF/yr for the October 1, <%= beps_firstcomplianceyear %> deadline.
+    <span>This building</span>
+    <% if (_isMeetingTarget) { %>
+    <span>is</span>
+    <% } else { %>
+    <span>is not</span>
+    <% } %>
+    <span
+      >currently meeting its estimated BEPS target of <%= _nextTargetValue %> kg
+      CO2e/SF/yr for the first compliance interval.</span
+    >
   </div>
 
   <div class="first-ghgi-target-chart-container">

@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!templates/scorecards/charts/fueluse.html'], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
+define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../../../../lib/validate_building_data', 'text!templates/scorecards/charts/fueluse.html'], function ($, _, Backbone, d3, wrap, validateBuildingData, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
     TYPICAL_CAR_EMMISSION: 4.7,
     initialize: function initialize(options) {
@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
     showPercents: function showPercents(num) {
       if (isNaN(num)) return null;
@@ -20,14 +21,30 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
     chartData: function chartData() {
       var data = this.data;
       var buildingData = data[0];
-      var gas_ghg_percent = buildingData.gas_ghg_percent,
-        electricity_ghg_percent = buildingData.electricity_ghg_percent,
-        steam_ghg_percent = buildingData.steam_ghg_percent,
-        gas_pct = buildingData.gas_pct,
-        electricity_pct = buildingData.electricity_pct,
-        steam_pct = buildingData.steam_pct,
-        total_ghg_emissions = buildingData.total_ghg_emissions,
-        total_kbtu = buildingData.total_kbtu;
+      var _validateBuildingData = validateBuildingData(buildingData, {
+          gas_ghg_percent: 'number',
+          electricity_ghg_percent: 'number',
+          steam_ghg_percent: 'number',
+          gas_pct: 'number',
+          electricity_pct: 'number',
+          steam_pct: 'number',
+          total_ghg_emissions: 'number',
+          total_kbtu: 'number'
+        }),
+        typedData = _validateBuildingData.typedData,
+        valid = _validateBuildingData.valid;
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+      var gas_ghg_percent = typedData.gas_ghg_percent,
+        electricity_ghg_percent = typedData.electricity_ghg_percent,
+        steam_ghg_percent = typedData.steam_ghg_percent,
+        gas_pct = typedData.gas_pct,
+        electricity_pct = typedData.electricity_pct,
+        steam_pct = typedData.steam_pct,
+        total_ghg_emissions = typedData.total_ghg_emissions,
+        total_kbtu = typedData.total_kbtu;
       var normalizeNum = function normalizeNum(num) {
         if (isNaN(num)) return 0;
         var next = Number(num !== null && num !== void 0 ? num : 0) * 100;
@@ -123,7 +140,6 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
 
       // Add Y axis
       var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-      // svg.append('g').call(d3.axisLeft(y));
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(chartData);
@@ -172,10 +188,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', 'text!
       });
     },
     render: function render() {
-      return this.template(this.chartData());
+      var chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
     afterRender: function afterRender() {
       var chartData = this.chartData();
+      if (!chartData) return;
       this.renderChart(chartData.chartData, chartData.totals);
     }
   });
