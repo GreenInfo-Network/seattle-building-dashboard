@@ -87,7 +87,7 @@ define([
         whiteBackground = maxVal - (greenStripedBar + greenBar);
 
         greenStripedBarLabel = `(EUI target) ${nextTargetValue}`;
-        greenBarLabel = `(EUI current) ${currentValue}`;
+        greenBarLabel = `(EUI current) ${Number(currentValue).toFixed(1)}`;
 
         isMeetingTarget = true;
       }
@@ -128,10 +128,17 @@ define([
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
 
+      const horizontalPadding = outerWidth / 5;
+
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
+      var margin = {
+          top: 40,
+          right: horizontalPadding,
+          bottom: 40,
+          left: horizontalPadding
+        },
         width = outerWidth - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
+        height = outerHeight - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
       var svg = parent
@@ -241,16 +248,7 @@ define([
           .append('text')
           .attr('class', 'first-compliance-interval-x-axis-label text-chart')
           .attr('text-anchor', d => {
-            // const textPos = x(d[0][1]);
-            // const max = width - 100;
-            // const min = 100;
             let anchor = labelTextAnchor[k];
-            // if (textPos > max) {
-            //   anchor = 'end';
-            // }
-            // if (textPos < min) {
-            //   anchor = 'start';
-            // }
             return anchor;
           })
           .attr('x', d => {

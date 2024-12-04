@@ -106,9 +106,7 @@ define([
 
         whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue).toFixed(
-          2
-        )}`;
+        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue)}`;
         greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
 
         isMeetingTarget = true;
@@ -149,10 +147,17 @@ define([
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
 
+      const horizontalPadding = outerWidth / 5;
+
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
+      var margin = {
+          top: 40,
+          right: horizontalPadding,
+          bottom: 40,
+          left: horizontalPadding
+        },
         width = outerWidth - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
+        height = outerHeight - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
       var svg = parent

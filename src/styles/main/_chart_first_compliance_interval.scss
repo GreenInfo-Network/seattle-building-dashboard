@@ -14,7 +14,7 @@
 
     &-chart {
       font-size: 0.8rem;
-      height: 100;
+      height: 120px;
       width: 100%;
 
       svg {
@@ -50,6 +50,14 @@
 
     &-whiteBackground {
       fill: $white;
+    }
+  }
+}
+
+@media print {
+  #first-compliance-interval-chart {
+    .first-compliance-interval-x-axis-label {
+      font-size: 0.7rem;
     }
   }
 }

@@ -43,6 +43,19 @@ define([
         this.render();
       });
 
+      // This re-renders all charts on print
+      if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        const that = this;
+        mediaQueryList.addListener(function (mql) {
+          if (mql.matches) {
+            that.render();
+          } else {
+            that.render();
+          }
+        });
+      }
+
       this.charts = {};
 
       return this;

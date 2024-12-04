@@ -114,3 +114,11 @@
     }
   }
 }
+
+@media print {
+  #beps-chart {
+    .beps-chart {
+      width: 100%;
+    }
+  }
+}

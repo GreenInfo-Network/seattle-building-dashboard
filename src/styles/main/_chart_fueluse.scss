@@ -87,3 +87,11 @@
     }
   }
 }
+
+@media print {
+  #fueluse-chart {
+    .fueluse-chart {
+      width: 100%;
+    }
+  }
+}

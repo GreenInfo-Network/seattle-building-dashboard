@@ -498,16 +498,11 @@ $dataviz-negative: #94778b;
     width: 100%;
     max-width: 1080px;
     min-width: 920px;
+    // TODO testing
+    // width: 594px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-
-    &-inner {
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
   }
 
   #scorecard-content {
@@ -550,11 +545,16 @@ $dataviz-negative: #94778b;
       color-adjust: exact !important; /*Firefox*/
     }
 
+    .print-hide {
+      display: none;
+    }
+
+    .building-container,
+    .scorecard-wrapper,
     .scorecard-wrapper {
       width: 8in;
       max-width: 8in;
-      // helps with alignment of abs pos EUI labels when printing
-      min-width: 945px;
+      min-width: unset;
     }
 
     #print-link,
