@@ -4,8 +4,9 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/fueluse.html'
-], function ($, _, Backbone, d3, wrap, FuelUseTemplate) {
+], function ($, _, Backbone, d3, wrap, validateBuildingData, FuelUseTemplate) {
   var FuelUseView = Backbone.View.extend({
     TYPICAL_CAR_EMMISSION: 4.7,
 
@@ -17,6 +18,7 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     showPercents: function (num) {
@@ -30,6 +32,22 @@ define([
 
       const buildingData = data[0];
 
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        gas_ghg_percent: 'number',
+        electricity_ghg_percent: 'number',
+        steam_ghg_percent: 'number',
+        gas_pct: 'number',
+        electricity_pct: 'number',
+        steam_pct: 'number',
+        total_ghg_emissions: 'number',
+        total_kbtu: 'number'
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
       const {
         gas_ghg_percent,
         electricity_ghg_percent,
@@ -39,7 +57,7 @@ define([
         steam_pct,
         total_ghg_emissions,
         total_kbtu
-      } = buildingData;
+      } = typedData;
 
       const normalizeNum = num => {
         if (isNaN(num)) return 0;
@@ -189,7 +207,6 @@ define([
 
       // Add Y axis
       var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-      // svg.append('g').call(d3.axisLeft(y));
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(chartData);
@@ -264,11 +281,14 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
+      if (!chartData) return;
       this.renderChart(chartData.chartData, chartData.totals);
     }
   });

@@ -1,4 +1,4 @@
-<div id="scorecard-2">
+<div id="building-scorecard">
   <div class="building-container">
     <!-- SIDEBAR -->
     <div class="building-sidebar">
@@ -22,7 +22,7 @@
       </div>
 
       <div class="building-sidebar-description-container text-copy">
-        <% if (tab === 'benchmark_overview') { %>
+        <% if (tab === 'benchmarking_overview') { %>
         <div class="building-sidebar-description">
           <div>
             Energy Benchmarking is the foundation of building energy management
@@ -64,17 +64,30 @@
         </div>
         <% } %> <% if (tab === 'energy_targets') { %>
         <div class="building-sidebar-description">
+          <% if (cbpsFlag) { %>
           <div>
-            Commercial buildings in Washington greater than 50,000 square feet
+            Commercial buildings in Washington larger than 50,000 square feet
             (Tier 1 buildings) must achieve performance targets under
             Washington’s Clean Buildings Performance Standard (CBPS) law.
           </div>
+
+          <% } else { %>
+          <div>
+            Multifamily buildings larger than 20,000 square feet and commercial
+            buildings 20,001–50,000 square feet (Tier 2 buildings) do not
+            currently need to meet CBPS targets, but must comply with other
+            program requirements.
+          </div>
+
+          <% } %>
+
           <div>
             The Washington Department of Commerce administers the CBPS and sets
             performance targets based on Energy Use Intensity (kBtu/SF/yr).
             Buildings may be subject to both Seattle’s BEPS law and Washington’s
             CBPS law.
           </div>
+
           <a
             class="building-sidebar-button text-subheader"
             href="https://www.commerce.wa.gov/cbps/"
@@ -89,7 +102,7 @@
     <!-- MAIN CONTENT -->
     <div class="building-main">
       <!-- BENCHMARKING OVERVIEW -->
-      <% if (tab === 'benchmark_overview') { %>
+      <% if (tab === 'benchmarking_overview') { %>
       <div class="building-main-section">
         <!-- Overview -->
         <div class="building-main-chart-container">
@@ -163,21 +176,29 @@
           </div>
         </div>
         <!-- Building info -->
+        <% if (showCharts.use_types) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">BUILDING INFO</div>
           <div id="use-types-chart" />
         </div>
+        <% } %>
         <!-- Energy & Emissions Breakdown -->
+        <% if (showCharts.fueluse) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">ENERGY & EMISSIONS BREAKDOWN</div>
           <div id="fueluse-chart" />
         </div>
+        <% } %>
+
         <!-- Energy Performance Over Time -->
+        <% if (showCharts.performance_over_time) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">ENERGY PERFORMANCE OVER TIME</div>
           <div id="performance-over-time-chart" />
         </div>
+        <% } %>
       </div>
+
       <% } %>
       <!-- EMISSIONS TARGETS -->
       <% if (tab === 'emissions_targets') { %>
@@ -229,7 +250,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2031</td>
+                <td><%= targetYears.bepstarget_2031 %></td>
                 <td><%= bepstarget_2031 %></td>
               </tr>
               <!-- third row -->
@@ -248,7 +269,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2036</td>
+                <td><%= targetYears.bepstarget_2036 %></td>
                 <td><%= bepstarget_2036 %></td>
               </tr>
               <!-- fourth row -->
@@ -267,7 +288,7 @@
                     </div>
                   </div>
                 </td>
-                <td>2041</td>
+                <td><%= targetYears.bepstarget_2041 %></td>
                 <td><%= bepstarget_2041 %></td>
               </tr>
               <!-- fifth row -->
@@ -286,14 +307,14 @@
                     </div>
                   </div>
                 </td>
-                <td>2046</td>
+                <td><%= targetYears.bepstarget_2046 %></td>
                 <td><%= bepstarget_2046 %></td>
               </tr>
             </table>
           </div>
           <div class="text-asterisk">
-            *Compliance Year Deadlines for Buildings >220,000 SF are October 1st
-            of the year specified.
+            *Compliance Year Deadlines for Buildings <%= sfRangeText %> SF are
+            October 1st of the year specified.
           </div>
           <div class="text-asterisk">
             ** Targets are estimated by prorating the published BEPS targets for
@@ -303,15 +324,20 @@
           </div>
         </div>
         <!-- First GHGI Target -->
+        <% if (showCharts.first_ghgi_target) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">FIRST GHGI TARGET</div>
           <div id="first-ghgi-target-chart" />
         </div>
+        <% } %>
         <!-- Plan for Future Targets -->
+        <% if (showCharts.beps) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">PLAN FOR FUTURE TARGETS</div>
           <div id="beps-chart" />
         </div>
+        <% } %>
+
         <!-- Take action -->
         <div class="building-main-chart-container">
           <div class="text-subheader">TAKE ACTION</div>
@@ -374,10 +400,12 @@
           </div>
         </div>
         <!-- First compliance interval -->
+        <% if(showCharts.first_compliance_interval) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">FIRST COMPLIANCE INTERVAL</div>
           <div id="first-compliance-interval-chart" />
         </div>
+        <% } %>
         <!-- Take action -->
         <div class="building-main-chart-container">
           <div class="text-subheader">TAKE ACTION</div>
@@ -385,7 +413,7 @@
             <div class="building-main-overview-container">
               <div class="text-copy-large">
                 Visit the Washington Department of Commerce website for steps to
-                comply:
+                comply
               </div>
               <a
                 target="_blank"
@@ -399,7 +427,7 @@
             <div class="building-main-overview-container">
               <div class="text-copy-large">
                 Learn about free technical support options for buildings in
-                Seattle:
+                Seattle
               </div>
               <a
                 target="_blank"

@@ -4,8 +4,17 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/first_compliance_interval.html'
-], function ($, _, Backbone, d3, wrap, FirstComplianceIntervalTemplate) {
+], function (
+  $,
+  _,
+  Backbone,
+  d3,
+  wrap,
+  validateBuildingData,
+  FirstComplianceIntervalTemplate
+) {
   var FirstComplianceIntervalView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(FirstComplianceIntervalTemplate);
@@ -16,41 +25,39 @@ define([
       this.latestYear = options.latestYear || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
 
-      // site_eui;
-      // site_eui_wn;
-      // source_eui;
-      // source_eui_wn;
-      // building_type_eui;
-      // building_type_eui_wn;
-      // cbps_date;
-      // cbps_flag;
-      // cbpseuitarget;
+      const buildingData = data[0];
 
-      const {
-        site_eui_wn, // current
-        cbpseuitarget, //target
-        cbps_date, // compliance year
-        cbps_flag, //compliance flag TODO if flag and no target, dont show
-        source_eui_wn // need to check what this is exactly...
-      } = data[0];
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        site_eui_wn: 'number', // current
+        cbpseuitarget: 'number', //target
+        cbps_date: 'number', // compliance year
+        cbps_flag: 'boolean' //compliance flag TODO if flag and no target, dont show
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
+      const { site_eui_wn, cbpseuitarget, cbps_date, cbps_flag } = typedData;
 
       function roundnum(num) {
         return Math.ceil(num / 50) * 50;
       }
 
-      // TODO confirm this is the correct thing to be using
-      const maxVal = roundnum(source_eui_wn);
+      const maxVal = roundnum(
+        Math.max(Number(site_eui_wn), Number(cbpseuitarget))
+      );
 
-      // TODO limit to two decimals
-      const nextTargetValue = cbpseuitarget;
-
-      const currentValue = Number(site_eui_wn).toFixed(1);
+      const nextTargetValue = Number(cbpseuitarget);
+      const currentValue = Number(Number(site_eui_wn).toFixed(1));
 
       let greenBar = 0;
       let greenStripedBar = 0;
@@ -61,6 +68,8 @@ define([
       let greenStripedBarLabel = '';
       let redBarLabel = '';
 
+      let isMeetingTarget;
+
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
@@ -69,6 +78,8 @@ define([
 
         redBarLabel = `(EUI current) ${currentValue}`;
         greenBarLabel = `(EUI target) ${nextTargetValue}`;
+
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
@@ -77,6 +88,8 @@ define([
 
         greenStripedBarLabel = `(EUI target) ${nextTargetValue}`;
         greenBarLabel = `(EUI current) ${currentValue}`;
+
+        isMeetingTarget = true;
       }
 
       const chartData = [
@@ -95,7 +108,10 @@ define([
       return {
         chartData,
         maxVal,
-        cbps_date
+        cbps_date,
+        cbps_flag,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
 
@@ -113,7 +129,7 @@ define([
       const outerHeight = parent.node().offsetHeight;
 
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 30, bottom: 30, left: 50 },
+      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
 
@@ -224,7 +240,19 @@ define([
         d3.select(barName)
           .append('text')
           .attr('class', 'first-compliance-interval-x-axis-label text-chart')
-          .attr('text-anchor', labelTextAnchor[k])
+          .attr('text-anchor', d => {
+            // const textPos = x(d[0][1]);
+            // const max = width - 100;
+            // const min = 100;
+            let anchor = labelTextAnchor[k];
+            // if (textPos > max) {
+            //   anchor = 'end';
+            // }
+            // if (textPos < min) {
+            //   anchor = 'start';
+            // }
+            return anchor;
+          })
           .attr('x', d => {
             return x(d[0][1]);
           })
@@ -249,12 +277,15 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData, chartData?.maxVal);
+      if (!chartData || !chartData?.cbps_flag) return;
+      this.renderChart(chartData.chartData, chartData.maxVal);
     }
   });
 

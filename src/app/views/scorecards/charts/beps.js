@@ -4,8 +4,9 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/beps.html'
-], function ($, _, Backbone, d3, wrap, BepsTemplate) {
+], function ($, _, Backbone, d3, wrap, validateBuildingData, BepsTemplate) {
   var BepsView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(BepsTemplate);
@@ -15,6 +16,7 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
@@ -22,8 +24,24 @@ define([
       const data = this.data;
       const buildingData = data[0];
 
-      const { gas_ghg_percent, electricity_ghg_percent, steam_ghg_percent } =
-        buildingData;
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        gas_ghg_percent: 'number',
+        electricity_ghg_percent: 'number',
+        steam_ghg_percent: 'number',
+        year: 'number'
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
+
+      const {
+        gas_ghg_percent,
+        electricity_ghg_percent,
+        steam_ghg_percent,
+        year
+      } = typedData;
 
       return {
         chartData: buildingData,
@@ -31,13 +49,17 @@ define([
         _showElectricity:
           !isNaN(electricity_ghg_percent) &&
           Number(electricity_ghg_percent) > 0,
-        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0
+        _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0,
+        _year: year
       };
     },
 
     renderChart: function (buildingData) {
-      const maxGhgi = 5;
       const totalGhgi = buildingData?.total_ghg_emissions_intensity;
+      const maxGhgi = Math.max(
+        buildingData?.bepstarget_2031 ?? 0,
+        Math.ceil(totalGhgi)
+      );
 
       const divisor = 100 / maxGhgi;
       const multiplier = totalGhgi / maxGhgi;
@@ -62,7 +84,7 @@ define([
 
       if (!parent.node()) return;
 
-      const margin = { top: 0, right: 0, bottom: 50, left: 50 };
+      const margin = { top: 20, right: 0, bottom: 50, left: 50 };
 
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
@@ -120,13 +142,19 @@ define([
       ticks.attr('class', 'beps-bar-axis-text text-chart');
 
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, 5]).range([height, 0]);
+      var y = d3.scaleLinear().domain([0, maxGhgi]).range([height, 0]);
 
       const yAxis = svg
         .append('g')
         .attr('class', 'text-chart')
         .attr('transform', `translate(${X_AXIS_PADDING * -1}, 0)`)
-        .call(d3.axisLeft(y).ticks(6).tickSize(0));
+        .call(
+          d3
+            .axisLeft(y)
+            .ticks(6)
+            .tickSize(0)
+            .tickFormat(d => `${d.toFixed(1)}`)
+        );
 
       yAxis.select('.domain').attr('stroke', 'transparent');
 
@@ -134,7 +162,7 @@ define([
         .append('text')
         .attr('class', 'beps-bar-y-axis-label text-chart')
         .attr('text-anchor', 'middle')
-        .attr('y', -1 * (X_AXIS_PADDING + X_AXIS_PADDING + FONT_SIZE))
+        .attr('y', -1 * ((X_AXIS_PADDING + FONT_SIZE) * 2))
         .attr('x', height / -2)
         .attr('transform', 'rotate(-90)')
         .text('GHGI (kgCO2e/sf/yr)');
@@ -172,10 +200,16 @@ define([
         .attr('width', x.bandwidth());
 
       // Add year targets
+      // 2031 is the start of the first window (2031 - 2035) so the shift
+      // states where in a window a particular building's targets are
+      const firstComplianceYear = Number(
+        buildingData?.beps_firstcomplianceyear ?? 2031
+      );
+      const yearWindowShift = firstComplianceYear - 2031;
       const targetYears = Object.entries(buildingData)
         .filter(([k, v]) => k.startsWith('bepstarget_'))
         .reduce((acc, [k, v]) => {
-          const year = k.split('_')[1];
+          const year = `${Number(k.split('_')[1]) + yearWindowShift}`;
           acc[year] = Number(v);
           return acc;
         }, {});
@@ -183,7 +217,7 @@ define([
       let targets = new Set();
 
       for (const targetData of Object.entries(targetYears)) {
-        const [year, target] = targetData;
+        let [year, target] = targetData;
 
         if (targets.has(target)) continue;
 
@@ -214,11 +248,14 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
+      if (!chartData) return;
       this.renderChart(chartData.chartData);
     }
   });

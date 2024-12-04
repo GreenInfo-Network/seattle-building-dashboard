@@ -74,6 +74,7 @@ define([
     copyUrl: function () {
       const url = window.location.href;
       try {
+        // This will only work in a prod env with https
         navigator.clipboard.writeText(url);
       } catch (err) {
         console.warn(err);
@@ -103,10 +104,7 @@ define([
       this.viewclass = BuildingScorecard;
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
-        // TODO set back to benchmark_overview
-        this.state.set({ tab: 'benchmark_overview' });
-        // this.state.set({ tab: 'emissions_targets' });
-        // this.state.set({ tab: 'energy_targets' });
+        this.state.set({ tab: 'benchmarking_overview' });
       }
       this.render();
     },
@@ -140,7 +138,7 @@ define([
 
       // set classes on tabs
       const tabs = [
-        'benchmark_overview',
+        'benchmarking_overview',
         'emissions_targets',
         'energy_targets'
       ];

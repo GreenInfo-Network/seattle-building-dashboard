@@ -4,8 +4,17 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/first_ghgi_target.html'
-], function ($, _, Backbone, d3, wrap, FirstGhgiTargetTemplate) {
+], function (
+  $,
+  _,
+  Backbone,
+  d3,
+  wrap,
+  validateBuildingData,
+  FirstGhgiTargetTemplate
+) {
   var FirstGhgiTargetView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(FirstGhgiTargetTemplate);
@@ -16,11 +25,29 @@ define([
       this.latestYear = options.latestYear || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
+
+      const buildingData = data[0];
+
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        total_ghg_emissions_intensity: 'number',
+        bepstarget_2031: 'number',
+        bepstarget_2036: 'number',
+        bepstarget_2041: 'number',
+        bepstarget_2046: 'number',
+        beps_firstcomplianceyear: 'number',
+        year: 'number'
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
 
       const {
         total_ghg_emissions_intensity,
@@ -28,10 +55,25 @@ define([
         bepstarget_2036,
         bepstarget_2041,
         bepstarget_2046,
-        beps_firstcomplianceyear
-      } = data[0];
+        beps_firstcomplianceyear,
+        year
+      } = typedData;
 
-      const nextTargetValue = data[0][`bepstarget_${beps_firstcomplianceyear}`];
+      function roundnum(num) {
+        return Math.ceil(num / 5) * 5;
+      }
+
+      const totalGhgi = total_ghg_emissions_intensity;
+      const maxGhgi = Math.max(5, roundnum(totalGhgi));
+
+      const getNextTarget = () => {
+        const years = [2031, 2036, 2041, 2046];
+        const firstComplianceYear = Number(beps_firstcomplianceyear);
+        const index = years.findIndex(y => y > firstComplianceYear && y > year);
+        return years?.[index - 1] ?? years?.[years.length - 1];
+      };
+
+      const nextTargetValue = Number(data[0][`bepstarget_${getNextTarget()}`]);
 
       const currentValue = Number(
         Number(total_ghg_emissions_intensity).toFixed(2)
@@ -46,22 +88,30 @@ define([
       let greenStripedBarLabel = '';
       let redBarLabel = '';
 
+      let isMeetingTarget;
+
       if (currentValue > nextTargetValue) {
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
 
-        whiteBackground = 5 - (redBar + greenBar);
+        whiteBackground = maxGhgi - (redBar + greenBar);
 
         redBarLabel = `(GHGI current) ${currentValue}`;
         greenBarLabel = `(GHGI target) ${nextTargetValue}`;
+
+        isMeetingTarget = false;
       } else {
         greenStripedBar = nextTargetValue - currentValue;
         greenBar = currentValue;
 
-        whiteBackground = 5 - (greenStripedBar + greenBar);
+        whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${nextTargetValue}`;
-        greenBarLabel = `(GHGI current) ${currentValue}`;
+        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue).toFixed(
+          2
+        )}`;
+        greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
+
+        isMeetingTarget = true;
       }
 
       const chartData = [
@@ -79,11 +129,14 @@ define([
 
       return {
         chartData,
-        beps_firstcomplianceyear
+        beps_firstcomplianceyear,
+        maxGhgi,
+        _nextTargetValue: nextTargetValue,
+        _isMeetingTarget: isMeetingTarget
       };
     },
 
-    renderChart: function (chartData) {
+    renderChart: function (chartData, maxGhgi) {
       const FONT_SIZE = 12;
       const PADDING = 6;
 
@@ -97,7 +150,7 @@ define([
       const outerHeight = parent.node().offsetHeight;
 
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 30, bottom: 30, left: 50 },
+      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
         width = outerWidth - margin.left - margin.right,
         height = 100 - margin.top - margin.bottom;
 
@@ -122,7 +175,7 @@ define([
       var y = d3.scaleBand().domain(groups).range([0, height]).padding([0.2]);
 
       // Add X axis
-      var x = d3.scaleLinear().domain([0, 5]).range([0, width]);
+      var x = d3.scaleLinear().domain([0, maxGhgi]).range([0, width]);
       const xAxis = svg
         .append('g')
         .attr('class', 'first-ghgi-target-x-axis text-chart')
@@ -208,7 +261,10 @@ define([
         d3.select(barName)
           .append('text')
           .attr('class', 'first-ghgi-target-x-axis-label text-chart')
-          .attr('text-anchor', labelTextAnchor[k])
+          .attr('text-anchor', d => {
+            let anchor = labelTextAnchor[k];
+            return anchor;
+          })
           .attr('x', d => {
             return x(d[0][1]);
           })
@@ -233,12 +289,15 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData, chartData.maxGhgi);
     }
   });
 

@@ -1,10 +1,34 @@
 <div class="first-compliance-interval">
   <div class="first-compliance-interval-text-container text-copy">
-    This Tier 1 building is not on track to meet its estimated CBPS EUI target*
-    of 67.0 kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.
+    <span>This</span>
+
+    <% if (cbps_flag) { %>
+    <span>This Tier 1 building</span>
+    <% if (_isMeetingTarget) { %>
+    <span>is</span>
+    <% } else { %>
+    <span>is not</span>
+    <% } %>
+    <span
+      >on track to meet its estimated CBPS EUI target* of <%= _nextTargetValue
+      %> kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.</span
+    >
+    <% } else { %>
+    <span
+      >This Tier 2 building is not currently required to meet a CBPS EUI target.
+    </span>
+    <% } %>
   </div>
 
   <div class="first-compliance-interval-chart-container">
     <div class="first-compliance-interval-chart" />
   </div>
+
+  <% if (cbps_flag) { %>
+  <div class="first-compliance-interval-text-container text-asterisk">
+    *Target is estimated by prorating the published CBPS targets for the top
+    three property use types by square footage. Calculations exclude parking
+    square footage.
+  </div>
+  <% } %>
 </div>

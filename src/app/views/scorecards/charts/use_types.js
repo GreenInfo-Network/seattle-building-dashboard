@@ -4,8 +4,9 @@ define([
   'backbone',
   'd3',
   '../../../../lib/wrap',
+  '../../../../lib/validate_building_data',
   'text!templates/scorecards/charts/use_types.html'
-], function ($, _, Backbone, d3, wrap, UseTypesTemplate) {
+], function ($, _, Backbone, d3, wrap, validateBuildingData, UseTypesTemplate) {
   var UseTypesView = Backbone.View.extend({
     initialize: function (options) {
       this.template = _.template(UseTypesTemplate);
@@ -15,11 +16,31 @@ define([
       this.year = options.year || '';
       this.isCity = options.isCity || false;
       this.viewParent = options.parent;
+      this.showChart = true;
     },
 
     // Templating for the HTML + chart
     chartData: function () {
       const data = this.data;
+
+      const buildingData = data[0];
+
+      const { typedData, valid } = validateBuildingData(buildingData, {
+        largestpropertyusetypegfa: 'number',
+        secondlargestpropertyusetypegfa: 'number',
+        thirdlargestpropertyusetypegfa: 'number',
+        largestpropertyusetype: 'string',
+        secondlargestpropertyusetype: 'string',
+        thirdlargestpropertyusetype: 'string',
+        id: 'number',
+        yearbuilt_string: 'string',
+        yearbuilt: 'number'
+      });
+
+      if (!valid) {
+        this.showChart = false;
+        return false;
+      }
 
       const {
         largestpropertyusetypegfa,
@@ -31,7 +52,7 @@ define([
         id,
         yearbuilt_string,
         yearbuilt
-      } = data[0];
+      } = typedData;
 
       const totalGfa =
         Number(largestpropertyusetypegfa ?? 0) +
@@ -56,19 +77,28 @@ define([
 
       const _totalSquareFootage = numberWithCommas(totalGfa);
 
-      const getLegendText = gfa => {
+      const getLegendText = (gfa, useType) => {
         if (isNaN(gfa)) return null;
         let roundedGfa = Math.round(gfa);
         if (gfa === 0) return null;
-        let next = `${roundedGfa}% ${largestpropertyusetype}`;
+        let next = `${roundedGfa}% ${useType}`;
         return next;
       };
 
-      const _legendFirstText = getLegendText(chartData.first);
+      const _legendFirstText = getLegendText(
+        chartData.first,
+        largestpropertyusetype
+      );
 
-      const _legendSecondText = getLegendText(chartData.second);
+      const _legendSecondText = getLegendText(
+        chartData.second,
+        secondlargestpropertyusetype
+      );
 
-      const _legendThirdText = getLegendText(chartData.third);
+      const _legendThirdText = getLegendText(
+        chartData.third,
+        thirdlargestpropertyusetype
+      );
 
       const _buildingId = id;
 
@@ -167,12 +197,15 @@ define([
     },
 
     render: function () {
-      return this.template(this.chartData());
+      const chartData = this.chartData();
+      if (!chartData) return;
+      return this.template(chartData);
     },
 
     afterRender: function () {
       const chartData = this.chartData();
-      this.renderChart(chartData?.chartData);
+      if (!chartData) return;
+      this.renderChart(chartData.chartData);
     }
   });
 
