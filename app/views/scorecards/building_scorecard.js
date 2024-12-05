@@ -270,16 +270,19 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
           return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
         var totalGfa = ((_building$largestprop = building === null || building === void 0 ? void 0 : building.largestpropertyusetypegfa) !== null && _building$largestprop !== void 0 ? _building$largestprop : 0) + ((_building$secondlarge = building === null || building === void 0 ? void 0 : building.secondlargestpropertyusetypegfa) !== null && _building$secondlarge !== void 0 ? _building$secondlarge : 0) + ((_building$thirdlarges = building === null || building === void 0 ? void 0 : building.thirdlargestpropertyusetypegfa) !== null && _building$thirdlarges !== void 0 ? _building$thirdlarges : 0);
-        var amounts = [[20001, 30000], [30001, 50000], [50001, 90000], [90001, 220000], [220000]];
+        var amounts = [[0, 20000], [20001, 30000], [30001, 50000], [50001, 90000], [90001, 220000], [220000]];
         var relevantAmounts = amounts.find(function (range) {
           return range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa);
         });
-        relevantAmounts = relevantAmounts.map(numberWithCommas);
+        if (!relevantAmounts) return '';
+        var relevantAmountsText = relevantAmounts.map(numberWithCommas);
         var rangeText = "";
-        if (relevantAmounts.length === 1) {
-          rangeText = "> ".concat(relevantAmounts[0], " SF");
+        if (relevantAmounts === amounts[0]) {
+          rangeText = "for Buildings < ".concat(relevantAmountsText[1], " SF");
+        } else if (relevantAmounts === amounts[amounts.length - 1]) {
+          rangeText = "for Buildings > ".concat(relevantAmountsText[0], " SF");
         } else {
-          rangeText = "".concat(relevantAmounts[0], "-").concat(relevantAmounts[1]);
+          rangeText = "for Buildings ".concat(relevantAmountsText[0], "-").concat(relevantAmountsText[1], " SF");
         }
         return rangeText;
       };
