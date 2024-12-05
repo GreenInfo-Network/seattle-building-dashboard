@@ -351,6 +351,7 @@ define([
           (building?.thirdlargestpropertyusetypegfa ?? 0);
 
         const amounts = [
+          [0, 20000],
           [20001, 30000],
           [30001, 50000],
           [50001, 90000],
@@ -362,14 +363,18 @@ define([
           range => range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa)
         );
 
-        relevantAmounts = relevantAmounts.map(numberWithCommas);
+        if (!relevantAmounts) return '';
+
+        const relevantAmountsText = relevantAmounts.map(numberWithCommas);
 
         let rangeText = ``;
 
-        if (relevantAmounts.length === 1) {
-          rangeText = `> ${relevantAmounts[0]} SF`;
+        if (relevantAmounts === amounts[0]) {
+          rangeText = `for Buildings < ${relevantAmountsText[1]} SF`;
+        } else if (relevantAmounts === amounts[amounts.length - 1]) {
+          rangeText = `for Buildings > ${relevantAmountsText[0]} SF`;
         } else {
-          rangeText = `${relevantAmounts[0]}-${relevantAmounts[1]}`;
+          rangeText = `for Buildings ${relevantAmountsText[0]}-${relevantAmountsText[1]} SF`;
         }
         return rangeText;
       };
