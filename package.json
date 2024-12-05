@@ -56,5 +56,8 @@
     "sass": "^1.56.2",
     "selenium-webdriver": "^4.7.0",
     "serve": "^14.1.2"
+  },
+  "overrides": {
+    "gift": "^0.10.2"
   }
 }
