@@ -4460,6 +4460,7 @@ html {
 #use-types-chart .use-types-chart {
   font-size: 0.8rem;
   width: 50%;
+  min-height: 150px;
 }
 #use-types-chart .use-types-chart svg {
   height: 100%;
