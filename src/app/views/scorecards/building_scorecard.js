@@ -362,14 +362,16 @@ define([
           range => range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa)
         );
 
+        if (!relevantAmounts) return '';
+
         relevantAmounts = relevantAmounts.map(numberWithCommas);
 
         let rangeText = ``;
 
         if (relevantAmounts.length === 1) {
-          rangeText = `> ${relevantAmounts[0]} SF`;
+          rangeText = `for Buildings > ${relevantAmounts[0]} SF`;
         } else {
-          rangeText = `${relevantAmounts[0]}-${relevantAmounts[1]}`;
+          rangeText = `for Buildings ${relevantAmounts[0]}-${relevantAmounts[1]} SF`;
         }
         return rangeText;
       };
