@@ -1,21 +1,55 @@
 <div class="fueluse">
   <div class="fueluse-chart-container">
-    <div class="fueluse-chart" />
+    <!-- Usage legend -->
     <div class="fueluse-legend">
       <% if (_showElectricity) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color electric"></div>
-        <div class="fueluse-legend-swatch-text text-copy">Electric</div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.usage.electricity %> Electric
+        </div>
       </div>
       <% } %> <% if (_showSteam) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color steam"></div>
-        <div class="fueluse-legend-swatch-text text-copy">Steam</div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.usage.steam %> Steam
+        </div>
       </div>
       <% } %> <% if (_showGas) { %>
       <div class="fueluse-legend-swatch">
         <div class="fueluse-legend-swatch-color gas"></div>
-        <div class="fueluse-legend-swatch-text text-copy">Gas</div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.usage.gas %> Gas
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="fueluse-chart" />
+
+    <!-- Emissions legend -->
+    <div class="fueluse-legend">
+      <% if (_showElectricity) { %>
+      <div class="fueluse-legend-swatch">
+        <div class="fueluse-legend-swatch-color electric"></div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.emissions.electricity %> Electric
+        </div>
+      </div>
+      <% } %> <% if (_showSteam) { %>
+      <div class="fueluse-legend-swatch">
+        <div class="fueluse-legend-swatch-color steam"></div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.emissions.steam %> Steam
+        </div>
+      </div>
+      <% } %> <% if (_showGas) { %>
+      <div class="fueluse-legend-swatch">
+        <div class="fueluse-legend-swatch-color gas"></div>
+        <div class="fueluse-legend-swatch-text text-copy">
+          <%= _legendText.emissions.gas %> Gas
+        </div>
       </div>
       <% } %>
     </div>
