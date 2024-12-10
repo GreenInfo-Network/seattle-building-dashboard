@@ -50,6 +50,7 @@ $dataviz-negative: #94778b;
   // light
   font-weight: 300;
   color: $paragraph;
+  line-height: 160%;
 }
 
 .text-subheader {
@@ -57,6 +58,7 @@ $dataviz-negative: #94778b;
   // bold
   font-weight: 700;
   color: $paragraph;
+  line-height: 140%;
 }
 
 .text-header {
@@ -64,12 +66,14 @@ $dataviz-negative: #94778b;
   // bold
   font-weight: 700;
   color: $paragraph;
+  line-height: 120%;
 }
 
 .text-copy-semibold {
   font-size: $text-size-regular;
   // semibold
   font-weight: 600;
+  line-height: 160%;
 }
 
 .text-copy-link {
@@ -78,6 +82,7 @@ $dataviz-negative: #94778b;
   font-weight: 600;
   color: $dark-blue;
   text-decoration: underline;
+  line-height: 160%;
 }
 
 .text-asterisk {
@@ -85,6 +90,7 @@ $dataviz-negative: #94778b;
   // light
   font-weight: 300;
   color: $paragraph;
+  line-height: 160%;
 }
 
 .text-button {
@@ -92,6 +98,7 @@ $dataviz-negative: #94778b;
   // bold
   font-weight: 700;
   color: $paragraph;
+  line-height: auto;
 }
 
 .text-chart {
@@ -99,6 +106,7 @@ $dataviz-negative: #94778b;
   // semibold
   font-weight: 600;
   color: $paragraph;
+  line-height: 120%;
 }
 
 .text-table {
@@ -106,6 +114,15 @@ $dataviz-negative: #94778b;
   // regular
   font-weight: 400;
   color: $paragraph;
+  line-height: 120%;
+}
+
+.text-table-large {
+  font-size: $text-size-regular;
+  // regular
+  font-weight: 400;
+  color: $paragraph;
+  line-height: 120%;
 }
 
 .text-table-header {
@@ -113,6 +130,7 @@ $dataviz-negative: #94778b;
   // semibold
   font-weight: 600;
   color: $paragraph;
+  line-height: 120%;
 }
 
 .text-copy-large {
@@ -251,12 +269,14 @@ $dataviz-negative: #94778b;
         &-text {
           display: flex;
           flex-direction: column;
+          gap: 0.5rem;
         }
 
         &-icon {
           display: flex;
-          align-items: center;
+          align-items: start;
           flex-shrink: 0;
+          width: 5rem;
         }
       }
 
@@ -419,12 +439,14 @@ $dataviz-negative: #94778b;
       &-table {
         border-radius: $small-border-radius;
         overflow: hidden;
+        width: 100%;
 
         table {
           border-spacing: 0;
           border-collapse: collapse;
           border-style: hidden;
           margin: 0;
+          table-layout: auto;
         }
 
         &-headers {
@@ -435,6 +457,8 @@ $dataviz-negative: #94778b;
           th {
             text-align: center;
             border-right: 1px solid $light-gray;
+            padding: 0.5rem;
+            white-space: nowrap;
           }
 
           th:last-of-type {
@@ -447,15 +471,15 @@ $dataviz-negative: #94778b;
           color: $paragraph;
 
           td {
-            text-align: center;
+            text-align: left;
             border-right: 1px solid $light-gray;
             border-bottom: 1px solid $light-gray;
             padding: 0.5rem;
+            white-space: nowrap;
           }
 
           td:last-of-type {
             border-right: none;
-            border-bottom: none;
           }
         }
 

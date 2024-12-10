@@ -34,7 +34,8 @@ define([
         thirdlargestpropertyusetype: 'string',
         id: 'number',
         yearbuilt_string: 'string',
-        yearbuilt: 'number'
+        yearbuilt: 'number',
+        propertygfabuildings: 'number'
       });
 
       if (!valid) {
@@ -51,7 +52,8 @@ define([
         thirdlargestpropertyusetype,
         id,
         yearbuilt_string,
-        yearbuilt
+        yearbuilt,
+        propertygfabuildings
       } = typedData;
 
       const totalGfa =
@@ -75,7 +77,7 @@ define([
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
 
-      const _totalSquareFootage = numberWithCommas(totalGfa);
+      const _totalSquareFootage = numberWithCommas(propertygfabuildings);
 
       const getLegendText = (gfa, useType) => {
         if (isNaN(gfa)) return null;

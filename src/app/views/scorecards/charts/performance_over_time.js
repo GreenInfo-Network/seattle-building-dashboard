@@ -31,6 +31,12 @@ define([
     chartData: function () {
       const data = this.data;
 
+      // No historical data when looking at earliest year
+      if (!data || !Array.isArray(data)) {
+        this.showChart = false;
+        return false;
+      }
+
       const validated = data.map(d =>
         validateBuildingData(d, {
           id: 'string',
@@ -109,7 +115,7 @@ define([
             return d.year;
           })
         )
-        .range([0, width]);
+        .range([30, width]);
 
       const xAxisTicks = [...new Set(chartData.map(d => d.year))];
 
@@ -136,7 +142,7 @@ define([
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');
 
-      function roundnum(num) {
+      function roundUpNum(num) {
         let nearestFifty = Math.ceil(num / 50) * 50;
         if (Math.abs(num - nearestFifty) < 20) {
           nearestFifty = nearestFifty + 20;
@@ -144,24 +150,28 @@ define([
         return nearestFifty;
       }
 
-      const max = roundnum(
+      function roundDownNum(num) {
+        let nearestFifty = Math.floor(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty - 20;
+        }
+        return nearestFifty;
+      }
+
+      const max = roundUpNum(
         d3.max(chartData, function (d) {
           return +d.n;
         })
       );
 
-      console.log({
-        max,
-        other: d3.max(chartData, function (d) {
-          return +d.n;
-        }),
-        min: d3.min(chartData, function (d) {
+      const min = roundDownNum(
+        d3.min(chartData, function (d) {
           return +d.n;
         })
-      });
+      );
 
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+      var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
 
       const yAxis = svg
         .append('g')
