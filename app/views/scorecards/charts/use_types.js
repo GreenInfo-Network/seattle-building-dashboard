@@ -38,7 +38,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
           thirdlargestpropertyusetype: 'string',
           id: 'number',
           yearbuilt_string: 'string',
-          yearbuilt: 'number'
+          yearbuilt: 'number',
+          propertygfabuildings: 'number'
         }),
         typedData = _validateBuildingData.typedData,
         valid = _validateBuildingData.valid;
@@ -54,7 +55,8 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         thirdlargestpropertyusetype = typedData.thirdlargestpropertyusetype,
         id = typedData.id,
         yearbuilt_string = typedData.yearbuilt_string,
-        yearbuilt = typedData.yearbuilt;
+        yearbuilt = typedData.yearbuilt,
+        propertygfabuildings = typedData.propertygfabuildings;
       var totalGfa = Number(largestpropertyusetypegfa !== null && largestpropertyusetypegfa !== void 0 ? largestpropertyusetypegfa : 0) + Number(secondlargestpropertyusetypegfa !== null && secondlargestpropertyusetypegfa !== void 0 ? secondlargestpropertyusetypegfa : 0) + Number(thirdlargestpropertyusetypegfa !== null && thirdlargestpropertyusetypegfa !== void 0 ? thirdlargestpropertyusetypegfa : 0);
       var chartData = {
         first: largestpropertyusetypegfa ? largestpropertyusetypegfa / totalGfa * 100 : 0,
@@ -64,7 +66,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
-      var _totalSquareFootage = numberWithCommas(totalGfa);
+      var _totalSquareFootage = numberWithCommas(propertygfabuildings);
       var getLegendText = function getLegendText(gfa, useType) {
         if (isNaN(gfa)) return null;
         var roundedGfa = Math.round(gfa);

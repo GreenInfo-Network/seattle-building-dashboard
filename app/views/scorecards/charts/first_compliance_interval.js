@@ -43,10 +43,14 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         cbpseuitarget = typedData.cbpseuitarget,
         cbps_date = typedData.cbps_date,
         cbps_flag = typedData.cbps_flag;
-      function roundnum(num) {
-        return Math.ceil(num / 50) * 50;
+      function roundUpNum(num) {
+        var nearestFifty = Math.ceil(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty + 20;
+        }
+        return nearestFifty;
       }
-      var maxVal = roundnum(Math.max(Number(site_eui_wn), Number(cbpseuitarget)));
+      var maxVal = roundUpNum(Math.max(Number(site_eui_wn), Number(cbpseuitarget)));
       var nextTargetValue = Number(cbpseuitarget);
       var currentValue = Number(Number(site_eui_wn).toFixed(1));
       var greenBar = 0;
@@ -121,7 +125,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
 
       // Add X axis
       var x = d3.scaleLinear().domain([0, maxVal]).range([0, width]);
-      var xAxis = svg.append('g').attr('class', 'first-compliance-interval-x-axis text-chart').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(10).tickSize(0));
+      var xAxis = svg.append('g').attr('class', 'first-compliance-interval-x-axis text-chart').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(Math.abs(maxVal / 20)).tickSize(0));
 
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');

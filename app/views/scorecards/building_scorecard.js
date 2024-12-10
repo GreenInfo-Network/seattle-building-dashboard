@@ -259,6 +259,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
       var yearWindowShift = firstComplianceYear - 2031;
       var targetYears = {
         // Note that bepstarget_2027 is not a real field
+        bepstarget_2027: 2027 + yearWindowShift,
         bepstarget_2031: 2031 + yearWindowShift,
         bepstarget_2036: 2036 + yearWindowShift,
         bepstarget_2041: 2041 + yearWindowShift,
@@ -297,10 +298,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         site_eui_wn: Number(site_eui_wn).toFixed(1),
         total_ghg: Number(total_ghg).toFixed(2),
         tab: this.state.get('tab'),
-        bepstarget_2031: bepstarget_2031,
-        bepstarget_2036: bepstarget_2036,
-        bepstarget_2041: bepstarget_2041,
-        bepstarget_2046: bepstarget_2046,
+        bepstarget_2031: bepstarget_2031.toFixed(2),
+        bepstarget_2036: bepstarget_2036.toFixed(2),
+        bepstarget_2041: bepstarget_2041.toFixed(2),
+        bepstarget_2046: bepstarget_2046.toFixed(2),
         // Since the fields above are windows, each building has specific years in those windows
         targetYears: targetYears,
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,

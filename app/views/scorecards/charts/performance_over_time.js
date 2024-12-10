@@ -22,6 +22,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
     // Templating for the HTML + chart
     chartData: function chartData() {
       var data = this.data;
+
+      // No historical data when looking at earliest year
+      if (!data || !Array.isArray(data)) {
+        this.showChart = false;
+        return false;
+      }
       var validated = data.map(function (d) {
         return validateBuildingData(d, {
           id: 'string',
@@ -83,7 +89,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       // Add X axis --> it is a date format
       var x = d3.scaleLinear().domain(d3.extent(chartData, function (d) {
         return d.year;
-      })).range([0, width]);
+      })).range([30, width]);
       var xAxisTicks = _toConsumableArray(new Set(chartData.map(function (d) {
         return d.year;
       })));
@@ -94,14 +100,29 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
 
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');
-      function roundnum(num) {
-        return Math.ceil(num / 50) * 50;
+      function roundUpNum(num) {
+        var nearestFifty = Math.ceil(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty + 20;
+        }
+        return nearestFifty;
       }
-      var max = roundnum(d3.max(chartData, function (d) {
+      function roundDownNum(num) {
+        var nearestFifty = Math.floor(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty - 20;
+        }
+        return nearestFifty;
+      }
+      var max = roundUpNum(d3.max(chartData, function (d) {
         return +d.n;
       }));
+      var min = roundDownNum(d3.min(chartData, function (d) {
+        return +d.n;
+      }));
+
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+      var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
       var yAxis = svg.append('g').attr("transform", "translate(".concat(AXIS_PADDING * -1, ", 0)")).attr('class', 'text-chart').call(d3.axisLeft(y).ticks(max / 50).tickSize(0));
 
       // Make the y axis line invisible

@@ -3526,23 +3526,27 @@ html {
   font-size: 1rem;
   font-weight: 300;
   color: #333;
+  line-height: 160%;
 }
 
 .text-subheader {
   font-size: 1rem;
   font-weight: 700;
   color: #333;
+  line-height: 140%;
 }
 
 .text-header {
   font-size: 1.25rem;
   font-weight: 700;
   color: #333;
+  line-height: 120%;
 }
 
 .text-copy-semibold {
   font-size: 1rem;
   font-weight: 600;
+  line-height: 160%;
 }
 
 .text-copy-link {
@@ -3550,42 +3554,56 @@ html {
   font-weight: 600;
   color: #0046ad;
   text-decoration: underline;
+  line-height: 160%;
 }
 
 .text-asterisk {
   font-size: 0.875rem;
   font-weight: 300;
   color: #333;
+  line-height: 160%;
 }
 
 .text-button {
   font-size: 0.875rem;
   font-weight: 700;
   color: #333;
+  line-height: auto;
 }
 
 .text-chart {
   font-size: 0.875rem;
   font-weight: 600;
   color: #333;
+  line-height: 120%;
 }
 
 .text-table {
   font-size: 0.875rem;
   font-weight: 400;
   color: #333;
+  line-height: 120%;
+}
+
+.text-table-large {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #333;
+  line-height: 120%;
 }
 
 .text-table-header {
   font-size: 0.875rem;
   font-weight: 600;
   color: #333;
+  line-height: 120%;
 }
 
 .text-copy-large {
   font-size: 1.5rem;
   font-weight: 400;
   color: #333;
+  line-height: 120%;
 }
 
 .scorecard-top-bar {
@@ -3764,16 +3782,18 @@ html {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  gap: 0.5rem;
 }
 #building-scorecard .building-sidebar-header-icon {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
   -ms-flex-negative: 0;
       flex-shrink: 0;
+  width: 5rem;
 }
 #building-scorecard .building-sidebar-perf-report {
   color: #969ba4;
@@ -3789,7 +3809,18 @@ html {
           flex-direction: column;
   gap: 0.5rem;
 }
+#building-scorecard .building-sidebar-bullets-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.25rem;
+}
 #building-scorecard .building-sidebar-button {
+  margin-top: 0.5rem;
   background-color: #007749;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3851,11 +3882,30 @@ html {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: 100%;
+}
+#building-scorecard .building-main-overview-top-left {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 100%;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+#building-scorecard .building-main-overview-top-right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 #building-scorecard .building-main-overview-bottom {
   display: -webkit-box;
@@ -3950,12 +4000,14 @@ html {
 #building-scorecard .building-main-table {
   border-radius: 4px;
   overflow: hidden;
+  width: 100%;
 }
 #building-scorecard .building-main-table table {
   border-spacing: 0;
   border-collapse: collapse;
   border-style: hidden;
   margin: 0;
+  table-layout: auto;
 }
 #building-scorecard .building-main-table-headers {
   background-color: #0046ad;
@@ -3965,6 +4017,8 @@ html {
 #building-scorecard .building-main-table-headers th {
   text-align: center;
   border-right: 1px solid #f1f1f1;
+  padding: 0.5rem;
+  white-space: nowrap;
 }
 #building-scorecard .building-main-table-headers th:last-of-type {
   border-right: none;
@@ -3974,14 +4028,14 @@ html {
   color: #333;
 }
 #building-scorecard .building-main-table-values td {
-  text-align: center;
+  text-align: left;
   border-right: 1px solid #f1f1f1;
   border-bottom: 1px solid #f1f1f1;
   padding: 0.5rem;
+  white-space: nowrap;
 }
 #building-scorecard .building-main-table-values td:last-of-type {
   border-right: none;
-  border-bottom: none;
 }
 #building-scorecard .building-main-table-value {
   display: -webkit-box;
@@ -4236,6 +4290,9 @@ html {
 #fueluse-chart .fueluse-chart .fueluse-bar-axis-text {
   fill: #333;
 }
+#fueluse-chart .fueluse-chart .fueluse-bar-arrow {
+  fill: #333;
+}
 
 @media print {
   #fueluse-chart .fueluse-chart {
@@ -4459,7 +4516,7 @@ html {
 }
 #use-types-chart .use-types-chart {
   font-size: 0.8rem;
-  width: 50%;
+  width: 30%;
   min-height: 150px;
 }
 #use-types-chart .use-types-chart svg {
@@ -4516,7 +4573,7 @@ html {
 }
 #performance-over-time-chart .performance-over-time-chart {
   font-size: 0.8rem;
-  height: 250px;
+  height: 260px;
   width: 100%;
 }
 #performance-over-time-chart .performance-over-time-chart svg {

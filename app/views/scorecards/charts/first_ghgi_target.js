@@ -46,11 +46,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         bepstarget_2046 = typedData.bepstarget_2046,
         beps_firstcomplianceyear = typedData.beps_firstcomplianceyear,
         year = typedData.year;
-      function roundnum(num) {
-        return Math.ceil(num / 5) * 5;
+      function roundUpNum(num) {
+        var nearestRound = Math.ceil(num / 2) * 1;
+        if (Math.abs(num - nearestRound) < 1) {
+          nearestRound = nearestRound + 1;
+        }
+        return nearestRound;
       }
-      var totalGhgi = total_ghg_emissions_intensity;
-      var maxGhgi = Math.max(5, roundnum(totalGhgi));
       var getNextTarget = function getNextTarget() {
         var _years;
         var years = [2031, 2036, 2041, 2046];
@@ -62,6 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       };
       var nextTargetValue = Number(data[0]["bepstarget_".concat(getNextTarget())]);
       var currentValue = Number(Number(total_ghg_emissions_intensity).toFixed(2));
+      var maxGhgi = Math.max(roundUpNum(nextTargetValue), roundUpNum(total_ghg_emissions_intensity));
       var greenBar = 0;
       var greenStripedBar = 0;
       var redBar = 0;
@@ -133,7 +136,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
 
       // Add X axis
       var x = d3.scaleLinear().domain([0, maxGhgi]).range([0, width]);
-      var xAxis = svg.append('g').attr('class', 'first-ghgi-target-x-axis text-chart').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(10).tickSize(0));
+      var xAxis = svg.append('g').attr('class', 'first-ghgi-target-x-axis text-chart').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(maxGhgi).tickSize(0));
 
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');

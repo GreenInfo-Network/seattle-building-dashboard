@@ -73,6 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', 'text!
         this.state.set({
           tab: 'benchmarking_overview'
         });
+        // this.state.set({ tab: 'emissions_targets' });
       }
       this.render();
     },
