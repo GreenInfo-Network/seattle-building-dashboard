@@ -120,6 +120,7 @@ $dataviz-negative: #94778b;
   // regular
   font-weight: 400;
   color: $paragraph;
+  line-height: 120%;
 }
 
 .scorecard {
@@ -279,7 +280,14 @@ $dataviz-negative: #94778b;
         gap: 0.5rem;
       }
 
+      &-bullets-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
       &-button {
+        margin-top: 0.5rem;
         background-color: $green;
         display: flex;
         padding: 8px 12px;
@@ -321,8 +329,19 @@ $dataviz-negative: #94778b;
       &-overview {
         &-top {
           display: flex;
-          flex-direction: column;
           width: 100%;
+
+          &-left {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+          }
+
+          &-right {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+          }
         }
 
         &-bottom {

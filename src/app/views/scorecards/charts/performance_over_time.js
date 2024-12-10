@@ -137,7 +137,11 @@ define([
       xAxis.select('.domain').attr('stroke', 'transparent');
 
       function roundnum(num) {
-        return Math.ceil(num / 50) * 50;
+        let nearestFifty = Math.ceil(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty + 20;
+        }
+        return nearestFifty;
       }
 
       const max = roundnum(
@@ -145,6 +149,17 @@ define([
           return +d.n;
         })
       );
+
+      console.log({
+        max,
+        other: d3.max(chartData, function (d) {
+          return +d.n;
+        }),
+        min: d3.min(chartData, function (d) {
+          return +d.n;
+        })
+      });
+
       // Add Y axis
       var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
 

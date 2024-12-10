@@ -4,12 +4,12 @@
     <div class="building-sidebar">
       <div class="building-sidebar-header">
         <div class="building-sidebar-header-text">
+          <div class="building-sidebar-perf-report text-subheader">
+            <%= year %> Performance report
+          </div>
           <div class="building-sidebar-name text-copy-large"><%= name %></div>
           <div class="building-sidebar-tab text-header">
             <%= tab.replaceAll('_', ' ').toUpperCase() %>
-          </div>
-          <div class="building-sidebar-perf-report text-subheader">
-            <%= year %> Performance report
           </div>
         </div>
         <div class="building-sidebar-header-icon">
@@ -34,11 +34,14 @@
             This report is based on this building’s reported benchmarking data.
             It displays:
           </div>
-          <div>• Energy and emissions performance trends</div>
-          <div>
-            • Current performance against estimated energy and emissions targets
+          <div class="building-sidebar-bullets-container">
+            <div>• Energy and emissions performance trends</div>
+            <div>
+              • Current performance against estimated energy and emissions
+              targets
+            </div>
+            <div>• Regulatory timelines and compliance requirements</div>
           </div>
-          <div>• Regulatory timelines and compliance requirements</div>
           <a
             class="building-sidebar-button text-subheader print-hide"
             href="https://www.seattle.gov/environment/climate-change/buildings-and-energy/energy-benchmarking"
@@ -107,9 +110,14 @@
         <!-- Overview -->
         <div class="building-main-chart-container">
           <div class="building-main-overview-top">
-            <div class="text-subheader"><%= name %></div>
-            <div class="text-copy"><%= addr1 %></div>
-            <div class="text-copy"><%= addr2 %></div>
+            <div class="building-main-overview-top-left">
+              <div class="text-subheader"><%= name %></div>
+              <div class="text-copy"><%= addr1 %></div>
+              <div class="text-copy"><%= addr2 %></div>
+            </div>
+            <div class="building-main-overview-top-right">
+              <div class="text-header"><%= year %></div>
+            </div>
           </div>
 
           <div class="building-main-overview-bottom">
