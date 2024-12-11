@@ -233,6 +233,18 @@ define([
         const { key, values } = graphLine;
 
         for (const v of values) {
+          svg
+            .append('circle')
+            .attr('class', `performance-over-time-${key}-dot`)
+            .attr('cx', x(v.year))
+            .attr('cy', y(+v.n));
+        }
+      }
+
+      for (const graphLine of sumstat) {
+        const { key, values } = graphLine;
+
+        for (const v of values) {
           const dotContainer = svg
             .append('g')
             .attr('class', 'performance-over-time-dot-container');
@@ -245,11 +257,17 @@ define([
             .attr('cx', x(v.year))
             .attr('cy', y(+v.n));
 
+          const bgWidth = Math.max(40, 8 * `${v.n}`.length);
+
           dotContainer
-            .append('circle')
-            .attr('class', `performance-over-time-${key}-dot`)
-            .attr('cx', x(v.year))
-            .attr('cy', y(+v.n));
+            .append('rect')
+            .attr('class', `performance-over-time-${key}-text-bg`)
+            .attr('width', `${bgWidth}px`)
+            .attr('height', '20px')
+            // minus full height
+            .attr('y', y(+v.n) - AXIS_PADDING - 20)
+            // minus half of width
+            .attr('x', x(v.year) - bgWidth / 2);
 
           dotContainer
             .append('text')
