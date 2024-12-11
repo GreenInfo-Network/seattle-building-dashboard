@@ -236,7 +236,7 @@ define([
 
         const yPos = Number(height) - Number(height) * multiplier;
 
-        const targetText = `${year}: target ${target.toFixed(2)}`;
+        const targetText = `${year} target: ${target.toFixed(2)}`;
 
         svg
           .append('line')

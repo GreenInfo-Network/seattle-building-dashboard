@@ -37,13 +37,17 @@ define([
         return false;
       }
 
-      const validated = data.map(d =>
-        validateBuildingData(d, {
-          id: 'string',
-          value: 'number',
-          year: 'number'
-        })
-      );
+      const validated = data
+        // Some points haven't been reported, but this shouldn't invalidate it
+        // Remove unreported points
+        .filter(d => d.value !== null && d.value !== undefined)
+        .map(d =>
+          validateBuildingData(d, {
+            id: 'string',
+            value: 'number',
+            year: 'number'
+          })
+        );
 
       const valid = validated.every(d => d.valid);
       const typedData = validated.map(d => d.typedData);

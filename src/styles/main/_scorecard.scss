@@ -542,8 +542,9 @@ $dataviz-negative: #94778b;
   bottom: 0;
   width: 100%;
   background: $white;
-  overflow: auto;
   z-index: $zIndexMax;
+  height: 100%;
+  overflow-y: scroll;
 
   &.active {
     display: block;
