@@ -542,16 +542,9 @@ $dataviz-negative: #94778b;
   bottom: 0;
   width: 100%;
   background: $white;
-  overflow: auto;
   z-index: $zIndexMax;
   height: 100%;
-
-  // Hide scrollbar
-  &::-webkit-scrollbar {
-    display: none;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  overflow-y: scroll;
 
   &.active {
     display: block;
