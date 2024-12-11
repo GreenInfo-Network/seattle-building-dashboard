@@ -2,13 +2,14 @@
   <div class="first-ghgi-target-text-container text-copy">
     <span>This building</span>
     <% if (_isMeetingTarget) { %>
-    <span>is</span>
+    <span class="text-copy-semibold">is</span>
     <% } else { %>
-    <span>is not</span>
+    <span class="text-copy-semibold">is not</span>
     <% } %>
-    <span
-      >on track to meet its estimated BEPS target of <%= _nextTargetValue %> kg
-      CO2e/SF/yr for the first compliance interval.</span
+    <span class="text-copy-semibold">on track</span
+    ><span>
+      to meet its estimated BEPS target of <%= _nextTargetValue %> kg CO2e/SF/yr
+      for the first compliance interval.</span
     >
   </div>
 

@@ -143,19 +143,13 @@ define([
       xAxis.select('.domain').attr('stroke', 'transparent');
 
       function roundUpNum(num) {
-        let nearestFifty = Math.ceil(num / 50) * 50;
-        if (Math.abs(num - nearestFifty) < 20) {
-          nearestFifty = nearestFifty + 20;
-        }
-        return nearestFifty;
+        const upper = Math.ceil(num * 1.15);
+        return upper;
       }
 
       function roundDownNum(num) {
-        let nearestFifty = Math.floor(num / 50) * 50;
-        if (Math.abs(num - nearestFifty) < 20) {
-          nearestFifty = nearestFifty - 20;
-        }
-        return nearestFifty;
+        const lower = Math.floor(num * 0.85);
+        return lower;
       }
 
       const max = roundUpNum(
@@ -197,7 +191,7 @@ define([
         .text('Weather Normalized Site EUI (kBtu/SF)');
 
       // Draw the background lines
-      const yAxisExtent = [0, max];
+      const yAxisExtent = [min, max];
 
       for (let i = yAxisExtent[0] + 50; i < yAxisExtent[1]; i += 50) {
         svg
