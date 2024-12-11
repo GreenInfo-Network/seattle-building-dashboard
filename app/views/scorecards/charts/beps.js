@@ -174,7 +174,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         targets.add(target);
         var _multiplier = target === 0 ? 0 : target / maxGhgi;
         var yPos = Number(height) - Number(height) * _multiplier;
-        var targetText = "".concat(year, ": target ").concat(target.toFixed(2));
+        var targetText = "".concat(year, " target: ").concat(target.toFixed(2));
         svg.append('line').attr('class', 'beps-bar-target-line').attr('x1', 0).attr('y1', yPos).attr('x2', outerWidth).attr('y2', yPos);
         svg.append('text').attr('class', 'beps-bar-target-text  text-chart').attr('font-size', FONT_SIZE).attr('x', outerWidth - margin.left - margin.right - X_AXIS_PADDING).attr('y', yPos - X_AXIS_PADDING).text(targetText);
       }

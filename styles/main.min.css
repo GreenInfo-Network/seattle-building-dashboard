@@ -4098,8 +4098,9 @@ html {
   bottom: 0;
   width: 100%;
   background: #ffffff;
-  overflow: auto;
   z-index: 999999;
+  height: 100%;
+  overflow-y: scroll;
 }
 #scorecard.active {
   display: block;

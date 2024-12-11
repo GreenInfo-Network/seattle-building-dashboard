@@ -28,7 +28,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         this.showChart = false;
         return false;
       }
-      var validated = data.map(function (d) {
+      var validated = data
+      // Some points haven't been reported, but this shouldn't invalidate it
+      // Remove unreported points
+      .filter(function (d) {
+        return d.value !== null && d.value !== undefined;
+      }).map(function (d) {
         return validateBuildingData(d, {
           id: 'string',
           value: 'number',
