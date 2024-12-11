@@ -284,6 +284,7 @@ $dataviz-negative: #94778b;
       }
 
       &-tab {
+        white-space: nowrap;
       }
 
       &-perf-report {
@@ -304,6 +305,18 @@ $dataviz-negative: #94778b;
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
+      }
+
+      &-bullet {
+        display: flex;
+        gap: 0.25rem;
+        margin-left: 0.5rem;
+
+        &-point {
+        }
+
+        &-text {
+        }
       }
 
       &-button {
@@ -471,7 +484,7 @@ $dataviz-negative: #94778b;
           color: $paragraph;
 
           td {
-            text-align: left;
+            text-align: center;
             border-right: 1px solid $light-gray;
             border-bottom: 1px solid $light-gray;
             padding: 0.5rem;

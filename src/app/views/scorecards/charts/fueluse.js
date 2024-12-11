@@ -139,7 +139,7 @@ define([
           totalUnits: 'kBtu'
         },
         emissions: {
-          label: 'Metric Tons',
+          label: 'Emissions',
           labelUnits: '(MT CO2e)',
           totalUnits: 'MT CO2e'
         }

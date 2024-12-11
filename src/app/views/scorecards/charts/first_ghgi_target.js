@@ -60,7 +60,7 @@ define([
       } = typedData;
 
       function roundUpNum(num) {
-        let nearestRound = Math.ceil(num / 2) * 1;
+        let nearestRound = Math.ceil(num / 2) * 2;
         if (Math.abs(num - nearestRound) < 1) {
           nearestRound = nearestRound + 1;
         }
@@ -82,7 +82,7 @@ define([
 
       const maxGhgi = Math.max(
         roundUpNum(nextTargetValue),
-        roundUpNum(total_ghg_emissions_intensity)
+        roundUpNum(currentValue)
       );
 
       let greenBar = 0;
@@ -102,7 +102,7 @@ define([
 
         whiteBackground = maxGhgi - (redBar + greenBar);
 
-        redBarLabel = `(GHGI current) ${currentValue}`;
+        redBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
         greenBarLabel = `(GHGI target) ${nextTargetValue}`;
 
         isMeetingTarget = false;

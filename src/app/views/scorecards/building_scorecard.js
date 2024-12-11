@@ -327,29 +327,12 @@ define([
       showCharts.first_compliance_interval =
         this.charts['eui']?.chart_first_compliance_interval?.showChart ?? false;
 
-      const firstComplianceYear = Number(
-        building?.beps_firstcomplianceyear ?? 2031
-      );
-      const yearWindowShift = firstComplianceYear - 2031;
-
-      const targetYears = {
-        // Note that bepstarget_2027 is not a real field
-        bepstarget_2027: 2027 + yearWindowShift,
-        bepstarget_2031: 2031 + yearWindowShift,
-        bepstarget_2036: 2036 + yearWindowShift,
-        bepstarget_2041: 2041 + yearWindowShift,
-        bepstarget_2046: 2046 + yearWindowShift
-      };
-
       const getSfText = () => {
         function numberWithCommas(x) {
           return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
-        const totalGfa =
-          (building?.largestpropertyusetypegfa ?? 0) +
-          (building?.secondlargestpropertyusetypegfa ?? 0) +
-          (building?.thirdlargestpropertyusetypegfa ?? 0);
+        const totalGfa = building?.propertygfabuildings ?? 0;
 
         const amounts = [
           [0, 20000],
@@ -371,13 +354,39 @@ define([
         let rangeText = ``;
 
         if (relevantAmounts === amounts[0]) {
-          rangeText = `for Buildings < ${relevantAmountsText[1]} SF`;
+          rangeText = `< ${relevantAmountsText[1]}`;
         } else if (relevantAmounts === amounts[amounts.length - 1]) {
-          rangeText = `for Buildings > ${relevantAmountsText[0]} SF`;
+          rangeText = `> ${relevantAmountsText[0]}`;
         } else {
-          rangeText = `for Buildings ${relevantAmountsText[0]}-${relevantAmountsText[1]} SF`;
+          rangeText = `${relevantAmountsText[0]}-${relevantAmountsText[1]}`;
         }
         return rangeText;
+      };
+
+      const sfRangeText = getSfText();
+
+      const firstComplianceYear = Number(
+        building?.beps_firstcomplianceyear ?? 2031
+      );
+
+      const reporting2027ByFirstComplianceYear = {
+        2031: 2027,
+        2032: 2027,
+        2033: 2028,
+        2034: 2029,
+        2035: 2030
+      };
+
+      const yearWindowShift = firstComplianceYear - 2031;
+
+      const targetYears = {
+        // Note that bepstarget_2027 is not a real field
+        bepstarget_2027:
+          reporting2027ByFirstComplianceYear[firstComplianceYear],
+        bepstarget_2031: 2031 + yearWindowShift,
+        bepstarget_2036: 2036 + yearWindowShift,
+        bepstarget_2041: 2041 + yearWindowShift,
+        bepstarget_2046: 2046 + yearWindowShift
       };
 
       this.templateArgs = {
@@ -400,7 +409,7 @@ define([
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,
         // show chart flags
         showCharts,
-        sfRangeText: getSfText()
+        sfRangeText
       };
 
       el.html(this.template(this.templateArgs));

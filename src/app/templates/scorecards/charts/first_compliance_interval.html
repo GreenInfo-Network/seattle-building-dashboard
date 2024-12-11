@@ -3,13 +3,14 @@
     <% if (cbps_flag) { %>
     <span>This Tier 1 building</span>
     <% if (_isMeetingTarget) { %>
-    <span>is</span>
+    <span class="text-copy-semibold">is</span>
     <% } else { %>
-    <span>is not</span>
+    <span class="text-copy-semibold">is not</span>
     <% } %>
-    <span
-      >on track to meet its estimated CBPS EUI target* of <%= _nextTargetValue
-      %> kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.</span
+    <span class="text-copy-semibold">on track</span
+    ><span>
+      to meet its estimated CBPS EUI target* of <%= _nextTargetValue %>
+      kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.</span
     >
     <% } else { %>
     <span
