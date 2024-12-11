@@ -47,7 +47,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         beps_firstcomplianceyear = typedData.beps_firstcomplianceyear,
         year = typedData.year;
       function roundUpNum(num) {
-        var nearestRound = Math.ceil(num / 2) * 1;
+        var nearestRound = Math.ceil(num / 2) * 2;
         if (Math.abs(num - nearestRound) < 1) {
           nearestRound = nearestRound + 1;
         }
@@ -64,7 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       };
       var nextTargetValue = Number(data[0]["bepstarget_".concat(getNextTarget())]);
       var currentValue = Number(Number(total_ghg_emissions_intensity).toFixed(2));
-      var maxGhgi = Math.max(roundUpNum(nextTargetValue), roundUpNum(total_ghg_emissions_intensity));
+      var maxGhgi = Math.max(roundUpNum(nextTargetValue), roundUpNum(currentValue));
       var greenBar = 0;
       var greenStripedBar = 0;
       var redBar = 0;
@@ -77,7 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         redBar = currentValue - nextTargetValue;
         greenBar = nextTargetValue;
         whiteBackground = maxGhgi - (redBar + greenBar);
-        redBarLabel = "(GHGI current) ".concat(currentValue);
+        redBarLabel = "(GHGI current) ".concat(Number(currentValue).toFixed(2));
         greenBarLabel = "(GHGI target) ".concat(nextTargetValue);
         isMeetingTarget = false;
       } else {

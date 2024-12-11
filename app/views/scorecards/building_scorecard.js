@@ -255,22 +255,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         this.charts['eui'].chart_first_compliance_interval.chartData();
       }
       showCharts.first_compliance_interval = (_this$charts$eui$char6 = (_this$charts$eui6 = this.charts['eui']) === null || _this$charts$eui6 === void 0 || (_this$charts$eui6 = _this$charts$eui6.chart_first_compliance_interval) === null || _this$charts$eui6 === void 0 ? void 0 : _this$charts$eui6.showChart) !== null && _this$charts$eui$char6 !== void 0 ? _this$charts$eui$char6 : false;
-      var firstComplianceYear = Number((_building$beps_firstc = building === null || building === void 0 ? void 0 : building.beps_firstcomplianceyear) !== null && _building$beps_firstc !== void 0 ? _building$beps_firstc : 2031);
-      var yearWindowShift = firstComplianceYear - 2031;
-      var targetYears = {
-        // Note that bepstarget_2027 is not a real field
-        bepstarget_2027: 2027 + yearWindowShift,
-        bepstarget_2031: 2031 + yearWindowShift,
-        bepstarget_2036: 2036 + yearWindowShift,
-        bepstarget_2041: 2041 + yearWindowShift,
-        bepstarget_2046: 2046 + yearWindowShift
-      };
       var getSfText = function getSfText() {
-        var _building$largestprop, _building$secondlarge, _building$thirdlarges;
+        var _building$propertygfa;
         function numberWithCommas(x) {
           return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
-        var totalGfa = ((_building$largestprop = building === null || building === void 0 ? void 0 : building.largestpropertyusetypegfa) !== null && _building$largestprop !== void 0 ? _building$largestprop : 0) + ((_building$secondlarge = building === null || building === void 0 ? void 0 : building.secondlargestpropertyusetypegfa) !== null && _building$secondlarge !== void 0 ? _building$secondlarge : 0) + ((_building$thirdlarges = building === null || building === void 0 ? void 0 : building.thirdlargestpropertyusetypegfa) !== null && _building$thirdlarges !== void 0 ? _building$thirdlarges : 0);
+        var totalGfa = (_building$propertygfa = building === null || building === void 0 ? void 0 : building.propertygfabuildings) !== null && _building$propertygfa !== void 0 ? _building$propertygfa : 0;
         var amounts = [[0, 20000], [20001, 30000], [30001, 50000], [50001, 90000], [90001, 220000], [220000]];
         var relevantAmounts = amounts.find(function (range) {
           return range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa);
@@ -279,13 +269,31 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         var relevantAmountsText = relevantAmounts.map(numberWithCommas);
         var rangeText = "";
         if (relevantAmounts === amounts[0]) {
-          rangeText = "for Buildings < ".concat(relevantAmountsText[1], " SF");
+          rangeText = "< ".concat(relevantAmountsText[1]);
         } else if (relevantAmounts === amounts[amounts.length - 1]) {
-          rangeText = "for Buildings > ".concat(relevantAmountsText[0], " SF");
+          rangeText = "> ".concat(relevantAmountsText[0]);
         } else {
-          rangeText = "for Buildings ".concat(relevantAmountsText[0], "-").concat(relevantAmountsText[1], " SF");
+          rangeText = "".concat(relevantAmountsText[0], "-").concat(relevantAmountsText[1]);
         }
         return rangeText;
+      };
+      var sfRangeText = getSfText();
+      var firstComplianceYear = Number((_building$beps_firstc = building === null || building === void 0 ? void 0 : building.beps_firstcomplianceyear) !== null && _building$beps_firstc !== void 0 ? _building$beps_firstc : 2031);
+      var reporting2027ByFirstComplianceYear = {
+        2031: 2027,
+        2032: 2027,
+        2033: 2028,
+        2034: 2029,
+        2035: 2030
+      };
+      var yearWindowShift = firstComplianceYear - 2031;
+      var targetYears = {
+        // Note that bepstarget_2027 is not a real field
+        bepstarget_2027: reporting2027ByFirstComplianceYear[firstComplianceYear],
+        bepstarget_2031: 2031 + yearWindowShift,
+        bepstarget_2036: 2036 + yearWindowShift,
+        bepstarget_2041: 2041 + yearWindowShift,
+        bepstarget_2046: 2046 + yearWindowShift
       };
       this.templateArgs = {
         active: 'active',
@@ -307,7 +315,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../lib/wrap', './charts
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,
         // show chart flags
         showCharts: showCharts,
-        sfRangeText: getSfText()
+        sfRangeText: sfRangeText
       };
       el.html(this.template(this.templateArgs));
 

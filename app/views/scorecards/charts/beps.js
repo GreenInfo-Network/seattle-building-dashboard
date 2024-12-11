@@ -58,7 +58,14 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         _this = this,
         _buildingData$beps_fi;
       var totalGhgi = buildingData === null || buildingData === void 0 ? void 0 : buildingData.total_ghg_emissions_intensity;
-      var maxGhgi = Math.max((_buildingData$bepstar = buildingData === null || buildingData === void 0 ? void 0 : buildingData.bepstarget_2031) !== null && _buildingData$bepstar !== void 0 ? _buildingData$bepstar : 0, Math.ceil(totalGhgi));
+      function roundUpNum(num) {
+        var nearestRound = Math.ceil(num / 2) * 2;
+        if (Math.abs(num - nearestRound) < 1) {
+          nearestRound = nearestRound + 1;
+        }
+        return nearestRound;
+      }
+      var maxGhgi = Math.max(roundUpNum((_buildingData$bepstar = buildingData === null || buildingData === void 0 ? void 0 : buildingData.bepstarget_2031) !== null && _buildingData$bepstar !== void 0 ? _buildingData$bepstar : 0), roundUpNum(totalGhgi));
       var divisor = 100 / maxGhgi;
       var multiplier = totalGhgi / maxGhgi;
       var gas_ghg_percent = buildingData.gas_ghg_percent,

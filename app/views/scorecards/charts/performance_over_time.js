@@ -101,18 +101,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');
       function roundUpNum(num) {
-        var nearestFifty = Math.ceil(num / 50) * 50;
-        if (Math.abs(num - nearestFifty) < 20) {
-          nearestFifty = nearestFifty + 20;
-        }
-        return nearestFifty;
+        var upper = Math.ceil(num * 1.15);
+        return upper;
       }
       function roundDownNum(num) {
-        var nearestFifty = Math.floor(num / 50) * 50;
-        if (Math.abs(num - nearestFifty) < 20) {
-          nearestFifty = nearestFifty - 20;
-        }
-        return nearestFifty;
+        var lower = Math.floor(num * 0.85);
+        return lower;
       }
       var max = roundUpNum(d3.max(chartData, function (d) {
         return +d.n;
@@ -120,18 +114,19 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       var min = roundDownNum(d3.min(chartData, function (d) {
         return +d.n;
       }));
+      var tickSize = (max - min) / 5;
 
       // Add Y axis
       var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
-      var yAxis = svg.append('g').attr("transform", "translate(".concat(AXIS_PADDING * -1, ", 0)")).attr('class', 'text-chart').call(d3.axisLeft(y).ticks(max / 50).tickSize(0));
+      var yAxis = svg.append('g').attr("transform", "translate(".concat(AXIS_PADDING * -1, ", 0)")).attr('class', 'text-chart').call(d3.axisLeft(y).ticks(max / tickSize).tickSize(0));
 
       // Make the y axis line invisible
       yAxis.select('.domain').attr('stroke', 'transparent');
       svg.append('text').attr('class', 'performance-over-time-axis-label text-chart').attr('text-anchor', 'middle').attr('y', -1 * (AXIS_PADDING * 4 + FONT_SIZE)).attr('x', height / -2).attr('transform', 'rotate(-90)').text('Weather Normalized Site EUI (kBtu/SF)');
 
       // Draw the background lines
-      var yAxisExtent = [0, max];
-      for (var i = yAxisExtent[0] + 50; i < yAxisExtent[1]; i += 50) {
+      var yAxisExtent = [min, max];
+      for (var i = yAxisExtent[0] + tickSize; i < yAxisExtent[1]; i += tickSize) {
         svg.append('line').attr('class', 'performance-over-time-background-line').attr('x1', 0).attr('y1', y(i)).attr('x2', outerWidth).attr('y2', y(i));
       }
 
@@ -154,23 +149,58 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
           var graphLine = _step.value;
           var key = graphLine.key,
             values = graphLine.values;
-          var _iterator2 = _createForOfIteratorHelper(values),
-            _step2;
+          var _iterator3 = _createForOfIteratorHelper(values),
+            _step3;
           try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var v = _step2.value;
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+              var v = _step3.value;
               svg.append('circle').attr('class', "performance-over-time-".concat(key, "-dot")).attr('cx', x(v.year)).attr('cy', y(+v.n));
             }
           } catch (err) {
-            _iterator2.e(err);
+            _iterator3.e(err);
           } finally {
-            _iterator2.f();
+            _iterator3.f();
           }
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
+      }
+      var _iterator2 = _createForOfIteratorHelper(sumstat),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _graphLine = _step2.value;
+          var _key = _graphLine.key,
+            _values = _graphLine.values;
+          var _iterator4 = _createForOfIteratorHelper(_values),
+            _step4;
+          try {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var _v = _step4.value;
+              var dotContainer = svg.append('g').attr('class', 'performance-over-time-dot-container');
+
+              // Just to make the hover target larger
+              dotContainer.append('circle').attr('fill', "transparent").attr('r', '1rem').attr('cx', x(_v.year)).attr('cy', y(+_v.n));
+              var bgWidth = Math.max(40, 8 * "".concat(_v.n).length);
+              dotContainer.append('rect').attr('class', "performance-over-time-".concat(_key, "-text-bg")).attr('width', "".concat(bgWidth, "px")).attr('height', '20px')
+              // minus full height
+              .attr('y', y(+_v.n) - AXIS_PADDING - 20)
+              // minus half of width
+              .attr('x', x(_v.year) - bgWidth / 2);
+              dotContainer.append('text').attr('class', "performance-over-time-".concat(_key, "-hover-text text-chart")).attr('text-anchor', 'middle').attr('y', y(+_v.n) - AXIS_PADDING * 2).attr('x', x(_v.year)).text(_v.n);
+            }
+          } catch (err) {
+            _iterator4.e(err);
+          } finally {
+            _iterator4.f();
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
       }
     },
     render: function render() {

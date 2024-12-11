@@ -3795,6 +3795,9 @@ html {
       flex-shrink: 0;
   width: 5rem;
 }
+#building-scorecard .building-sidebar-tab {
+  white-space: nowrap;
+}
 #building-scorecard .building-sidebar-perf-report {
   color: #969ba4;
   text-transform: uppercase;
@@ -3818,6 +3821,13 @@ html {
       -ms-flex-direction: column;
           flex-direction: column;
   gap: 0.25rem;
+}
+#building-scorecard .building-sidebar-bullet {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
 }
 #building-scorecard .building-sidebar-button {
   margin-top: 0.5rem;
@@ -4028,7 +4038,7 @@ html {
   color: #333;
 }
 #building-scorecard .building-main-table-values td {
-  text-align: left;
+  text-align: center;
   border-right: 1px solid #f1f1f1;
   border-bottom: 1px solid #f1f1f1;
   padding: 0.5rem;
@@ -4588,6 +4598,20 @@ html {
   stroke: #969ba4;
   stroke-width: 1.5;
 }
+#performance-over-time-chart .performance-over-time-building-text-bg {
+  fill: #ffffff;
+  stroke: #0046ad;
+  rx: 2px;
+  ry: 2px;
+  opacity: 0;
+}
+#performance-over-time-chart .performance-over-time-average-text-bg {
+  fill: #ffffff;
+  stroke: #969ba4;
+  rx: 2px;
+  ry: 2px;
+  opacity: 0;
+}
 #performance-over-time-chart .performance-over-time-building-dot {
   fill: #0046ad;
   r: 0.25rem;
@@ -4595,6 +4619,31 @@ html {
 #performance-over-time-chart .performance-over-time-average-dot {
   fill: #969ba4;
   r: 0.25rem;
+}
+#performance-over-time-chart .performance-over-time-building-hover-text {
+  fill: #0046ad;
+  opacity: 0;
+  padding: 0.5rem;
+}
+#performance-over-time-chart .performance-over-time-average-hover-text {
+  fill: #969ba4;
+  opacity: 0;
+  padding: 0.5rem;
+}
+#performance-over-time-chart .performance-over-time-dot-container {
+  cursor: pointer;
+}
+#performance-over-time-chart .performance-over-time-dot-container:hover .performance-over-time-building-hover-text {
+  opacity: 1;
+}
+#performance-over-time-chart .performance-over-time-dot-container:hover .performance-over-time-average-hover-text {
+  opacity: 1;
+}
+#performance-over-time-chart .performance-over-time-dot-container:hover .performance-over-time-building-text-bg {
+  opacity: 1;
+}
+#performance-over-time-chart .performance-over-time-dot-container:hover .performance-over-time-average-text-bg {
+  opacity: 1;
 }
 #performance-over-time-chart .performance-over-time-legend {
   display: -webkit-box;
