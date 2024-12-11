@@ -164,6 +164,8 @@ define([
         })
       );
 
+      const tickSize = (max - min) / 5;
+
       // Add Y axis
       var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
 
@@ -174,7 +176,7 @@ define([
         .call(
           d3
             .axisLeft(y)
-            .ticks(max / 50)
+            .ticks(max / tickSize)
             .tickSize(0)
         );
 
@@ -193,7 +195,11 @@ define([
       // Draw the background lines
       const yAxisExtent = [min, max];
 
-      for (let i = yAxisExtent[0] + 50; i < yAxisExtent[1]; i += 50) {
+      for (
+        let i = yAxisExtent[0] + tickSize;
+        i < yAxisExtent[1];
+        i += tickSize
+      ) {
         svg
           .append('line')
           .attr('class', 'performance-over-time-background-line')
@@ -227,11 +233,31 @@ define([
         const { key, values } = graphLine;
 
         for (const v of values) {
-          svg
+          const dotContainer = svg
+            .append('g')
+            .attr('class', 'performance-over-time-dot-container');
+
+          // Just to make the hover target larger
+          dotContainer
+            .append('circle')
+            .attr('fill', `transparent`)
+            .attr('r', '1rem')
+            .attr('cx', x(v.year))
+            .attr('cy', y(+v.n));
+
+          dotContainer
             .append('circle')
             .attr('class', `performance-over-time-${key}-dot`)
             .attr('cx', x(v.year))
             .attr('cy', y(+v.n));
+
+          dotContainer
+            .append('text')
+            .attr('class', `performance-over-time-${key}-hover-text text-chart`)
+            .attr('text-anchor', 'middle')
+            .attr('y', y(+v.n) - AXIS_PADDING * 2)
+            .attr('x', x(v.year))
+            .text(v.n);
         }
       }
     },

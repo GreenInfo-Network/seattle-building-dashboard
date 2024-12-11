@@ -58,6 +58,32 @@
       r: 0.25rem;
     }
 
+    &-building-hover-text {
+      fill: $dark-blue;
+      opacity: 0;
+      padding: 0.5rem;
+    }
+
+    &-average-hover-text {
+      fill: $gray;
+      opacity: 0;
+      padding: 0.5rem;
+    }
+
+    &-dot-container {
+      cursor: pointer;
+
+      &:hover {
+        .performance-over-time-building-hover-text {
+          opacity: 1;
+        }
+
+        .performance-over-time-average-hover-text {
+          opacity: 1;
+        }
+      }
+    }
+
     &-legend {
       display: flex;
       align-items: center;
