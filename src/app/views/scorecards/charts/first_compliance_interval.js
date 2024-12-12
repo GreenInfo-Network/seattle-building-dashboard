@@ -48,11 +48,15 @@ define([
 
       const { site_eui_wn, cbpseuitarget, cbps_date, cbps_flag } = typedData;
 
-      function roundnum(num) {
-        return Math.ceil(num / 50) * 50;
+      function roundUpNum(num) {
+        let nearestFifty = Math.ceil(num / 50) * 50;
+        if (Math.abs(num - nearestFifty) < 20) {
+          nearestFifty = nearestFifty + 20;
+        }
+        return nearestFifty;
       }
 
-      const maxVal = roundnum(
+      const maxVal = roundUpNum(
         Math.max(Number(site_eui_wn), Number(cbpseuitarget))
       );
 
@@ -87,7 +91,7 @@ define([
         whiteBackground = maxVal - (greenStripedBar + greenBar);
 
         greenStripedBarLabel = `(EUI target) ${nextTargetValue}`;
-        greenBarLabel = `(EUI current) ${currentValue}`;
+        greenBarLabel = `(EUI current) ${Number(currentValue).toFixed(1)}`;
 
         isMeetingTarget = true;
       }
@@ -128,10 +132,17 @@ define([
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
 
+      const horizontalPadding = outerWidth / 5;
+
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
+      var margin = {
+          top: 40,
+          right: horizontalPadding,
+          bottom: 40,
+          left: horizontalPadding
+        },
         width = outerWidth - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
+        height = outerHeight - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
       var svg = parent
@@ -159,7 +170,12 @@ define([
         .append('g')
         .attr('class', 'first-compliance-interval-x-axis text-chart')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x).ticks(10).tickSize(0));
+        .call(
+          d3
+            .axisBottom(x)
+            .ticks(Math.abs(maxVal / 20))
+            .tickSize(0)
+        );
 
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');
@@ -241,16 +257,7 @@ define([
           .append('text')
           .attr('class', 'first-compliance-interval-x-axis-label text-chart')
           .attr('text-anchor', d => {
-            // const textPos = x(d[0][1]);
-            // const max = width - 100;
-            // const min = 100;
             let anchor = labelTextAnchor[k];
-            // if (textPos > max) {
-            //   anchor = 'end';
-            // }
-            // if (textPos < min) {
-            //   anchor = 'start';
-            // }
             return anchor;
           })
           .attr('x', d => {

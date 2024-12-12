@@ -1,17 +1,16 @@
 <div class="first-compliance-interval">
   <div class="first-compliance-interval-text-container text-copy">
-    <span>This</span>
-
     <% if (cbps_flag) { %>
     <span>This Tier 1 building</span>
     <% if (_isMeetingTarget) { %>
     <span>is</span>
     <% } else { %>
-    <span>is not</span>
+    <span>is </span><span class="text-copy-semibold">not</span>
     <% } %>
-    <span
-      >on track to meet its estimated CBPS EUI target* of <%= _nextTargetValue
-      %> kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.</span
+    <span class="text-copy-semibold">on track</span
+    ><span>
+      to meet its estimated CBPS EUI target* of <%= _nextTargetValue %>
+      kBtu/SF/yr for the June 1, <%= cbps_date %> deadline.</span
     >
     <% } else { %>
     <span
@@ -21,7 +20,9 @@
   </div>
 
   <div class="first-compliance-interval-chart-container">
+    <% if (cbps_flag) { %>
     <div class="first-compliance-interval-chart" />
+    <% } %>
   </div>
 
   <% if (cbps_flag) { %>

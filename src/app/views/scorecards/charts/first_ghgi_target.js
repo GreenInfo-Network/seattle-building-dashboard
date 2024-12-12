@@ -59,12 +59,13 @@ define([
         year
       } = typedData;
 
-      function roundnum(num) {
-        return Math.ceil(num / 5) * 5;
+      function roundUpNum(num) {
+        let nearestRound = Math.ceil(num / 2) * 2;
+        if (Math.abs(num - nearestRound) < 1) {
+          nearestRound = nearestRound + 1;
+        }
+        return nearestRound;
       }
-
-      const totalGhgi = total_ghg_emissions_intensity;
-      const maxGhgi = Math.max(5, roundnum(totalGhgi));
 
       const getNextTarget = () => {
         const years = [2031, 2036, 2041, 2046];
@@ -77,6 +78,11 @@ define([
 
       const currentValue = Number(
         Number(total_ghg_emissions_intensity).toFixed(2)
+      );
+
+      const maxGhgi = Math.max(
+        roundUpNum(nextTargetValue),
+        roundUpNum(currentValue)
       );
 
       let greenBar = 0;
@@ -96,7 +102,7 @@ define([
 
         whiteBackground = maxGhgi - (redBar + greenBar);
 
-        redBarLabel = `(GHGI current) ${currentValue}`;
+        redBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
         greenBarLabel = `(GHGI target) ${nextTargetValue}`;
 
         isMeetingTarget = false;
@@ -106,9 +112,7 @@ define([
 
         whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue).toFixed(
-          2
-        )}`;
+        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue)}`;
         greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
 
         isMeetingTarget = true;
@@ -149,10 +153,17 @@ define([
       const outerWidth = parent.node().offsetWidth;
       const outerHeight = parent.node().offsetHeight;
 
+      const horizontalPadding = outerWidth / 5;
+
       // set the dimensions and margins of the graph
-      var margin = { top: 30, right: 120, bottom: 30, left: 130 },
+      var margin = {
+          top: 40,
+          right: horizontalPadding,
+          bottom: 40,
+          left: horizontalPadding
+        },
         width = outerWidth - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
+        height = outerHeight - margin.top - margin.bottom;
 
       // append the svg object to the body of the page
       var svg = parent
@@ -180,7 +191,7 @@ define([
         .append('g')
         .attr('class', 'first-ghgi-target-x-axis text-chart')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x).ticks(10).tickSize(0));
+        .call(d3.axisBottom(x).ticks(maxGhgi).tickSize(0));
 
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');

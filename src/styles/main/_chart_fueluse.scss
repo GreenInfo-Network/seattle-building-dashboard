@@ -83,7 +83,19 @@
         &-axis-text {
           fill: $paragraph;
         }
+
+        &-arrow {
+          fill: $paragraph;
+        }
       }
+    }
+  }
+}
+
+@media print {
+  #fueluse-chart {
+    .fueluse-chart {
+      width: 100%;
     }
   }
 }

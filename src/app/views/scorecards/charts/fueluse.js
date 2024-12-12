@@ -67,15 +67,15 @@ define([
 
       const chartData = [
         {
+          group: 'usage',
           electricity: normalizeNum(electricity_pct),
           gas: normalizeNum(gas_pct),
-          group: 'usage',
           steam: normalizeNum(steam_pct)
         },
         {
+          group: 'emissions',
           electricity: normalizeNum(electricity_ghg_percent),
           gas: normalizeNum(gas_ghg_percent),
-          group: 'emissions',
           steam: normalizeNum(steam_ghg_percent)
         }
       ];
@@ -93,16 +93,27 @@ define([
       }
 
       const totals = {
-        emissions: numberWithCommas(total_ghg_emissions),
-        usage: numberWithCommas(total_kbtu)
+        usage: numberWithCommas(total_kbtu),
+        emissions: numberWithCommas(total_ghg_emissions)
       };
+
+      const legendText = chartData.reduce((acc, entry) => {
+        let nextEntry = { ...entry };
+        delete nextEntry.group;
+        nextEntry = Object.fromEntries(
+          Object.entries(nextEntry).map(([k, v]) => [k, `${v}%`])
+        );
+        acc[entry.group] = nextEntry;
+        return acc;
+      }, {});
 
       return {
         totals,
         chartData,
         _showGas,
         _showElectricity,
-        _showSteam
+        _showSteam,
+        _legendText: legendText
       };
     },
 
@@ -122,15 +133,15 @@ define([
       const height = outerHeight - margin.top - margin.bottom;
 
       const labels = {
-        emissions: {
-          label: 'Metric Tons',
-          labelUnits: '(MT CO2e)',
-          totalUnits: 'MT CO2e'
-        },
         usage: {
           label: 'Energy Used',
           labelUnits: '(kBtu)',
           totalUnits: 'kBtu'
+        },
+        emissions: {
+          label: 'Emissions',
+          labelUnits: '(MT CO2e)',
+          totalUnits: 'MT CO2e'
         }
       };
 
@@ -142,15 +153,18 @@ define([
         .append('g')
         .attr('transform', `translate(0, ${margin.top})`);
 
-      let groups = ['emissions', 'usage'];
+      let groups = ['usage', 'emissions'];
       let subgroups = ['gas', 'steam', 'electricity'];
+
+      const USAGE_INDEX = groups.findIndex(v => v === 'usage');
+      const EMISSIONS_INDEX = groups.findIndex(v => v === 'emissions');
 
       // Add bottom X axis
       var x = d3
         .scaleBand()
         .domain(groups)
         .range([0, width])
-        .paddingInner([0.1]);
+        .paddingInner([0.25]);
 
       const xAxisA = svg
         .append('g')
@@ -240,8 +254,7 @@ define([
         })
         .attr('width', x.bandwidth());
 
-      const EMISSIONS_INDEX = 0;
-      const USAGE_INDEX = 1;
+      // <path d="M1 6.5C0.447715 6.5 -4.82823e-08 6.94772 0 7.5C4.82823e-08 8.05228 0.447715 8.5 1 8.5L1 6.5ZM17.7071 8.20711C18.0976 7.81658 18.0976 7.18342 17.7071 6.79289L11.3431 0.428931C10.9526 0.038407 10.3195 0.0384071 9.92893 0.428931C9.53841 0.819456 9.53841 1.45262 9.92893 1.84314L15.5858 7.5L9.92893 13.1569C9.53841 13.5474 9.53841 14.1805 9.92893 14.5711C10.3195 14.9616 10.9526 14.9616 11.3431 14.5711L17.7071 8.20711ZM1 8.5L17 8.5L17 6.5L1 6.5L1 8.5Z" fill="#333333"/>
 
       // Emissions percentages
       svg
@@ -258,7 +271,10 @@ define([
           return y(d[EMISSIONS_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
         })
         .text(d => {
-          return `${d[EMISSIONS_INDEX]?.data?.[d?.key]}%`;
+          const percent = Number(d[EMISSIONS_INDEX]?.data?.[d?.key]);
+          // Below 8%, you can't see the percentage in the chart well
+          // so it's clearer to remove it
+          return percent >= 8 ? `${percent}%` : '';
         });
 
       // Usage percentages
@@ -276,8 +292,28 @@ define([
           return y(d[USAGE_INDEX][1]) + height - PERCENTAGE_BOTTOM_PADDING;
         })
         .text(d => {
-          return `${d[USAGE_INDEX]?.data?.[d?.key]}%`;
+          const percent = Number(d[USAGE_INDEX]?.data?.[d?.key]);
+          // Below 8%, you can't see the percentage in the chart well
+          // so it's clearer to remove it
+          return percent >= 8 ? `${percent}%` : '';
         });
+
+      // Arrow
+      const arrowHeight = 15;
+      const arrowWidth = 18;
+      svg
+        .append('path')
+        .attr('class', 'fueluse-bar-arrow')
+        .attr(
+          'd',
+          'M1 6.5C0.447715 6.5 -4.82823e-08 6.94772 0 7.5C4.82823e-08 8.05228 0.447715 8.5 1 8.5L1 6.5ZM17.7071 8.20711C18.0976 7.81658 18.0976 7.18342 17.7071 6.79289L11.3431 0.428931C10.9526 0.038407 10.3195 0.0384071 9.92893 0.428931C9.53841 0.819456 9.53841 1.45262 9.92893 1.84314L15.5858 7.5L9.92893 13.1569C9.53841 13.5474 9.53841 14.1805 9.92893 14.5711C10.3195 14.9616 10.9526 14.9616 11.3431 14.5711L17.7071 8.20711ZM1 8.5L17 8.5L17 6.5L1 6.5L1 8.5Z'
+        )
+        .attr(
+          'transform',
+          `translate(${Number(width) / 2 - arrowWidth / 2}, ${
+            Number(height) / 2 - arrowHeight / 2
+          })`
+        );
     },
 
     render: function () {

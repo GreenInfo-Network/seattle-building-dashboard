@@ -31,13 +31,23 @@ define([
     chartData: function () {
       const data = this.data;
 
-      const validated = data.map(d =>
-        validateBuildingData(d, {
-          id: 'string',
-          value: 'number',
-          year: 'number'
-        })
-      );
+      // No historical data when looking at earliest year
+      if (!data || !Array.isArray(data)) {
+        this.showChart = false;
+        return false;
+      }
+
+      const validated = data
+        // Some points haven't been reported, but this shouldn't invalidate it
+        // Remove unreported points
+        .filter(d => d.value !== null && d.value !== undefined)
+        .map(d =>
+          validateBuildingData(d, {
+            id: 'string',
+            value: 'number',
+            year: 'number'
+          })
+        );
 
       const valid = validated.every(d => d.valid);
       const typedData = validated.map(d => d.typedData);
@@ -109,7 +119,7 @@ define([
             return d.year;
           })
         )
-        .range([0, width]);
+        .range([30, width]);
 
       const xAxisTicks = [...new Set(chartData.map(d => d.year))];
 
@@ -136,17 +146,32 @@ define([
       // Make the x axis line invisible
       xAxis.select('.domain').attr('stroke', 'transparent');
 
-      function roundnum(num) {
-        return Math.ceil(num / 50) * 50;
+      function roundUpNum(num) {
+        const upper = Math.ceil(num * 1.15);
+        return upper;
       }
 
-      const max = roundnum(
+      function roundDownNum(num) {
+        const lower = Math.floor(num * 0.85);
+        return lower;
+      }
+
+      const max = roundUpNum(
         d3.max(chartData, function (d) {
           return +d.n;
         })
       );
+
+      const min = roundDownNum(
+        d3.min(chartData, function (d) {
+          return +d.n;
+        })
+      );
+
+      const tickSize = (max - min) / 5;
+
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+      var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
 
       const yAxis = svg
         .append('g')
@@ -155,7 +180,7 @@ define([
         .call(
           d3
             .axisLeft(y)
-            .ticks(max / 50)
+            .ticks(max / tickSize)
             .tickSize(0)
         );
 
@@ -172,9 +197,13 @@ define([
         .text('Weather Normalized Site EUI (kBtu/SF)');
 
       // Draw the background lines
-      const yAxisExtent = [0, max];
+      const yAxisExtent = [min, max];
 
-      for (let i = yAxisExtent[0] + 50; i < yAxisExtent[1]; i += 50) {
+      for (
+        let i = yAxisExtent[0] + tickSize;
+        i < yAxisExtent[1];
+        i += tickSize
+      ) {
         svg
           .append('line')
           .attr('class', 'performance-over-time-background-line')
@@ -213,6 +242,44 @@ define([
             .attr('class', `performance-over-time-${key}-dot`)
             .attr('cx', x(v.year))
             .attr('cy', y(+v.n));
+        }
+      }
+
+      for (const graphLine of sumstat) {
+        const { key, values } = graphLine;
+
+        for (const v of values) {
+          const dotContainer = svg
+            .append('g')
+            .attr('class', 'performance-over-time-dot-container');
+
+          // Just to make the hover target larger
+          dotContainer
+            .append('circle')
+            .attr('fill', `transparent`)
+            .attr('r', '1rem')
+            .attr('cx', x(v.year))
+            .attr('cy', y(+v.n));
+
+          const bgWidth = Math.max(40, 8 * `${v.n}`.length);
+
+          dotContainer
+            .append('rect')
+            .attr('class', `performance-over-time-${key}-text-bg`)
+            .attr('width', `${bgWidth}px`)
+            .attr('height', '20px')
+            // minus full height
+            .attr('y', y(+v.n) - AXIS_PADDING - 20)
+            // minus half of width
+            .attr('x', x(v.year) - bgWidth / 2);
+
+          dotContainer
+            .append('text')
+            .attr('class', `performance-over-time-${key}-hover-text text-chart`)
+            .attr('text-anchor', 'middle')
+            .attr('y', y(+v.n) - AXIS_PADDING * 2)
+            .attr('x', x(v.year))
+            .text(v.n);
         }
       }
     },

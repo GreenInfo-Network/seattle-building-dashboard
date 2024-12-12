@@ -58,7 +58,6 @@ define([
       'zoom',
       'building',
       'report_active',
-      'city_report_active',
       'tab'
     ],
 
@@ -84,13 +83,6 @@ define([
       }
 
       if (
-        attributes.hasOwnProperty('city_report_active') &&
-        !attributes.city_report_active
-      ) {
-        delete attributes.city_report_active;
-      }
-
-      if (
         attributes.hasOwnProperty('building') &&
         _.isNull(attributes.building)
       ) {
@@ -110,13 +102,6 @@ define([
         !_.isBoolean(params.report_active)
       ) {
         params.report_active = params.report_active === 'true';
-      }
-
-      if (
-        params.hasOwnProperty('city_report_active') &&
-        !_.isBoolean(params.city_report_active)
-      ) {
-        params.city_report_active = params.city_report_active === 'true';
       }
 
       return params;
@@ -225,11 +210,6 @@ define([
       new ScorecardController({ state, mapView });
       new MobileAlert({ state });
       new FooterView({ state });
-      new Button({
-        el: '#city-scorcard-toggle',
-        onClick: _.bind(this.toggleCityScorecard, this),
-        value: 'Citywide Report'
-      });
       // hack: the turorial needs state from the map, which isn't present until after the map loads
       // TODO: define and instantiate these views in the mapView/building_layer?
       setTimeout(function () {
@@ -238,10 +218,6 @@ define([
       }, 3000);
 
       this.state.on('change', this.onChange, this);
-    },
-
-    toggleCityScorecard: function () {
-      this.state.set({ city_report_active: true });
     },
 
     onChange: function () {

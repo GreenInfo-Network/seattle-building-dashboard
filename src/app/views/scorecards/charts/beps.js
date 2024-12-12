@@ -56,9 +56,18 @@ define([
 
     renderChart: function (buildingData) {
       const totalGhgi = buildingData?.total_ghg_emissions_intensity;
+
+      function roundUpNum(num) {
+        let nearestRound = Math.ceil(num / 2) * 2;
+        if (Math.abs(num - nearestRound) < 1) {
+          nearestRound = nearestRound + 1;
+        }
+        return nearestRound;
+      }
+
       const maxGhgi = Math.max(
-        buildingData?.bepstarget_2031 ?? 0,
-        Math.ceil(totalGhgi)
+        roundUpNum(buildingData?.bepstarget_2031 ?? 0),
+        roundUpNum(totalGhgi)
       );
 
       const divisor = 100 / maxGhgi;
@@ -227,7 +236,7 @@ define([
 
         const yPos = Number(height) - Number(height) * multiplier;
 
-        const targetText = `${year}: target ${target.toFixed(2)}`;
+        const targetText = `${year} target: ${target.toFixed(2)}`;
 
         svg
           .append('line')

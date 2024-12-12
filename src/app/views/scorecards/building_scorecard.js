@@ -10,11 +10,7 @@ define([
   './charts/performance_over_time',
   './charts/first_ghgi_target',
   './charts/first_compliance_interval',
-  //
-  './charts/performance_standard',
-  './charts/shift',
   './charts/comments',
-  'models/building_color_bucket_calculator',
   'text!templates/scorecards/building.html'
 ], function (
   $,
@@ -28,11 +24,7 @@ define([
   PerformanceOverTimeView,
   FirstGhgiTargetView,
   FirstComplianceIntervalView,
-  //
-  PerformanceStandardView,
-  ShiftView,
   CommentView,
-  BuildingColorBucketCalculator,
   BuildingTemplate
 ) {
   var BuildingScorecard = Backbone.View.extend({
@@ -50,6 +42,19 @@ define([
       $(window).on('resize', () => {
         this.render();
       });
+
+      // This re-renders all charts on print
+      if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        const that = this;
+        mediaQueryList.addListener(function (mql) {
+          if (mql.matches) {
+            that.render();
+          } else {
+            that.render();
+          }
+        });
+      }
 
       this.charts = {};
 
@@ -322,30 +327,15 @@ define([
       showCharts.first_compliance_interval =
         this.charts['eui']?.chart_first_compliance_interval?.showChart ?? false;
 
-      const firstComplianceYear = Number(
-        building?.beps_firstcomplianceyear ?? 2031
-      );
-      const yearWindowShift = firstComplianceYear - 2031;
-
-      const targetYears = {
-        // Note that bepstarget_2027 is not a real field
-        bepstarget_2031: 2031 + yearWindowShift,
-        bepstarget_2036: 2036 + yearWindowShift,
-        bepstarget_2041: 2041 + yearWindowShift,
-        bepstarget_2046: 2046 + yearWindowShift
-      };
-
       const getSfText = () => {
         function numberWithCommas(x) {
           return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
-        const totalGfa =
-          (building?.largestpropertyusetypegfa ?? 0) +
-          (building?.secondlargestpropertyusetypegfa ?? 0) +
-          (building?.thirdlargestpropertyusetypegfa ?? 0);
+        const totalGfa = building?.propertygfabuildings ?? 0;
 
         const amounts = [
+          [0, 20000],
           [20001, 30000],
           [30001, 50000],
           [50001, 90000],
@@ -357,16 +347,46 @@ define([
           range => range[0] <= totalGfa && (!range[1] || range[1] >= totalGfa)
         );
 
-        relevantAmounts = relevantAmounts.map(numberWithCommas);
+        if (!relevantAmounts) return '';
+
+        const relevantAmountsText = relevantAmounts.map(numberWithCommas);
 
         let rangeText = ``;
 
-        if (relevantAmounts.length === 1) {
-          rangeText = `> ${relevantAmounts[0]} SF`;
+        if (relevantAmounts === amounts[0]) {
+          rangeText = `< ${relevantAmountsText[1]}`;
+        } else if (relevantAmounts === amounts[amounts.length - 1]) {
+          rangeText = `> ${relevantAmountsText[0]}`;
         } else {
-          rangeText = `${relevantAmounts[0]}-${relevantAmounts[1]}`;
+          rangeText = `${relevantAmountsText[0]}-${relevantAmountsText[1]}`;
         }
         return rangeText;
+      };
+
+      const sfRangeText = getSfText();
+
+      const firstComplianceYear = Number(
+        building?.beps_firstcomplianceyear ?? 2031
+      );
+
+      const reporting2027ByFirstComplianceYear = {
+        2031: 2027,
+        2032: 2027,
+        2033: 2028,
+        2034: 2029,
+        2035: 2030
+      };
+
+      const yearWindowShift = firstComplianceYear - 2031;
+
+      const targetYears = {
+        // Note that bepstarget_2027 is not a real field
+        bepstarget_2027:
+          reporting2027ByFirstComplianceYear[firstComplianceYear],
+        bepstarget_2031: 2031 + yearWindowShift,
+        bepstarget_2036: 2036 + yearWindowShift,
+        bepstarget_2041: 2041 + yearWindowShift,
+        bepstarget_2046: 2046 + yearWindowShift
       };
 
       this.templateArgs = {
@@ -380,16 +400,16 @@ define([
         site_eui_wn: Number(site_eui_wn).toFixed(1),
         total_ghg: Number(total_ghg).toFixed(2),
         tab: this.state.get('tab'),
-        bepstarget_2031,
-        bepstarget_2036,
-        bepstarget_2041,
-        bepstarget_2046,
+        bepstarget_2031: bepstarget_2031.toFixed(2),
+        bepstarget_2036: bepstarget_2036.toFixed(2),
+        bepstarget_2041: bepstarget_2041.toFixed(2),
+        bepstarget_2046: bepstarget_2046.toFixed(2),
         // Since the fields above are windows, each building has specific years in those windows
         targetYears,
         cbpsFlag: building.cbps_flag && building.cbpseuitarget,
         // show chart flags
         showCharts,
-        sfRangeText: getSfText()
+        sfRangeText
       };
 
       el.html(this.template(this.templateArgs));

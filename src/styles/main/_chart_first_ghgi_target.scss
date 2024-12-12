@@ -15,7 +15,7 @@
 
     &-chart {
       font-size: 0.8rem;
-      height: 100;
+      height: 120px;
       width: 100%;
 
       svg {
@@ -51,6 +51,14 @@
 
     &-whiteBackground {
       fill: $white;
+    }
+  }
+}
+
+@media print {
+  #first-ghgi-target-chart {
+    .first-ghgi-target-x-axis-label {
+      font-size: 0.7rem;
     }
   }
 }

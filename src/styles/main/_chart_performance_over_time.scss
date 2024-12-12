@@ -26,7 +26,7 @@
 
     &-chart {
       font-size: 0.8rem;
-      height: 250px;
+      height: 260px;
       width: 100%;
 
       svg {
@@ -48,6 +48,22 @@
       stroke-width: 1.5;
     }
 
+    &-building-text-bg {
+      fill: $white;
+      stroke: $dark-blue;
+      rx: 2px;
+      ry: 2px;
+      opacity: 0;
+    }
+
+    &-average-text-bg {
+      fill: $white;
+      stroke: $gray;
+      rx: 2px;
+      ry: 2px;
+      opacity: 0;
+    }
+
     &-building-dot {
       fill: $dark-blue;
       r: 0.25rem;
@@ -56,6 +72,40 @@
     &-average-dot {
       fill: $gray;
       r: 0.25rem;
+    }
+
+    &-building-hover-text {
+      fill: $dark-blue;
+      opacity: 0;
+      padding: 0.5rem;
+    }
+
+    &-average-hover-text {
+      fill: $gray;
+      opacity: 0;
+      padding: 0.5rem;
+    }
+
+    &-dot-container {
+      cursor: pointer;
+
+      &:hover {
+        .performance-over-time-building-hover-text {
+          opacity: 1;
+        }
+
+        .performance-over-time-average-hover-text {
+          opacity: 1;
+        }
+
+        .performance-over-time-building-text-bg {
+          opacity: 1;
+        }
+
+        .performance-over-time-average-text-bg {
+          opacity: 1;
+        }
+      }
     }
 
     &-legend {
