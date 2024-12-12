@@ -30,7 +30,13 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
           gas_ghg_percent: 'number',
           electricity_ghg_percent: 'number',
           steam_ghg_percent: 'number',
-          year: 'number'
+          year: 'number',
+          total_ghg_emissions_intensity: 'number',
+          bepstarget_2031: 'number',
+          bepstarget_2036: 'number',
+          bepstarget_2041: 'number',
+          bepstarget_2046: 'number',
+          beps_firstcomplianceyear: 'number'
         }),
         typedData = _validateBuildingData.typedData,
         valid = _validateBuildingData.valid;
@@ -41,9 +47,22 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       var gas_ghg_percent = typedData.gas_ghg_percent,
         electricity_ghg_percent = typedData.electricity_ghg_percent,
         steam_ghg_percent = typedData.steam_ghg_percent,
-        year = typedData.year;
+        year = typedData.year,
+        bepstarget_2031 = typedData.bepstarget_2031,
+        bepstarget_2036 = typedData.bepstarget_2036,
+        bepstarget_2041 = typedData.bepstarget_2041,
+        bepstarget_2046 = typedData.bepstarget_2046;
+
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      var dataException = [bepstarget_2031, bepstarget_2036, bepstarget_2041, bepstarget_2046].every(function (v) {
+        return !v;
+      });
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
       return {
-        chartData: buildingData,
+        chartData: typedData,
         _showGas: !isNaN(gas_ghg_percent) && Number(gas_ghg_percent) > 0,
         _showElectricity: !isNaN(electricity_ghg_percent) && Number(electricity_ghg_percent) > 0,
         _showSteam: !isNaN(steam_ghg_percent) && Number(steam_ghg_percent) > 0,

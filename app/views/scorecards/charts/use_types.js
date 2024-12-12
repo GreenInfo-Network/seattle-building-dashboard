@@ -57,6 +57,15 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         yearbuilt_string = typedData.yearbuilt_string,
         yearbuilt = typedData.yearbuilt,
         propertygfabuildings = typedData.propertygfabuildings;
+
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      var dataException = [largestpropertyusetypegfa, secondlargestpropertyusetypegfa, thirdlargestpropertyusetypegfa].every(function (v) {
+        return !v;
+      });
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
       var totalGfa = Number(largestpropertyusetypegfa !== null && largestpropertyusetypegfa !== void 0 ? largestpropertyusetypegfa : 0) + Number(secondlargestpropertyusetypegfa !== null && secondlargestpropertyusetypegfa !== void 0 ? secondlargestpropertyusetypegfa : 0) + Number(thirdlargestpropertyusetypegfa !== null && thirdlargestpropertyusetypegfa !== void 0 ? thirdlargestpropertyusetypegfa : 0);
       var chartData = {
         first: largestpropertyusetypegfa ? largestpropertyusetypegfa / totalGfa * 100 : 0,

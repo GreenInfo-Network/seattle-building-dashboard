@@ -46,6 +46,15 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         bepstarget_2046 = typedData.bepstarget_2046,
         beps_firstcomplianceyear = typedData.beps_firstcomplianceyear,
         year = typedData.year;
+
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      var dataException = [bepstarget_2031, bepstarget_2036, bepstarget_2041, bepstarget_2046].every(function (v) {
+        return !v;
+      });
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
       function roundUpNum(num) {
         var nearestRound = Math.ceil(num / 2) * 2;
         if (Math.abs(num - nearestRound) < 1) {

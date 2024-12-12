@@ -43,6 +43,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
         cbpseuitarget = typedData.cbpseuitarget,
         cbps_date = typedData.cbps_date,
         cbps_flag = typedData.cbps_flag;
+      if (!cbps_flag || !cbpseuitarget) {
+        this.showChart = false;
+        return false;
+      }
       function roundUpNum(num) {
         var nearestFifty = Math.ceil(num / 50) * 50;
         if (Math.abs(num - nearestFifty) < 20) {
