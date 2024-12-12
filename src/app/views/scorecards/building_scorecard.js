@@ -389,28 +389,75 @@ define([
         bepstarget_2046: 2046 + yearWindowShift
       };
 
-      this.templateArgs = {
-        active: 'active',
-        name,
-        addr1: building.reported_address,
-        addr2: this.addressLine2(building),
-        year: selected_year,
-        year_built: building.yearbuilt,
-        ess_logo: this.energyStarCertified('eui', building, config),
-        site_eui_wn: Number(site_eui_wn).toFixed(1),
-        total_ghg: Number(total_ghg).toFixed(2),
-        tab: this.state.get('tab'),
-        bepstarget_2031: bepstarget_2031.toFixed(2),
-        bepstarget_2036: bepstarget_2036.toFixed(2),
-        bepstarget_2041: bepstarget_2041.toFixed(2),
-        bepstarget_2046: bepstarget_2046.toFixed(2),
-        // Since the fields above are windows, each building has specific years in those windows
-        targetYears,
-        cbpsFlag: building.cbps_flag && building.cbpseuitarget,
-        // show chart flags
-        showCharts,
-        sfRangeText
-      };
+      try {
+        this.templateArgs = {
+          dataError: false,
+          active: 'active',
+          name,
+          addr1: building?.reported_address ?? null,
+          addr2: this.addressLine2(building),
+          year: selected_year,
+          year_built: building?.yearbuilt ?? null,
+          ess_logo: this.energyStarCertified('eui', building, config),
+          site_eui_wn:
+            site_eui_wn !== null && !isNaN(site_eui_wn)
+              ? Number(site_eui_wn).toFixed(1)
+              : null,
+          total_ghg:
+            total_ghg !== null && !isNaN(total_ghg)
+              ? Number(total_ghg).toFixed(2)
+              : null,
+          tab: this.state.get('tab'),
+          bepstarget_2031:
+            bepstarget_2031 !== null && bepstarget_2031 !== undefined
+              ? bepstarget_2031.toFixed(2)
+              : null,
+          bepstarget_2036:
+            bepstarget_2036 !== null && bepstarget_2036 !== undefined
+              ? bepstarget_2036.toFixed(2)
+              : null,
+          bepstarget_2041:
+            bepstarget_2041 !== null && bepstarget_2041 !== undefined
+              ? bepstarget_2041.toFixed(2)
+              : null,
+          bepstarget_2046:
+            bepstarget_2046 !== null && bepstarget_2046 !== undefined
+              ? bepstarget_2046.toFixed(2)
+              : null,
+          // Since the fields above are windows, each building has specific years in those windows
+          targetYears,
+          cbpsFlag: building.cbps_flag,
+          // show chart flags
+          showCharts,
+          sfRangeText
+        };
+      } catch (err) {
+        // Set null to all expected fields in template to prevent crash, dataError
+        // set to true will simply display a message that they cannot generate a report.
+        // This will only happen if there's an unexpected JS error in the logic of the template.
+        // Otherwise each individual piece will appear or not depending.
+        this.templateArgs = {
+          dataError: true,
+          active: null,
+          name: null,
+          addr1: null,
+          addr2: null,
+          year: null,
+          year_built: null,
+          ess_logo: null,
+          total_ghg: null,
+          tab: null,
+          bepstarget_2031: null,
+          bepstarget_2036: null,
+          bepstarget_2041: null,
+          bepstarget_2046: null,
+          targetYears: null,
+          cbpsFlag: null,
+          showCharts: null,
+          sfRangeText: null
+        };
+        console.warn(err);
+      }
 
       el.html(this.template(this.templateArgs));
 
@@ -460,9 +507,9 @@ define([
     },
 
     addressLine2: function (building) {
-      var city = building.city;
-      var state = building.state;
-      var zip = building.zip;
+      var city = building?.city ?? '';
+      var state = building?.state ?? '';
+      var zip = building?.zip ?? '';
 
       var addr = city;
       if (state) {
