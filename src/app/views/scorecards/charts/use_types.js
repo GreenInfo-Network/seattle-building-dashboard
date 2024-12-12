@@ -56,6 +56,18 @@ define([
         propertygfabuildings
       } = typedData;
 
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      const dataException = [
+        largestpropertyusetypegfa,
+        secondlargestpropertyusetypegfa,
+        thirdlargestpropertyusetypegfa
+      ].every(v => !v);
+
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
+
       const totalGfa =
         Number(largestpropertyusetypegfa ?? 0) +
         Number(secondlargestpropertyusetypegfa ?? 0) +

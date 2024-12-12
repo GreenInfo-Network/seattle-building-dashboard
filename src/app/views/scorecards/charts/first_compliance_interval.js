@@ -48,6 +48,11 @@ define([
 
       const { site_eui_wn, cbpseuitarget, cbps_date, cbps_flag } = typedData;
 
+      if (!cbps_flag || !cbpseuitarget) {
+        this.showChart = false;
+        return false;
+      }
+
       function roundUpNum(num) {
         let nearestFifty = Math.ceil(num / 50) * 50;
         if (Math.abs(num - nearestFifty) < 20) {

@@ -1,4 +1,5 @@
 <div id="building-scorecard">
+  <% if (!dataError) { %>
   <div class="building-container">
     <!-- SIDEBAR -->
     <div class="building-sidebar">
@@ -137,6 +138,7 @@
 
           <div class="building-main-overview-bottom">
             <!-- GHGI -->
+            <% if (total_ghg !== null) { %>
             <div class="building-main-overview-container">
               <div class="building-main-overview-header">
                 <div class="text-subheader">Emissions</div>
@@ -166,7 +168,9 @@
                 <img src="images/link_out.png" />
               </div>
             </div>
+            <% } %>
             <!-- EUI -->
+            <% if (site_eui_wn !== null) { %>
             <div class="building-main-overview-container">
               <div class="building-main-overview-header">
                 <div class="text-subheader">Energy</div>
@@ -196,6 +200,7 @@
                 <img src="images/link_out.png" />
               </div>
             </div>
+            <% } %>
           </div>
         </div>
         <!-- Building info -->
@@ -227,6 +232,7 @@
       <% if (tab === 'emissions_targets') { %>
       <div class="building-main-section">
         <!-- Seattle BEPS Requirements -->
+        <% if (showCharts.first_ghgi_target) { %>
         <div class="building-main-chart-container">
           <div class="text-subheader">SEATTLE BEPS REQUIREMENTS</div>
           <!-- BEPS target table -->
@@ -359,6 +365,8 @@
             be revised by future rule.
           </div>
         </div>
+
+        <% } %>
         <!-- First GHGI Target -->
         <% if (showCharts.first_ghgi_target) { %>
         <div class="building-main-chart-container">
@@ -371,6 +379,15 @@
         <div class="building-main-chart-container">
           <div class="text-subheader">PLAN FOR FUTURE TARGETS</div>
           <div id="beps-chart" />
+        </div>
+        <% } %>
+
+        <!-- Not enough data -->
+        <% if (!showCharts.first_ghgi_target) { %>
+        <div class="building-main-chart-container">
+          <div class="text-subheader">
+            Unable to calculate estimated BEPS targets.
+          </div>
         </div>
         <% } %>
 
@@ -442,6 +459,16 @@
           <div id="first-compliance-interval-chart" />
         </div>
         <% } %>
+
+        <!-- Not enough data -->
+        <% if (!showCharts.first_compliance_interval) { %>
+        <div class="building-main-chart-container">
+          <div class="text-subheader">
+            Unable to calculate estimated CBPS EUI target.
+          </div>
+        </div>
+        <% } %>
+
         <!-- Take action -->
         <div class="building-main-chart-container print-hide">
           <div class="text-subheader">TAKE ACTION</div>
@@ -480,4 +507,9 @@
       <% } %>
     </div>
   </div>
+  <% } else { %>
+  <div class="data-error text-copy">
+    Unable to generate Building Performance Report.
+  </div>
+  <% } %>
 </div>

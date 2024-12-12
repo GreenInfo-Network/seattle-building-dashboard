@@ -59,6 +59,19 @@ define([
         year
       } = typedData;
 
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      const dataException = [
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046
+      ].every(v => !v);
+
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
+
       function roundUpNum(num) {
         let nearestRound = Math.ceil(num / 2) * 2;
         if (Math.abs(num - nearestRound) < 1) {

@@ -28,7 +28,13 @@ define([
         gas_ghg_percent: 'number',
         electricity_ghg_percent: 'number',
         steam_ghg_percent: 'number',
-        year: 'number'
+        year: 'number',
+        total_ghg_emissions_intensity: 'number',
+        bepstarget_2031: 'number',
+        bepstarget_2036: 'number',
+        bepstarget_2041: 'number',
+        bepstarget_2046: 'number',
+        beps_firstcomplianceyear: 'number'
       });
 
       if (!valid) {
@@ -40,11 +46,28 @@ define([
         gas_ghg_percent,
         electricity_ghg_percent,
         steam_ghg_percent,
-        year
+        year,
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046
       } = typedData;
 
+      // In the data, if all the targets are 0, null, or undefined, don't show the chart
+      const dataException = [
+        bepstarget_2031,
+        bepstarget_2036,
+        bepstarget_2041,
+        bepstarget_2046
+      ].every(v => !v);
+
+      if (dataException) {
+        this.showChart = false;
+        return false;
+      }
+
       return {
-        chartData: buildingData,
+        chartData: typedData,
         _showGas: !isNaN(gas_ghg_percent) && Number(gas_ghg_percent) > 0,
         _showElectricity:
           !isNaN(electricity_ghg_percent) &&
