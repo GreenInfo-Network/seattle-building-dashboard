@@ -100,13 +100,13 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
                 // Add an image of the menu - this is overall easier to control than selectize
                 // and we don't have any focus conflicts (see next step)
                 $('<img>', {
-                  src: './images/menu.jpg',
+                  src: './images/menu.png',
                   id: 'proptype-menu-image',
                   css: {
                     'z-index': 999999,
                     position: 'fixed',
-                    width: 234,
-                    height: 234
+                    width: 255,
+                    height: 231
                   }
                 }).insertAfter('#building-proptype-selector select');
 
@@ -124,7 +124,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
             // STEP 3
             popover: {
               title: 'Filter buildings',
-              description: 'Users can also filter buildings by property type.'
+              description: 'Users can also filter buildings by building type.'
             },
             onDeselected: () => {
               // delete the menu image
@@ -203,9 +203,9 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
               description:
                 'Zooming in will display additional detail about the building location and footprints.',
               onNextClick: () => {
-                // pretend to click this building (id 357 is specific to Seattle Municipal Tower)
+                // pretend to click this building (id 359 is specific to City Hall)
                 mapview.currentLayerView.onFeatureClick(null, null, null, {
-                  id: '357'
+                  id: '359'
                 });
                 driverObj.moveNext();
               }
@@ -220,7 +220,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
             popover: {
               title: 'Map display',
               description:
-                'Clicking on a building shape or dot will display an information pop-up. To view a more detailed, building-specific performance profile, click on “View Building Report”.'
+                'Clicking on a building shape or dot will display an information pop-up. To view a more detailed, building-specific performance report, click on “View Performance Report”.'
             }
           },
           {
@@ -239,12 +239,12 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
                 // without this delay, seems that Driver cannot find the element
                 setTimeout(function () {
                   driverObj.moveNext();
-                }, 750);
+                }, 1750);
               }
             }
           },
           {
-            element: '#building-intro-row',
+            element: 'div[data-tutorial="building-details"]',
             onHighlighted: () => {
               document.querySelector('.driver-popover').focus();
             },
@@ -252,43 +252,70 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
               // STEP 10
               title: 'Building performance details',
               description:
-                'The customized Building Report displays the building’s Site EUI and GHG Intensity for the selected reporting year and frames them in the context of their peers.'
+                'This customized Performance Report displays the building’s Site EUI and GHG Intensity for the selected reporting year, as well as other useful benchmarking information.',
             }
           },
           {
-            element: '#compare-shift-chart',
+            element: 'div[data-tutorial="energy-emissions"]',
             onHighlighted: () => {
               document.querySelector('.driver-popover').focus();
             },
             // STEP 11
             popover: {
-              title: 'Building performance trends',
+              title: 'Energy and Emissions',
               description:
-                'The report displays performance trends of the same building over time against a typical building of the same property type.'
+                'The report displays how property energy consumption translates to Greenhouse Gas emissions.',
+              onNextClick: () => {
+                // Click the tab named "Emissions Targets"
+                $('#emissions_targets').click();
+                setTimeout(function () {
+                  driverObj.moveNext();
+                }, 100);
+              }
             }
           },
           {
-            element: '#performance-standard-chart',
+            element: 'div[data-tutorial="emissions-targets"]',
             onHighlighted: () => {
               document.querySelector('.driver-popover').focus();
             },
-            // STEP 12 (new)
+            // STEP 12
             popover: {
-              title: 'Building performance standard',
+              title: 'Emissions Targets',
               description:
-                'For commercial buildings 50,000 SF and larger, the report displays current energy performance versus an approximate Washington Clean Buildings Performance Standard EUI target.'
+                'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.',
             }
           },
           {
-            element: '#links',
+            element: 'div[data-tutorial="emissions-targets-ghg"]',
+            onHighlighted: () => {
+              document.querySelector('.driver-popover').focus();
+            },
+            // STEP 12b
+            popover: {
+              title: 'GHG Intensity',
+              description:
+                'The report also displays a building’s current GHG intensity.',
+              onNextClick: () => {
+                // Click the tab named "Energy Targets"
+                $('#energy_targets').click();
+                setTimeout(function () {
+                  driverObj.moveNext();
+                }, 100);
+              }
+            }
+          },
+
+          {
+            element: 'div[data-tutorial="energy-targets"]',
             onHighlighted: () => {
               document.querySelector('.driver-popover').focus();
             },
             // STEP 13
             popover: {
-              title: 'Utility Incentives',
+              title: 'Energy Targets',
               description:
-                'Users can also find utility incentive opportunities at the bottom of the report.'
+                'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.'
             }
           }
         ]
