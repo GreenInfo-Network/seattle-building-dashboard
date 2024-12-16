@@ -8,7 +8,9 @@ define(['jquery', 'underscore', 'backbone', 'views/layout/tutorial', 'text!templ
       this.$el.html(_.template(SplashTemplate));
       // check the value of the cookie, to know whether to show the splash or not
       var skip = this.getCookie('skip_tutorial');
-      if (!skip) {
+      console.log('skip', skip);
+      if (skip === 'false') {
+        // don't skip the turorial, render
         this.render();
       }
       return this;

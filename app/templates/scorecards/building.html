@@ -136,7 +136,7 @@
             </div>
           </div>
 
-          <div class="building-main-overview-bottom">
+          <div class="building-main-overview-bottom" data-tutorial="building-details">
             <!-- GHGI -->
             <% if (total_ghg !== null) { %>
             <div class="building-main-overview-container">
@@ -212,7 +212,7 @@
         <% } %>
         <!-- Energy & Emissions Breakdown -->
         <% if (showCharts.fueluse) { %>
-        <div class="building-main-chart-container">
+        <div class="building-main-chart-container" data-tutorial="energy-emissions">
           <div class="text-subheader">ENERGY & EMISSIONS BREAKDOWN</div>
           <div id="fueluse-chart" />
         </div>
@@ -233,7 +233,7 @@
       <div class="building-main-section">
         <!-- Seattle BEPS Requirements -->
         <% if (showCharts.first_ghgi_target) { %>
-        <div class="building-main-chart-container">
+        <div class="building-main-chart-container" data-tutorial="emissions-targets">
           <div class="text-subheader">SEATTLE BEPS REQUIREMENTS</div>
           <!-- BEPS target table -->
           <div class="building-main-table">
@@ -369,7 +369,7 @@
         <% } %>
         <!-- First GHGI Target -->
         <% if (showCharts.first_ghgi_target) { %>
-        <div class="building-main-chart-container">
+        <div class="building-main-chart-container" data-tutorial="emissions-targets-ghg">
           <div class="text-subheader">FIRST GHGI TARGET</div>
           <div id="first-ghgi-target-chart" />
         </div>
@@ -454,7 +454,7 @@
         </div>
         <!-- First compliance interval -->
         <% if(showCharts.first_compliance_interval) { %>
-        <div class="building-main-chart-container">
+        <div class="building-main-chart-container" data-tutorial="energy-targets">
           <div class="text-subheader">FIRST COMPLIANCE INTERVAL</div>
           <div id="first-compliance-interval-chart" />
         </div>
