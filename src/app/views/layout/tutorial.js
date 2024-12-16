@@ -236,16 +236,24 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
               onNextClick: () => {
                 // Click "Show Report"
                 $('button#view-report').click();
-                // without this delay, seems that Driver cannot find the element
+                // hack: tempoarily hide the highlight and popover
+                // to make the long delay (waiting for the report to be present) less jarring
+                $('div#driver-popover-content').hide();
+                $('.driver-overlay path').css('opacity', 0);
+
+                // without this delay, seems that Driver cannot find the element in the report
                 setTimeout(function () {
                   driverObj.moveNext();
-                }, 1750);
+                }, 750);
               }
             }
           },
           {
             element: 'div[data-tutorial="building-details"]',
             onHighlighted: () => {
+              // hack: restore the highlight and popover
+              $('div#driver-popover-content').show();
+              $('.driver-overlay path').css('opacity', 0.75);
               document.querySelector('.driver-popover').focus();
             },
             popover: {
@@ -268,6 +276,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
               onNextClick: () => {
                 // Click the tab named "Emissions Targets"
                 $('#emissions_targets').click();
+
                 setTimeout(function () {
                   driverObj.moveNext();
                 }, 100);

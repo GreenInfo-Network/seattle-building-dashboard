@@ -13,9 +13,9 @@ define([
     	this.$el.html(_.template(SplashTemplate));
     	// check the value of the cookie, to know whether to show the splash or not
     	var skip = this.getCookie('skip_tutorial');
-      console.log('skip', skip)
-    	if (skip==='false') {
-        // don't skip the turorial, render
+      skip = JSON.parse(skip);
+    	if (!skip) {
+        // don't skip the turorial, render it
 	    	this.render();
     	}
       return this;
