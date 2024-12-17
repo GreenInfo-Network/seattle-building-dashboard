@@ -154,6 +154,9 @@ define(['underscore', 'backbone'], function (_, Backbone) {
       data.rows.forEach(function (row) {
         if (row.iscompliantflag != true) {
           // do the updates
+          // tbh, I'm not sure where this would matter or be displayed in the application
+          // the CartoCSS we send is used with the data on CARTO to make tiles, not local values... 
+          // see also building_layer.js where the CartoCSS is generated
           row.total_ghg_emissions = null;
           row.total_ghg_emissions_intensity = null;
           row.energy_star_score = null;

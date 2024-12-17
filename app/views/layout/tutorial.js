@@ -265,7 +265,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           // STEP 12
           popover: {
             title: 'Emissions Targets',
-            description: 'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.'
+            description: 'The report displays a building’s estimated emissions targets under the Seattle Building Emissions Performance Standard (BEPS) law.'
           }
         }, {
           element: 'div[data-tutorial="emissions-targets-ghg"]',
@@ -292,7 +292,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           // STEP 14
           popover: {
             title: 'Energy Targets',
-            description: 'The report displays a building’s estimated emissions targets under the Seattle Building Emissions Performance Standard (BEPS) law.'
+            description: 'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.'
           }
         }]
       });
