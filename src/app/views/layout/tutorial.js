@@ -292,7 +292,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
             popover: {
               title: 'Emissions Targets',
               description:
-                'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.',
+                'The report displays a building’s estimated emissions targets under the Seattle Building Emissions Performance Standard (BEPS) law.',
             }
           },
           {
@@ -324,7 +324,7 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function (
             popover: {
               title: 'Energy Targets',
               description:
-                'The report displays a building’s estimated emissions targets under the Seattle Building Emissions Performance Standard (BEPS) law.'
+                'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.'
             }
           }
         ]
