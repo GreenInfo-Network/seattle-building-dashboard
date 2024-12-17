@@ -64,9 +64,9 @@ define([
 
     if (outline && mode === 'footprints') mode = 'footprints_null_outline';
 
-    // a CartoCSS hack we have to employ in order to symbolize some fields as null, when EUI is null
+    // a CartoCSS hack we have to employ in order to symbolize some fields as null, when iscompliantflag is null
     // to do this we inject a new rule, in the form of 
-    // "#benchmarking_production [total_ghg_emissions>=0][iscompliantflag!='true']{polygon-fill:#CCC; line-color: #636363}"
+    // "#benchmarking_production [total_ghg_emissions>=0][iscompliantflag=false]{polygon-fill:#CCC; line-color: #636363}"
     // if the incoming field is not in that list of fields, then we don't do that (startingCSS is an empty array)
     let startingCSS = [];
     if (this.fieldNamesToNull.indexOf(this.fieldName) > -1) {
