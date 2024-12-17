@@ -218,8 +218,8 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
               $('button#view-report').click();
               // hack: tempoarily hide the highlight and popover
               // to make the long delay (waiting for the report to be present) less jarring
-              $('div#driver-popover-content').hide();
-              $('.driver-overlay path').css('opacity', 0);
+              // $('div#driver-popover-content').hide();
+              // $('.driver-overlay path').css('opacity', 0);
 
               // without this delay, seems that Driver cannot find the element in the report
               setTimeout(function () {
@@ -231,8 +231,8 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           element: 'div[data-tutorial="building-details"]',
           onHighlighted: function onHighlighted() {
             // hack: restore the highlight and popover
-            $('div#driver-popover-content').show();
-            $('.driver-overlay path').css('opacity', 0.75);
+            // $('div#driver-popover-content').show();
+            // $('.driver-overlay path').css('opacity', 0.75);
             document.querySelector('.driver-popover').focus();
           },
           popover: {
@@ -272,10 +272,10 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           onHighlighted: function onHighlighted() {
             document.querySelector('.driver-popover').focus();
           },
-          // STEP 12b
+          // STEP 13
           popover: {
             title: 'GHG Intensity',
-            description: 'The report also displays a building’s current GHG intensity.',
+            description: 'The report also displays whether or not a building is currently on track to meet their first GHG intensity target.',
             onNextClick: function onNextClick() {
               // Click the tab named "Energy Targets"
               $('#energy_targets').click();
@@ -289,10 +289,10 @@ define(['jquery', 'underscore', 'backbone', 'driver'], function ($, _, Backbone,
           onHighlighted: function onHighlighted() {
             document.querySelector('.driver-popover').focus();
           },
-          // STEP 13
+          // STEP 14
           popover: {
             title: 'Energy Targets',
-            description: 'If applicable, the report also displays a building’s estimated EUI target under the Washington state Clean Building Performance Standard law.'
+            description: 'The report displays a building’s estimated emissions targets under the Seattle Building Emissions Performance Standard (BEPS) law.'
           }
         }]
       });
