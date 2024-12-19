@@ -88,7 +88,8 @@ define([
       this.viewclass = BuildingScorecard;
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
-        this.state.set({ tab: 'benchmarking_overview' });
+        const initialTab = this.state.get('tab') ?? 'benchmarking_overview';
+        this.state.set({ tab: initialTab });
       }
       this.render();
     },
