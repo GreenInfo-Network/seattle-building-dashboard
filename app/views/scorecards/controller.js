@@ -70,8 +70,10 @@ define(['jquery', 'underscore', 'backbone', 'd3', './building_scorecard', 'text!
       this.viewclass = BuildingScorecard;
       // Set initial tab on load
       if (this.state.get('report_active') === true) {
+        var _this$state$get;
+        var initialTab = (_this$state$get = this.state.get('tab')) !== null && _this$state$get !== void 0 ? _this$state$get : 'benchmarking_overview';
         this.state.set({
-          tab: 'benchmarking_overview'
+          tab: initialTab
         });
       }
       this.render();
