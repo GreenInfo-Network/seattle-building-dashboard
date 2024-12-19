@@ -115,8 +115,8 @@ define([
 
         whiteBackground = maxGhgi - (redBar + greenBar);
 
-        redBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
-        greenBarLabel = `(GHGI target) ${nextTargetValue}`;
+        redBarLabel = `GHGI current: ${Number(currentValue).toFixed(2)}`;
+        greenBarLabel = `GHGI target: ${nextTargetValue}`;
 
         isMeetingTarget = false;
       } else {
@@ -125,8 +125,8 @@ define([
 
         whiteBackground = maxGhgi - (greenStripedBar + greenBar);
 
-        greenStripedBarLabel = `(GHGI target) ${Number(nextTargetValue)}`;
-        greenBarLabel = `(GHGI current) ${Number(currentValue).toFixed(2)}`;
+        greenStripedBarLabel = `GHGI target: ${Number(nextTargetValue)}`;
+        greenBarLabel = `GHGI current: ${Number(currentValue).toFixed(2)}`;
 
         isMeetingTarget = true;
       }
