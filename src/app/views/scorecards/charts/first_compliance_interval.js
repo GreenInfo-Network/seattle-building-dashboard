@@ -85,8 +85,8 @@ define([
 
         whiteBackground = maxVal - (redBar + greenBar);
 
-        redBarLabel = `(EUI current) ${currentValue}`;
-        greenBarLabel = `(EUI target) ${nextTargetValue}`;
+        redBarLabel = `EUI current: ${currentValue}`;
+        greenBarLabel = `EUI target: ${nextTargetValue}`;
 
         isMeetingTarget = false;
       } else {
