@@ -48,6 +48,7 @@ define(['jquery'], function ($) {
           : coerce_types[val] !== undefined ? coerce_types[val] // true, false, null
           : val; // string
         }
+
         if (keys_last) {
           // Complex key, build deep object structure based on a few rules:
           // * The 'cur' pointer starts at the object top-level.
