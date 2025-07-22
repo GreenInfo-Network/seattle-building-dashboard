@@ -1717,12 +1717,15 @@ div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart table td:first-child {
   width: auto;
-  padding-right: 10px;
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart table td:last-child {
   width: 100%;
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td {
+  padding-bottom: 0.4rem;
+  vertical-align: baseline;
+}
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .secondary td {
   padding-bottom: 1rem;
   vertical-align: baseline;
 }
@@ -1734,6 +1737,7 @@ div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .
   padding-bottom: 10px;
   font-size: 1em !important;
   line-height: 1.25 !important;
+  text-align: left !important;
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td span.out-of-compliance {
   font-weight: 600;
@@ -1742,10 +1746,13 @@ div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .
   margin-bottom: 6px;
   display: block;
 }
-div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td:first-child {
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .lead td:first-child,
+div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .secondary td:first-child {
   font-size: 2.5em;
   font-weight: 500;
   line-height: 1;
+  text-align: right;
+  padding-right: 10px;
 }
 div.leaflet-popup-pane div.leaflet-popup .leaflet-popup-content .building-info .building-popup-chart .barchart td {
   vertical-align: bottom;

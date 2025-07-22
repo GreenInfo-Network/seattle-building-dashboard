@@ -135,7 +135,7 @@ define(['jquery', 'underscore', 'backbone', 'd3', '../../../../lib/wrap', '../..
       var parentSvg = parent.append('svg').attr('viewBox', "0 0 ".concat(outerWidth, " ").concat(outerHeight));
       var svg = parentSvg.append('g').attr('transform', "translate(0, ".concat(margin.top, ")"));
       var groups = ['usage', 'emissions'];
-      var subgroups = ['gas', 'steam', 'electricity'];
+      var subgroups = ['electricity', 'steam', 'gas'];
       var USAGE_INDEX = groups.findIndex(function (v) {
         return v === 'usage';
       });

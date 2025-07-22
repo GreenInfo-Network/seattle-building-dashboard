@@ -68,6 +68,11 @@
             "label": "Site EUI (kBTU/ft²)",
             "nodata": "Site EUI data not available."
         },
+        "secondary": {
+            "field": "total_ghg_emissions_intensity",
+            "label": "GHG Intensity (kgCO₂e/ft²)",
+            "nodata": "GHG Intensity data not available."
+        },
         "barchart": {
             "field": "energy_star_score",
             "desc": "ENERGY<br/>STAR Score",

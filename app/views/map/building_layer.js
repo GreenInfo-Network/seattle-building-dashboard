@@ -111,6 +111,12 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'collections/city_buildings', 
       color: this.getColor(chartData.lead.field, building.get(chartData.lead.field)),
       label: chartData.lead.label
     };
+    o.chart.secondary = {
+      value: building.get(chartData.secondary.field),
+      color: this.getColor(chartData.secondary.field, building.get(chartData.secondary.field)),
+      label: chartData.secondary.label
+    };
+    // debugger
 
     // lead field in "popup_chart" from seattle.json is site_eui_wn
     // console.log(o.chart.lead);

@@ -15,20 +15,20 @@
         </div>
       </div>
 
-      <% if (_showElectricity) { %>
+      <% if (_showGas) { %>
       <div class="beps-legend-swatch">
-        <div class="beps-legend-swatch-color electric"></div>
-        <div class="beps-legend-swatch-text text-copy">Electric</div>
+        <div class="beps-legend-swatch-color gas"></div>
+        <div class="beps-legend-swatch-text text-copy">Gas</div>
       </div>
       <% } %> <% if (_showSteam) { %>
       <div class="beps-legend-swatch">
         <div class="beps-legend-swatch-color steam"></div>
         <div class="beps-legend-swatch-text text-copy">Steam</div>
       </div>
-      <% } %> <% if (_showGas) { %>
+      <% } %> <% if (_showElectricity) { %>
       <div class="beps-legend-swatch">
-        <div class="beps-legend-swatch-color gas"></div>
-        <div class="beps-legend-swatch-text text-copy">Gas</div>
+        <div class="beps-legend-swatch-color electric"></div>
+        <div class="beps-legend-swatch-text text-copy">Electric</div>
       </div>
       <% } %>
     </div>
