@@ -143,8 +143,16 @@ define([
         ...new Set(chartData.map(d => Object.keys(d)).flat())
       ].filter(v => v !== 'group');
 
-      // Add a background
+      // sort subgroups so that electricity is always first, then steam, then gas
+      subgroups.sort((a, b) => {
+        if (a === 'electricity') return -1;
+        if (b === 'electricity') return 1;
+        if (a === 'steam') return -1;
+        if (b === 'steam') return 1;
+        return 0; // keep the order for gas
+      });
 
+      // Add a background
       svg
         .append('rect')
         .attr('class', 'beps-bar-background-rect')

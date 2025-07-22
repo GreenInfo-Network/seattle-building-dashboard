@@ -154,7 +154,7 @@ define([
         .attr('transform', `translate(0, ${margin.top})`);
 
       let groups = ['usage', 'emissions'];
-      let subgroups = ['gas', 'steam', 'electricity'];
+      let subgroups = ['electricity', 'steam', 'gas'];
 
       const USAGE_INDEX = groups.findIndex(v => v === 'usage');
       const EMISSIONS_INDEX = groups.findIndex(v => v === 'emissions');
