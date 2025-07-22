@@ -154,6 +154,13 @@ define([
       label: chartData.lead.label
     };
 
+    o.chart.secondary = {
+      value: building.get(chartData.secondary.field),
+      color: this.getColor(chartData.secondary.field, building.get(chartData.secondary.field)),
+      label: chartData.secondary.label
+    };
+    // debugger
+
     // lead field in "popup_chart" from seattle.json is site_eui_wn
     // console.log(o.chart.lead);
 

@@ -31,6 +31,13 @@
           <% } %>
         </tr>
 
+        <% if (data.chart.secondary) { %>
+          <tr class="secondary">
+            <td style="color: <%= data.chart.secondary.color %>;"><%= data.chart.secondary.value.toLocaleString() %></td>
+            <td><%= data.chart.secondary.label %></td>
+          </tr>
+        <% } %>
+
         <% if (data.chart.barchart.nodata) { %>
         <!-- just leave this blank for now 
         <tr class="barchart">
