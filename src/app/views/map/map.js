@@ -138,6 +138,15 @@ define([
           scrollWheelZoom: false,
         });
 
+        // accessibility hacks: add empty alt text to all map tiles
+        this.leafletMap.on('load', function() {
+          $('.leaflet-tile-pane img').attr('alt', '');
+        });
+
+        this.leafletMap.on('moveend zoomend', function() {
+          $('.leaflet-tile-pane img').attr('alt', '');
+        });
+
         this.leafletMap.attributionControl.setPrefix('');
 
         var background = city.get('backgroundTileSource');

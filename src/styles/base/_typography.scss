@@ -33,11 +33,6 @@ a {
   &:hover {
     color: darken($medium-gray,30);
   }
-
-  &:active,
-  &:focus {
-    outline: none;
-  }
 }
 
 hr {

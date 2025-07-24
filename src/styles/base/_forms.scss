@@ -47,9 +47,13 @@ textarea {
 
   &:focus {
     border-color: $action-color;
-    box-shadow: $form-box-shadow-focus;
-    outline: none;
+    box-shadow: none;
+    outline: 2px solid rgba($action-color, 0.5);
   }
+}
+
+.categorize-select-toggle:focus {
+  outline: 2px solid rgba($action-color, 0.5);
 }
 
 textarea {

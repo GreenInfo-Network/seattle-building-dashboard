@@ -1,6 +1,5 @@
 .search-wrapper {
-  padding: calc($base-spacing / 4) 1em;
-  border: 1px solid $base-border-color;
+  position: relative;
   border-radius: 1em;
   margin: 0.5em 1em;
   display: flex;
@@ -13,13 +12,19 @@
   }
 
   .address-search {
-    padding: 0;
+    padding: calc($base-spacing / 4) 1em;
+    padding-right: 2.2em; // space for the icon
+    border: 1px solid $base-border-color;
     margin: 0;
-    border: 0 none;
     display: block;
   }
-}
 
+  .address-search-icon {
+    position: absolute;
+    right: 0.9em;
+    top: 20%;
+  }
+}
 
 .address-search-results.autocomplete-suggestions {
   top: 135px;

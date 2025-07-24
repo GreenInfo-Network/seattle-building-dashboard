@@ -33,23 +33,29 @@
       padding: 0.75em 1em 0.75em 2em;
     }
 
-    h4 {
+    h2.sidebar-header {
       position: relative;
       text-transform: uppercase;
       margin: 0;
+      padding: 0;
+      font-size: 1em;
+      font-weight: 700;
+      text-indent: 0;
+      box-shadow: none;
+    }
 
-      button {
-        position: absolute;
-        top: -0.2em;
-        right: 0;
-        background: transparent;
-        border: 0;
-        font-size: 0.81em;
-        text-transform: uppercase;
-        border-radius: 0;
-        padding: 0.4em;
-        line-height: 1;
-      }
+
+    button.reset-all-filters {
+      position: absolute;
+      top: 0.75em;
+      right: 0.2em;
+      background: transparent;
+      border: 0;
+      font-size: 0.81em;
+      text-transform: uppercase;
+      border-radius: 0;
+      padding: 0.4em;
+      line-height: 1;
     }
 
     p {
@@ -361,7 +367,7 @@
     @extend %disable-user-select;
   }
 
-  h2:after, label:after {
+  h2:not(.sidebar-header):after, label:after {
     content: "\A";
     display: block;
     position: absolute;
@@ -383,7 +389,7 @@
     border-top-color: $base-background-color;
   }
 
-  h2:after {
+  h2:not(.sidebar-header):after {
     border-top-color: $base-font-color;
   }
 

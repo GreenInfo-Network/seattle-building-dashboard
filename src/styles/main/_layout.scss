@@ -85,13 +85,14 @@ header {
     width: $large-nav-col-fixed-width;
   }
 
-  .address-search {
-    width: $nav-col-fixed-width - 4em;
+  // .address-search {
+  //   // width: $nav-col-fixed-width - 3.5em;
 
-    @include media($large-screen-up) {
-      width: $large-nav-col-fixed-width - 4em;
-    }
-  }
+  //   // @include media($large-screen-up) {
+  //   //   width: $large-nav-col-fixed-width - 3.5em;
+  //   // }
+  //   width: 100%;
+  // }
 }
 
 #map-category-controls {
