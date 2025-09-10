@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <title>Seattle Building Dashboard</title>
+    <meta name="description" content="Seattle Building Dashboard" />
+    <meta name="author" content="City of Seattle" />
+    <meta name="keywords" content="Seattle, Building, Dashboard, Energy, Benchmarking" />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
+      content="width=device-width, initial-scale=1.0"
     />
 
     <link
@@ -44,46 +48,46 @@
     <link rel="stylesheet" type="text/css" href="styles/main.min.css" />
   </head>
   <body>
-    <div id="mobile-failover"></div>
-    <div id="splash"></div>
-    <div id="modals"></div>
-    <header id="title"></header>
-    <div id="toolbar" class="toolbar">
-      <div id="search"></div>
-      <div id="map-category-controls"></div>
-      <div id="building-proptype-selector"></div>
-      <div class="tbar-right">
-        <div id="year-select-container"></div>
+    <main>
+      <div id="mobile-failover"></div>
+      <div id="splash"></div>
+      <div id="modals"></div>
+      <header id="title"></header>
+      <div id="toolbar" class="toolbar">
+        <div id="search"></div>
+        <div id="map-category-controls"></div>
+        <div id="building-proptype-selector"></div>
+        <div class="tbar-right">
+          <div id="year-select-container"></div>
+        </div>
       </div>
-    </div>
 
-    <div class="main-container">
-      <div id="map-controls">
-        <div id="map-controls-bk"></div>
-        <div id="map-controls-header">
-          <div>
-            <h4>
-              Metric Filters
+      <div class="main-container">
+        <div id="map-controls">
+          <div id="map-controls-bk"></div>
+          <div id="map-controls-header">
+            <div>
+              <h2 class="sidebar-header">Metric Filters</h2>
               <button class="reset-all-filters">Reset map</button>
-            </h4>
-            <p>Select a metric to see filtered results on the map</p>
+              <p>Select a metric to see filtered results on the map</p>
+            </div>
+          </div>
+          <div id="map-controls-content">
+            <div id="map-controls-content--inner" tablindex="0"></div>
           </div>
         </div>
-        <div id="map-controls-content">
-          <div id="map-controls-content--inner"></div>
+        <div id="map-wrapper">
+          <div id="simple-tooltip" class="cartodb-tooltip"></div>
+          <div id="map" aria-hidden="true"></div>
         </div>
+        <div id="map-controls-counts"></div>
+        <div id="map-controls-bar"></div>
       </div>
-      <div id="map-wrapper">
-        <div id="simple-tooltip" class="cartodb-tooltip"></div>
-        <div id="map"></div>
-      </div>
-      <div id="map-controls-counts"></div>
-      <div id="map-controls-bar"></div>
-    </div>
 
-    <div id="footer"></div>
+      <div id="footer"></div>
 
-    <div id="scorecard"></div>
+      <div id="scorecard"></div>
+    </main>
 
     <script src="lib/polyfills.js"></script>
     <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>

@@ -83,9 +83,13 @@ input[type=color]:focus, input[type=date]:focus, input[type=datetime]:focus, inp
 select[multiple=multiple]:focus,
 textarea:focus {
   border-color: white;
-  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(242, 242, 242, 0.7);
-          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(242, 242, 242, 0.7);
-  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.categorize-select-toggle:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 textarea {
@@ -209,9 +213,6 @@ a {
 }
 a:active, a:focus, a:hover {
   color: #6a6a6a;
-}
-a:active, a:focus {
-  outline: none;
 }
 
 hr {
@@ -654,14 +655,6 @@ header {
     width: 22.5em;
   }
 }
-#search .address-search {
-  width: 14.75em;
-}
-@media screen and (min-width: 56.25em) {
-  #search .address-search {
-    width: 18.5em;
-  }
-}
 
 #map-category-controls {
   position: absolute;
@@ -876,8 +869,7 @@ header {
 }
 
 .search-wrapper {
-  padding: 0.3em 1em;
-  border: 1px solid white;
+  position: relative;
   border-radius: 1em;
   margin: 0.5em 1em;
   display: -webkit-box;
@@ -894,10 +886,16 @@ header {
   box-shadow: none;
 }
 .search-wrapper .address-search {
-  padding: 0;
+  padding: 0.3em 1em;
+  padding-right: 2.2em;
+  border: 1px solid white;
   margin: 0;
-  border: 0 none;
   display: block;
+}
+.search-wrapper .address-search-icon {
+  position: absolute;
+  right: 0.9em;
+  top: 20%;
 }
 
 .address-search-results.autocomplete-suggestions {
@@ -1071,15 +1069,21 @@ header {
 #map-controls #map-controls-header > div {
   padding: 0.75em 1em 0.75em 2em;
 }
-#map-controls #map-controls-header h4 {
+#map-controls #map-controls-header h2.sidebar-header {
   position: relative;
   text-transform: uppercase;
   margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-weight: 700;
+  text-indent: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
-#map-controls #map-controls-header h4 button {
+#map-controls #map-controls-header button.reset-all-filters {
   position: absolute;
-  top: -0.2em;
-  right: 0;
+  top: 0.75em;
+  right: 0.2em;
   background: transparent;
   border: 0;
   font-size: 0.81em;
@@ -1337,7 +1341,7 @@ header {
 #map-controls {
   background-color: transparent;
 }
-#map-controls h2:after, #map-controls label:after {
+#map-controls h2:not(.sidebar-header):after, #map-controls label:after {
   content: "\a";
   display: block;
   position: absolute;
@@ -1356,7 +1360,7 @@ header {
   bottom: -9px;
   border-top-color: #f2f2f2;
 }
-#map-controls h2:after {
+#map-controls h2:not(.sidebar-header):after {
   border-top-color: #0047ba;
 }
 #map-controls h3 {
