@@ -6,7 +6,10 @@ define(['d3'], function (d3) {
     "default": function _default(d) {
       return d;
     },
-    integer: d3.format(',.0f'),
+    integer: function integer(n) {
+      if (n === null || typeof n === 'undefined' || isNaN(n)) return 'n/a';
+      return d3.format(',.0f')(n);
+    },
     fixed: function fixed(precision) {
       precision = precision || 0;
       precision = Math.max(precision, 0);

@@ -77,7 +77,7 @@ textarea {
 input[type=color]:hover, input[type=date]:hover, input[type=datetime]:hover, input[type=datetime-local]:hover, input[type=email]:hover, input[type=month]:hover, input[type=number]:hover, input[type=password]:hover, input[type=search]:hover, input[type=tel]:hover, input[type=text]:hover, input[type=time]:hover, input[type=url]:hover, input[type=week]:hover, input:not([type]):hover, textarea:hover,
 select[multiple=multiple]:hover,
 textarea:hover {
-  border-color: #e6e6e6;
+  border-color: rgb(229.5, 229.5, 229.5);
 }
 input[type=color]:focus, input[type=date]:focus, input[type=datetime]:focus, input[type=datetime-local]:focus, input[type=email]:focus, input[type=month]:focus, input[type=number]:focus, input[type=password]:focus, input[type=search]:focus, input[type=tel]:focus, input[type=text]:focus, input[type=time]:focus, input[type=url]:focus, input[type=week]:focus, input:not([type]):focus, textarea:focus,
 select[multiple=multiple]:focus,
@@ -161,7 +161,7 @@ table {
 }
 
 th {
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid rgb(216.75, 216.75, 216.75);
   font-weight: 600;
   padding: 0.6em 0;
   text-align: left;
@@ -206,7 +206,7 @@ p {
 }
 
 a {
-  color: #848484;
+  color: rgb(131.5, 131.5, 131.5);
   text-decoration: none;
   -webkit-transition: color 0.1s linear;
   transition: color 0.1s linear;
@@ -1017,7 +1017,7 @@ header {
 }
 .map-category-control .categories {
   color: #0047ba;
-  background-color: rgba(183, 183, 183, 0.9);
+  background-color: rgba(182.5, 182.5, 182.5, 0.9);
 }
 .map-category-control li {
   line-height: 1.2;
@@ -1178,7 +1178,7 @@ header {
   bottom: 0;
   width: calc(100% - 160px);
   padding: 0;
-  background-color: #dadada;
+  background-color: rgb(218.2, 218.2, 218.2);
 }
 #map-controls .control-cell.right .compare-closer {
   position: absolute;
@@ -1546,7 +1546,7 @@ header {
 }
 .building-report .subheader,
 .building-report .average-info {
-  color: #b7b7b7;
+  color: rgb(182.5, 182.5, 182.5);
   text-transform: uppercase;
 }
 .building-report .averages .subheader,
@@ -1572,7 +1572,7 @@ header {
 .building-report .metric-container {
   font-weight: bold;
   text-align: center;
-  color: #b7b7b7;
+  color: rgb(182.5, 182.5, 182.5);
 }
 .building-report .undefined .value {
   display: none;
@@ -1581,7 +1581,7 @@ header {
   display: none;
 }
 .building-report .building:not(.current) .value {
-  color: #b7b7b7 !important;
+  color: rgb(182.5, 182.5, 182.5) !important;
 }
 .building-report .metric-container .histogram {
   height: 1.9375em;

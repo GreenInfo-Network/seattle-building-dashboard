@@ -154,7 +154,7 @@
             "null_outline_css": true,
             "unit": "kBtu",
             "formatter": "fixed-1",
-            "filter_range": {"min": 0, "max": 1500},
+            "filter_range": {"min": 0, "max": 250},
             "description": "Weather-normalized site energy use is the total amount of all the energy a property consumes on-site annually, as reported on utility bills. Site energy use is measured in thousands of British thermal units (kBtu)."
         },
         {
