@@ -3,7 +3,10 @@ define(['d3'], function(d3) {
 
   const types = {
     default: d => d,
-    integer: d3.format(',.0f'),
+    integer: n => {
+      if (n === null || typeof n === 'undefined' || isNaN(n)) return 'n/a';
+      return d3.format(',.0f')(n);
+    },
     fixed: precision => {
       precision = precision || 0;
       precision = Math.max(precision, 0);
