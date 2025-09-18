@@ -112,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
         .range([0, this.width])
         .padding(0.2);
 
+
       // threshold types use rounded bands for convienence
       if (isThreshold) {
         xScale.rangeRound([0, this.width]);
@@ -134,12 +135,16 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
       // make scale available to caller
       this.xScale = xScale;
 
-      // draw
+      // bind data
       const bars = this.g.selectAll('rect').data(bardata, function (d) {
         return d.color;
       });
 
-      bars
+      // remove old bars
+      bars.exit().remove();
+
+      // add new bars
+      const newBars = bars
         .enter()
         .append('rect')
         .attr('fill', d => {
@@ -163,8 +168,32 @@ define(['jquery', 'underscore', 'backbone', 'd3'], function (
           return height - yScale(d.count);
         });
 
-      bars.exit().remove();
+      // update all bars
+      newBars.merge(bars)
+        .transition()
+        .duration(200)
+        .attr('fill', d => {
+          // not on a continous scale
+          // so just need the color from data
+          if (isThreshold) return d.color;
 
+          // mapping the color continously
+          // so need to calculate the color for
+          // this xpos
+          //
+          return colorScale(filterValueForXpos(d.xpos));
+        })
+        .attr('width', xScale.bandwidth())
+        .attr('stroke-width', 0)
+        .attr('height', d => yScale(d.count))
+        .attr('x', d => {
+          return xScale(d.data);
+        })
+        .attr('y', d => {
+          return height - yScale(d.count);
+        });
+
+      // highlight selected bar
       bars.call(this.highlightBar, this);
 
       this.g

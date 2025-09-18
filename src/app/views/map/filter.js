@@ -200,6 +200,10 @@ define([
         const subset = buildings.where({
           [this.propertyTypeKey]: category.values[0]
         });
+
+        // d3 median can handle null, but not if they are _all_ null, then it returns undefined
+        // we handle this in the integer formatter, to set undefined to 'n/a'
+        // this takes care of Laboratory data, which is all nulls, not sure how resilient this will be for other cases
         median = d3.median(subset, d => d.get(this.layer.field_name));
       } else {
         median = d3.median(buildings.pluck(this.layer.field_name));
@@ -381,26 +385,40 @@ define([
         chartElm.html(this.histogram.render());
       }
 
+      // isDirty:
+      // 1. First render after initialize
+      // 2. Property type change
+      // 3. Layer change while this is the current layer
       if (isDirty) {
-        this.histogram.update({
+        var histogram_options = {
           gradients: bucketGradients,
           slices: rangeSliceCount,
           filterRange: [filterRangeMin, filterRangeMax],
           colorScale: gradientCalculator.colorGradient().copy(),
           outerwidth: chartElm.width(),
           outerheight: chartElm.height()
-        });
+        };
 
+        this.histogram.update(histogram_options);
         chartElm.html(this.histogram.render());
       }
+
 
       if (this.threshold_labels && (isDirty || this.initRender)) {
         const svg = this.histogram.$el.find('svg')[0];
         const svgScaleFactor = svg ? svg.getCTM().a : 1;
+
+        // get label positions from the xScale
+        const positions = this.threshold_labels.map((label, i) => {
+          return this.histogram.xScale(i) * svgScaleFactor;
+        });
+
         const qlabels = {
           width: this.histogram.xScale.bandwidth() * svgScaleFactor,
           labels: this.threshold_labels,
-          positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
+          // this only provides positions for two labels! we need one per bar
+          // positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
+          positions: positions
         };
 
         this.$el.find('.quartiles').html(quartileTemplate(qlabels));
