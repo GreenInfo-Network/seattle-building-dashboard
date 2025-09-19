@@ -412,24 +412,29 @@ define([
         // when the SVG is not active, getCTM().a returns 1
         // when it is active, it returns the correct scale factor
         // instead of getting $(this) histogram's svg, just get the current active svg
-        const currentSvg = $('div.map-control.current svg')[0];
-        // not sure it's possible to _not_ have a current svg, but just in case
-        const svgScaleFactor = currentSvg ? currentSvg.getCTM().a : 1;
 
-        // get label positions from the xScale
-        const positions = this.threshold_labels.map((label, i) => {
-          return this.histogram.xScale(i) * svgScaleFactor;
-        });
+        // if this is the initial render, then wait a bit for the svg to be active
+        const wait = this.initRender ? 600 : 0;
+        setTimeout(() => {
+          const currentSvg = $('div.map-control.current svg')[0];
+          // not sure it's possible to _not_ have a current svg, but just in case
+          const svgScaleFactor = currentSvg ? currentSvg.getCTM().a : 1;
 
-        const qlabels = {
-          width: this.histogram.xScale.bandwidth() * svgScaleFactor,
-          labels: this.threshold_labels,
-          // this only provides positions for two labels! we need one per bar
-          // positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
-          positions: positions
-        };
+          // get label positions from the xScale
+          const positions = this.threshold_labels.map((label, i) => {
+            return this.histogram.xScale(i) * svgScaleFactor;
+          });
 
-        this.$el.find('.quartiles').html(quartileTemplate(qlabels));
+          const qlabels = {
+            width: this.histogram.xScale.bandwidth() * svgScaleFactor,
+            labels: this.threshold_labels,
+            // this only provides positions for two labels! we need one per bar
+            // positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
+            positions: positions
+          };
+
+          this.$el.find('.quartiles').html(quartileTemplate(qlabels));
+        }, wait * 1);
       }
 
       if (!this.$filter || isDirty) {
