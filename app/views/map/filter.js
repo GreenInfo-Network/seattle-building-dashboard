@@ -301,22 +301,27 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'ionrangeslider', 'models/buil
         // when the SVG is not active, getCTM().a returns 1
         // when it is active, it returns the correct scale factor
         // instead of getting $(this) histogram's svg, just get the current active svg
-        var currentSvg = $('div.map-control.current svg')[0];
-        // not sure it's possible to _not_ have a current svg, but just in case
-        var svgScaleFactor = currentSvg ? currentSvg.getCTM().a : 1;
 
-        // get label positions from the xScale
-        var positions = this.threshold_labels.map(function (label, i) {
-          return _this5.histogram.xScale(i) * svgScaleFactor;
-        });
-        var qlabels = {
-          width: this.histogram.xScale.bandwidth() * svgScaleFactor,
-          labels: this.threshold_labels,
-          // this only provides positions for two labels! we need one per bar
-          // positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
-          positions: positions
-        };
-        this.$el.find('.quartiles').html(quartileTemplate(qlabels));
+        // if this is the initial render, then wait a bit for the svg to be active
+        var wait = this.initRender ? 600 : 0;
+        setTimeout(function () {
+          var currentSvg = $('div.map-control.current svg')[0];
+          // not sure it's possible to _not_ have a current svg, but just in case
+          var svgScaleFactor = currentSvg ? currentSvg.getCTM().a : 1;
+
+          // get label positions from the xScale
+          var positions = _this5.threshold_labels.map(function (label, i) {
+            return _this5.histogram.xScale(i) * svgScaleFactor;
+          });
+          var qlabels = {
+            width: _this5.histogram.xScale.bandwidth() * svgScaleFactor,
+            labels: _this5.threshold_labels,
+            // this only provides positions for two labels! we need one per bar
+            // positions: this.histogram.xScale.range().map(d => d * svgScaleFactor)
+            positions: positions
+          };
+          _this5.$el.find('.quartiles').html(quartileTemplate(qlabels));
+        }, wait * 1);
       }
       if (!this.$filter || isDirty) {
         if (this.$filter) {
