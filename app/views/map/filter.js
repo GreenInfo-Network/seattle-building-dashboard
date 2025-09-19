@@ -295,8 +295,15 @@ define(['jquery', 'underscore', 'backbone', 'd3', 'ionrangeslider', 'models/buil
         chartElm.html(this.histogram.render());
       }
       if (this.threshold_labels && (isDirty || this.initRender)) {
-        var svg = this.histogram.$el.find('svg')[0];
-        var svgScaleFactor = svg ? svg.getCTM().a : 1;
+        // unfortunately, this doesn't always work.
+        // const svg = this.histogram.$el.find('svg')[0];
+        // const svgScaleFactor = svg ? svg.getCTM().a : 1;
+        // when the SVG is not active, getCTM().a returns 1
+        // when it is active, it returns the correct scale factor
+        // instead of getting $(this) histogram's svg, just get the current active svg
+        var currentSvg = $('div.map-control.current svg')[0];
+        // not sure it's possible to _not_ have a current svg, but just in case
+        var svgScaleFactor = currentSvg ? currentSvg.getCTM().a : 1;
 
         // get label positions from the xScale
         var positions = this.threshold_labels.map(function (label, i) {
