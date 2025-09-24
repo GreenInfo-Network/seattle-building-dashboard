@@ -26,7 +26,7 @@
               </td>
             <% } %>
           <% } else { %>
-            <td style="color: <%= data.chart.lead.color %>;"><%= data.chart.lead.value.toLocaleString() %></td>
+            <td style="color: <%= data.chart.lead.color %>;"><%= data.chart.lead.value.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) %></td>
             <td><%= data.chart.lead.label %></td>
           <% } %>
         </tr>
