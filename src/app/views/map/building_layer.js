@@ -154,15 +154,15 @@ define([
       label: chartData.lead.label
     };
 
+    // this will show in the popup if there is a value, and the lead value is not nodata
+    // see the template for details (building_info.html)
     o.chart.secondary = {
       value: building.get(chartData.secondary.field),
       color: this.getColor(chartData.secondary.field, building.get(chartData.secondary.field)),
       label: chartData.secondary.label
     };
-    // debugger
 
     // lead field in "popup_chart" from seattle.json is site_eui_wn
-    // console.log(o.chart.lead);
 
     if (!_.isNumber(o.chart.lead.value) || _.isNaN(o.chart.lead.value)) {
       o.chart.lead.nodata = chartData.lead.nodata;
