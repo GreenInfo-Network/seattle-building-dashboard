@@ -245,7 +245,7 @@
         "allowable": true,
         "atZoom": 15,
         "property_id": "id",
-        "table_name": "footprints_production"
+        "table_name": "fp_incoming"
     },
     "scorecard": {
         "citywide": {
