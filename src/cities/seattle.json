@@ -19,7 +19,7 @@
     "zoom": 14,
     "categoryDefaults": [],
     "cartoDbUser": "cityenergy-seattle",
-    "table_name": "carto_2015_2024_data_extra_20250828in",
+    "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
     "property_id": "id",
     "property_name": "property_name",
     "building_type": "property_type",
@@ -201,43 +201,43 @@
     ],
     "years": {
         "2015": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
         "2016": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
         "2017": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
         "2018": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
          "2019": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
          "2020": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
          "2021": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
          "2022": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
         "2023": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         },
         "2024": {
-            "table_name": "carto_2015_2024_data_extra_20250828in",
+            "table_name": "carto_2015_2024_data_extra_forpublishingv1in",
             "default_layer": "total_ghg_emissions"
         }
     },
@@ -245,7 +245,7 @@
         "allowable": true,
         "atZoom": 15,
         "property_id": "id",
-        "table_name": "fp_incoming"
+        "table_name": "footprints_production"
     },
     "scorecard": {
         "citywide": {
