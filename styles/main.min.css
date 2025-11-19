@@ -887,14 +887,14 @@ header {
 }
 .search-wrapper .address-search {
   padding: 0.3em 1em;
-  padding-right: 2.2em;
+  padding-right: 1.3em;
   border: 1px solid white;
   margin: 0;
   display: block;
 }
 .search-wrapper .address-search-icon {
   position: absolute;
-  right: 0.9em;
+  right: 0.7em;
   top: 20%;
 }
 
