@@ -13,7 +13,7 @@
 
   .address-search {
     padding: calc($base-spacing / 4) 1em;
-    padding-right: 2.2em; // space for the icon
+    padding-right: 1.3em; // space for the icon
     border: 1px solid $base-border-color;
     margin: 0;
     display: block;
@@ -21,7 +21,7 @@
 
   .address-search-icon {
     position: absolute;
-    right: 0.9em;
+    right: 0.7em;
     top: 20%;
   }
 }
