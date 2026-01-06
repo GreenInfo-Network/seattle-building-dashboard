@@ -76,7 +76,7 @@ define(['underscore', 'backbone', 'd3'], function (_, Backbone, d3) {
           console.error("No modal data for (".concat(selected, ")"));
           return _this2;
         }
-        var rows = _this2.parse(d3.csv.parse(payload), props.reflinks);
+        var rows = _this2.parse(d3.csvParse(payload), props.reflinks);
         _this2.set({
           cache: _.extend(cache, _defineProperty({}, selected, rows)),
           viewdata: rows
