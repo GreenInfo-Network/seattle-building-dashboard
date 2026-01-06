@@ -89,7 +89,7 @@ define([
           return this;
         }
 
-        const rows = this.parse(d3.csv.parse(payload), props.reflinks);
+        const rows = this.parse(d3.csvParse(payload), props.reflinks);
 
         this.set({
           cache: _.extend(cache, { [selected]: rows }),
